@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "885411879826",
+    "project_id": "event-go-c36f9",
+    "storage_bucket": "event-go-c36f9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:885411879826:android:b2c032a4cd251e646d7f4b",
+        "android_client_info": {
+          "package_name": "com.example.event_go"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_K5NwFumwGLhHpxBQ6KvPWD1brByjlw4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
