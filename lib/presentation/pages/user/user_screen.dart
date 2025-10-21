@@ -1,0 +1,241 @@
+import 'package:animated_toggle_switch/animated_toggle_switch.dart';
+import 'package:event_go/core/constants/app_colors.dart';
+import 'package:flutter/material.dart';
+
+class UserScreen extends StatefulWidget {
+  const UserScreen({super.key});
+
+  @override
+  State<UserScreen> createState() => _UserScreenState();
+}
+
+class _UserScreenState extends State<UserScreen> {
+  bool isDarkMode = false;
+  @override
+  Widget build(BuildContext context) {
+    const Color itemBackgroundColor = Color(0xFF2C2C2C);
+    const Color secondaryTextColor = Color(0xFF8A8A8A);
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            _buildHeader(),
+            const SizedBox(height: 100),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildSettingsGroup(
+                    icon: Icons.person_outline,
+                    title: 'Cài đặt tài khoản',
+                    backgroundColor: itemBackgroundColor,
+                    children: [
+                      _buildSettingsItem(title: 'Thông tin tài khoản', onTap: () {}),
+                      _buildSettingsItem(title: 'Đổi mã PIN', onTap: () {}, showDivider: false),
+                    ],
+                  ),
+                  const SizedBox(height: 40),
+                  _buildSettingsGroup(
+                    icon: Icons.settings_outlined,
+                    title: 'Cài đặt ứng dụng',
+                    backgroundColor: itemBackgroundColor,
+                    children: [_buildLanguageItem(onTap: () {})],
+                  ),
+                  const SizedBox(height: 40),
+                  _buildSingleSettingsItem(
+                    icon: Icons.public,
+                    title: 'Trung tâm trợ giúp',
+                    backgroundColor: itemBackgroundColor,
+                    onTap: () {},
+                  ),
+                  const SizedBox(height: 8),
+                  _buildSingleSettingsItem(
+                    icon: Icons.logout,
+                    title: 'Đăng xuất',
+                    backgroundColor: itemBackgroundColor,
+                    onTap: () {},
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 40),
+            const Text(
+              'Phiên bản 3.1.13(30284)',
+              style: TextStyle(color: secondaryTextColor, fontSize: 12),
+            ),
+            const SizedBox(height: 20),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Stack(
+      clipBehavior: Clip.none,
+      alignment: Alignment.center,
+      children: [
+        Container(height: 150, decoration: const BoxDecoration(color: Color(0xFF596DC3))),
+        Positioned(
+          bottom: -70,
+          child: Column(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: const Color(0xFF1E1E1E), width: 5),
+                ),
+                child: const CircleAvatar(
+                  radius: 40,
+                  backgroundColor: Color(0xFF596DC3),
+                  child: Icon(Icons.flutter_dash, color: Colors.white, size: 40),
+                ),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'Nhật Lê Văn',
+                style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSettingsGroup({
+    required IconData icon,
+    required String title,
+    required Color backgroundColor,
+    required List<Widget> children,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
+          child: Row(
+            children: [
+              Icon(icon, color: Colors.white, size: 20),
+              const SizedBox(width: 8),
+              Text(
+                title,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 18),
+        Container(
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(children: children),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSingleSettingsItem({
+    required IconData icon,
+    required String title,
+    required Color backgroundColor,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 50,
+        child: Row(
+          children: [
+            Icon(icon, color: Colors.white, size: 22),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(title, style: const TextStyle(color: Colors.white, fontSize: 16)),
+            ),
+            const Icon(Icons.chevron_right, color: Colors.white70),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSettingsItem({
+    required String title,
+    required VoidCallback onTap,
+    bool showDivider = true,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(title, style: const TextStyle(color: Colors.white, fontSize: 16)),
+                ),
+                const Icon(Icons.chevron_right, color: Colors.white70),
+              ],
+            ),
+          ),
+          if (showDivider)
+            Divider(color: Colors.grey.shade700, height: 1, indent: 16, endIndent: 16),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLanguageItem({required VoidCallback onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        child: Row(
+          children: [
+            const Expanded(
+              child: Text('Thay đổi ngôn ngữ', style: TextStyle(color: Colors.white, fontSize: 16)),
+            ),
+            AnimatedToggleSwitch<bool>.size(
+              current: isDarkMode,
+              values: const [false, true],
+              iconOpacity: 0.3,
+              indicatorSize: const Size(30, 30),
+              borderWidth: 1.0,
+              customIconBuilder: (context, local, global) => Text(
+                local.value ? 'vie' : 'en',
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                  color: Color.lerp(Colors.black, Colors.white, local.animationValue),
+                ),
+              ),
+              style: ToggleStyle(
+                backgroundColor: Colors.white,
+                borderColor: const Color(0xFF596DC3),
+                indicatorColor: const Color(0xFF596DC3),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              onChanged: (b) {
+                setState(() {
+                  isDarkMode = b;
+                });
+              },
+              iconAnimationType: AnimationType.onHover,
+              height: 30,
+              spacing: 1,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
