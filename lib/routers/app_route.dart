@@ -4,6 +4,7 @@ import 'package:event_go/presentation/pages/auth/new_password_screen.dart';
 import 'package:event_go/presentation/pages/auth/sign_up_screen.dart';
 import 'package:event_go/presentation/pages/auth/reset_password_screen.dart';
 import 'package:event_go/presentation/pages/auth/otp_verification_screen.dart';
+import 'package:event_go/presentation/pages/home/event_booking_screen.dart';
 import 'package:event_go/presentation/pages/home/event_detail_screen.dart';
 import 'package:event_go/presentation/pages/home/home_screen.dart';
 import 'package:event_go/presentation/pages/home/search_screen.dart';
@@ -30,6 +31,7 @@ class AppRouter {
           ),
           GoRoute(path: RouterPath.langding_page, builder: (context, state) => LangdingScreen()),
           GoRoute(path: RouterPath.search, builder: (context, state) => SearchScreen()),
+          GoRoute(path: RouterPath.booking, builder: (context, state) => EventBookingScreen()),
           GoRoute(
             path: RouterPath.resetPassword,
             builder: (context, state) {

@@ -21,6 +21,8 @@ class EventDetailScreen extends StatefulWidget {
 }
 
 class _EventDetailScreenState extends State<EventDetailScreen> {
+  int _captchaFailCount = 0;
+  DateTime? _lockoutEndTime;
   bool isComboSoldOut = true;
   bool _isExpanded = false;
   final List<String> _captchaImages = [AppImage.logo, AppImage.banner_1, AppImage.banner_2];
@@ -48,11 +50,7 @@ Với những ca khúc quen thuộc đạt hàng trăm triệu lượt xem như 
         ),
         backgroundColor: const Color(0xFF596DC3),
         centerTitle: true,
-        actions: [
-          IconButton(onPressed: () {
-            
-          }, icon: Icon(Icons.share)),
-        ],
+        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.share))],
       ),
       bottomNavigationBar: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -75,6 +73,19 @@ Với những ca khúc quen thuộc đạt hàng trăm triệu lượt xem như 
             AppElevatedButton(
               text: 'Mua vé ngay',
               onPressed: () {
+                if (_lockoutEndTime != null && DateTime.now().isBefore(_lockoutEndTime!)) {
+                  final remaining = _lockoutEndTime!.difference(DateTime.now());
+                  final remainingSeconds = remaining.inSeconds + 1;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Bạn đã thử quá 5 lần. Vui lòng thử lại sau $remainingSeconds giây.',
+                      ),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                  return;
+                }
                 showDialog(
                   context: context,
                   builder: (dialogContext) {
@@ -127,13 +138,40 @@ Với những ca khúc quen thuộc đạt hàng trăm triệu lượt xem như 
                               colorCaptChar: Colors.blue,
                               onConfirm: (success) async {
                                 if (success) {
+                                  setState(() {
+                                    _captchaFailCount = 0;
+                                  });
                                   dialogContext.pop();
-                                  context.pushReplacement(RouterPath.ticket);
+                                  context.push(RouterPath.booking);
                                 } else {
-                                  errorNotifier.value = 'Xác minh không đúng, vui lòng thử lại!';
-                                  await Future.delayed(const Duration(milliseconds: 500));
-                                  controller.create();
-                                  errorNotifier.value = null;
+                                  setState(() {
+                                    _captchaFailCount++;
+                                  });
+
+                                  if (_captchaFailCount >= 5) {
+                                    setState(() {
+                                      _lockoutEndTime = DateTime.now().add(
+                                        const Duration(minutes: 1),
+                                      );
+                                      _captchaFailCount = 0;
+                                    });
+
+                                    dialogContext.pop();
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          'Bạn đã thử quá 5 lần. Vui lòng thử lại sau 1 phút.',
+                                        ),
+                                        backgroundColor: Colors.red,
+                                      ),
+                                    );
+                                  } else {
+                                    errorNotifier.value =
+                                        'Xác minh không đúng! (Thử lại: $_captchaFailCount/5)';
+                                    await Future.delayed(const Duration(milliseconds: 500));
+                                    controller.create();
+                                    errorNotifier.value = null;
+                                  }
                                 }
                               },
                             ),
