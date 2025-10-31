@@ -16,16 +16,13 @@ class PaymentResultScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ZaloPay trả về '1' là thành công
     final bool isSuccess = code == '1';
 
     String decodedMessage;
     if (message != null) {
       try {
-        // 1. Dùng hàm decodeQueryComponent
         decodedMessage = Uri.decodeQueryComponent(message!);
       } catch (e) {
-        // 2. Nếu giải mã vẫn lỗi, hiển thị tạm message gốc
         decodedMessage = message!;
       }
     } else {
@@ -33,12 +30,12 @@ class PaymentResultScreen extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFF121212), // Màu nền giống app của bạn
+      backgroundColor: const Color(0xFF121212),
       appBar: AppBar(
         title: Text("Kết quả giao dịch"),
-        backgroundColor: const Color(0xFF596DC3), // Màu AppBar giống của bạn
+        backgroundColor: const Color(0xFF596DC3),
         centerTitle: true,
-        automaticallyImplyLeading: false, // Ẩn nút back
+        automaticallyImplyLeading: false,
       ),
       body: Center(
         child: Padding(
@@ -89,8 +86,7 @@ class PaymentResultScreen extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  // Quay về trang chủ (hoặc trang vé)
-                  context.go(RouterPath.home);
+                   context.go(RouterPath.home);
                 },
                 child: const Text(
                   "Về trang chủ",

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-
 import 'package:event_go/core/base/base_view_model.dart';
 import 'package:event_go/core/constants/app_strings.dart';
 import 'package:event_go/data/repositories/auth_repository.dart';
@@ -31,26 +30,24 @@ class AuthViewModel extends BaseViewModel {
   bool get obscurePassword => _obscurePassword;
   bool get obscureConfirmPassword => _obscureConfirmPassword;
 
-
-  AuthViewModel(
-      {
-        required LoginUseCase loginUseCase,
-        required RegisterUseCase registerUseCase,
-        required LogoutUseCase logoutUseCase,
-        required ResetPasswordUseCase resetPasswordUseCase,
-        required AuthRepository authRepository,
-        required SendEmailVerificationUseCase sendEmailVerificationUseCase,
-        required UpdatePasswordUseCase updatePasswordUseCase,
-      }) : _loginUseCase = loginUseCase,
-        _registerUseCase = registerUseCase,
-        _logoutUseCase = logoutUseCase,
-        _resetPasswordUseCase = resetPasswordUseCase,
-        _sendEmailVerificationUseCase = sendEmailVerificationUseCase,
-        _updatePasswordUseCase = updatePasswordUseCase,
-        _authRepository = authRepository {
+  AuthViewModel({
+    required LoginUseCase loginUseCase,
+    required RegisterUseCase registerUseCase,
+    required LogoutUseCase logoutUseCase,
+    required ResetPasswordUseCase resetPasswordUseCase,
+    required AuthRepository authRepository,
+    required SendEmailVerificationUseCase sendEmailVerificationUseCase,
+    required UpdatePasswordUseCase updatePasswordUseCase,
+  }) : _loginUseCase = loginUseCase,
+       _registerUseCase = registerUseCase,
+       _logoutUseCase = logoutUseCase,
+       _resetPasswordUseCase = resetPasswordUseCase,
+       _sendEmailVerificationUseCase = sendEmailVerificationUseCase,
+       _updatePasswordUseCase = updatePasswordUseCase,
+       _authRepository = authRepository {
     _authRepository.authStateChanges.listen((authState) {
       _currentUser = authState.session?.user;
-      notifyListeners();
+      Future.microtask(() => notifyListeners());
     });
   }
 
@@ -80,6 +77,7 @@ class AuthViewModel extends BaseViewModel {
     _obscurePassword = true;
     _obscureConfirmPassword = true;
   }
+
   void startOtpCountdown() {
     _otpTimer?.cancel();
     _countdown = 60;
@@ -100,6 +98,7 @@ class AuthViewModel extends BaseViewModel {
   void stopOtpCountdown() {
     _otpTimer?.cancel();
   }
+
   Future<void> checkAuthState() async {
     try {
       _setLoading(true);
@@ -141,6 +140,7 @@ class AuthViewModel extends BaseViewModel {
       print('Error checking auth state: $e');
     }
   }
+
   Future<void> _saveLoginState(bool isLoggedIn) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isLoggedIn', isLoggedIn);
@@ -154,15 +154,15 @@ class AuthViewModel extends BaseViewModel {
     }
     return isFirst;
   }
+
   Future<void> _createUserProfile(User user) async {
-    await Supabase.instance.client
-        .from('profiles')
-        .insert({
+    await Supabase.instance.client.from('profiles').insert({
       'id': user.id,
       'role': 'user',
       'email': user.email,
     });
   }
+
   @override
   Future<bool> login(String email, String password) async {
     try {
@@ -213,9 +213,7 @@ class AuthViewModel extends BaseViewModel {
       final result = await _registerUseCase(email, password);
 
       if (result.isSuccess && result.user != null) {
-        await Supabase.instance.client
-            .from('profiles')
-            .insert({
+        await Supabase.instance.client.from('profiles').insert({
           'id': result.user!.id,
           'role': 'user',
           'email': result.user!.email,
@@ -250,6 +248,7 @@ class AuthViewModel extends BaseViewModel {
       _setError(AppStrings.logoutError);
     }
   }
+
   Future<bool> resetPassword(String email) async {
     try {
       _setLoading(true);
@@ -272,6 +271,7 @@ class AuthViewModel extends BaseViewModel {
       return false;
     }
   }
+
   Future<bool> sendEmailVerification(String email, String otpCode) async {
     try {
       _setLoading(true);
@@ -293,6 +293,7 @@ class AuthViewModel extends BaseViewModel {
       return false;
     }
   }
+
   Future<bool> updatePassword(String newPassword) async {
     try {
       _setLoading(true);
@@ -315,19 +316,21 @@ class AuthViewModel extends BaseViewModel {
     }
   }
 
-
   void _setLoading(bool loading) {
     _isLoading = loading;
     notifyListeners();
   }
+
   void _setError(String error) {
     _errorMessage = error;
     notifyListeners();
   }
+
   void _clearError() {
     _errorMessage = null;
     notifyListeners();
   }
+
   void clearError() {
     _clearError();
   }

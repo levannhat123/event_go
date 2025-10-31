@@ -8,6 +8,7 @@ import 'package:event_go/domain/usecase/auth/send_email_usecase.dart';
 import 'package:event_go/domain/usecase/auth/update_password_use_case.dart';
 import 'package:event_go/presentation/view_models/auth_change_notifier.dart';
 import 'package:event_go/presentation/view_models/auth_view_model.dart';
+import 'package:event_go/presentation/view_models/home_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 
@@ -21,18 +22,27 @@ void setupDependencies(GoRouter router) {
   getIt.registerLazySingleton(() => LoginUseCase(getIt<AuthRepository>()));
   getIt.registerLazySingleton(() => RegisterUseCase(getIt<AuthRepository>()));
   getIt.registerLazySingleton(() => LogoutUseCase(getIt<AuthRepository>()));
-  getIt.registerLazySingleton(() => ResetPasswordUseCase(getIt<AuthRepository>()));
-  getIt.registerLazySingleton(() => SendEmailVerificationUseCase(getIt<AuthRepository>()));
-  getIt.registerLazySingleton(() => UpdatePasswordUseCase(getIt<AuthRepository>()));
+  getIt.registerLazySingleton(
+    () => ResetPasswordUseCase(getIt<AuthRepository>()),
+  );
+  getIt.registerLazySingleton(
+    () => SendEmailVerificationUseCase(getIt<AuthRepository>()),
+  );
+  getIt.registerLazySingleton(
+    () => UpdatePasswordUseCase(getIt<AuthRepository>()),
+  );
 
   // ViewModel
-  getIt.registerFactory(() => AuthViewModel(
-        loginUseCase: getIt<LoginUseCase>(),
-        registerUseCase: getIt<RegisterUseCase>(),
-        logoutUseCase: getIt<LogoutUseCase>(),
-        resetPasswordUseCase: getIt<ResetPasswordUseCase>(),
-        authRepository: getIt<AuthRepository>(),
-        sendEmailVerificationUseCase: getIt<SendEmailVerificationUseCase>(),
-        updatePasswordUseCase: getIt<UpdatePasswordUseCase>(),
-  ));
+  getIt.registerFactory(
+    () => AuthViewModel(
+      loginUseCase: getIt<LoginUseCase>(),
+      registerUseCase: getIt<RegisterUseCase>(),
+      logoutUseCase: getIt<LogoutUseCase>(),
+      resetPasswordUseCase: getIt<ResetPasswordUseCase>(),
+      authRepository: getIt<AuthRepository>(),
+      sendEmailVerificationUseCase: getIt<SendEmailVerificationUseCase>(),
+      updatePasswordUseCase: getIt<UpdatePasswordUseCase>(),
+    ),
+  );
+  getIt.registerLazySingleton(() => HomeViewModel());
 }
