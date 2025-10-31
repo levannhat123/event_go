@@ -1,4 +1,5 @@
 class RouterPath {
+  static const String splash = '/splash';
   static const String login = '/login';
   static const String sign_up = '/sign-up';
   static const String langding_page = '/langding_page';

@@ -4,6 +4,7 @@ import 'package:event_go/core/constants/app_colors.dart';
 import 'package:event_go/core/config/supabase_config.dart';
 import 'package:event_go/injection/injection.dart';
 import 'package:event_go/presentation/view_models/auth_change_notifier.dart';
+import 'package:event_go/presentation/view_models/auth_view_model.dart';
 import 'package:event_go/routers/app_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -34,7 +35,10 @@ void main() {
     runApp(
       MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (_) => AuthChangeNotifier())
+          ChangeNotifierProvider(create: (_) => AuthChangeNotifier()),
+          ChangeNotifierProvider(
+            create: (_) => getIt<AuthViewModel>(),
+          ),
         ],
         child: ScreenUtilInit(
           designSize: const Size(428, 926),
