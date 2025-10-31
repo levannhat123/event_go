@@ -1,40 +1,43 @@
 import 'package:event_go/core/base/base_view.dart';
 import 'package:event_go/core/constants/app_colors.dart';
 import 'package:event_go/core/constants/app_image.dart';
-import 'package:event_go/core/constants/app_strings.dart';
 import 'package:event_go/core/widgets/app_elevated_button.dart';
+import 'package:event_go/core/widgets/showdialog.dart';
 import 'package:event_go/injection/injection.dart';
-import 'package:event_go/presentation/view_models/auth_view_model.dart';
 import 'package:event_go/routers/router_name.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart'; // Import Provider
 import 'dart:async';
+
+import '../../../core/constants/app_strings.dart';
+import '../../view_models/auth_view_model.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
   final String email;
 
-  const OtpVerificationScreen({
-    super.key,
-    required this.email,
-  });
+  const OtpVerificationScreen({super.key, required this.email});
 
   @override
   State<OtpVerificationScreen> createState() => _OtpVerificationScreenState();
 }
 
 class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
-  final List<TextEditingController> _controllers = List.generate(6, (index) => TextEditingController());
+  final List<TextEditingController> _controllers = List.generate(
+    6,
+    (index) => TextEditingController(),
+  );
   final List<FocusNode> _focusNodes = List.generate(6, (index) => FocusNode());
   final _formKey = GlobalKey<FormState>();
-  int _countdown = 60;
-  Timer? _timer;
-  bool _canResend = false;
 
   @override
   void initState() {
     super.initState();
-    _startCountdown();
+    Future.microtask(() {
+      final viewModel = Provider.of<AuthViewModel>(context, listen: false);
+      viewModel.startOtpCountdown();
+    });
   }
 
   @override
@@ -45,28 +48,15 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     for (var focusNode in _focusNodes) {
       focusNode.dispose();
     }
-    _timer?.cancel();
+
+    try {
+      final viewModel = Provider.of<AuthViewModel>(context, listen: false);
+      viewModel.stopOtpCountdown();
+    } catch (e) {
+      print("Error stopping OTP countdown: $e");
+    }
+
     super.dispose();
-  }
-
-  void _startCountdown() {
-    setState(() {
-      _countdown = 60;
-      _canResend = false;
-    });
-
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_countdown > 0) {
-        setState(() {
-          _countdown--;
-        });
-      } else {
-        setState(() {
-          _canResend = true;
-        });
-        timer.cancel();
-      }
-    });
   }
 
   String get _otpCode {
@@ -80,13 +70,15 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       _focusNodes[index - 1].requestFocus();
     }
 
-    // Auto verify when all 6 digits are entered
     if (_otpCode.length == 6) {
-      _verifyOtp();
+      final viewModel = Provider.of<AuthViewModel>(context, listen: false);
+      if (!viewModel.isLoading) {
+        _verifyOtp(viewModel);
+      }
     }
   }
 
-  void _verifyOtp() async {
+  void _verifyOtp(AuthViewModel viewModel) async {
     if (_otpCode.length != 6) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -97,13 +89,36 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       return;
     }
 
-    final viewModel = getIt<AuthViewModel>();
+    final success = await viewModel.sendEmailVerification(
+      widget.email,
+      _otpCode,
+    );
 
+    if (!mounted) return;
 
+    if (success) {
+      context.push(RouterPath.resetPassword);
+    } else {
+      await showCustomDialog(
+        context: context,
+        title: "XÁC THỰC THẤT BẠI",
+        message:
+            viewModel.errorMessage ?? "Mã OTP không hợp lệ hoặc đã hết hạn.",
+        buttonText: "Thử lại",
+        icon: Icons.error,
+        iconColor: Colors.red,
+        onPressed: () {
+          for (var controller in _controllers) {
+            controller.clear();
+          }
+          _focusNodes[0].requestFocus();
+        },
+      );
+    }
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext mayhem) {
     return BaseView(
       padding: false,
       viewModelBuilder: () => getIt<AuthViewModel>(),
@@ -184,7 +199,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                           ),
                         ),
                         const SizedBox(height: 30),
-                        
+
                         // OTP Input Fields
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -209,45 +224,78 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                   fillColor: Colors.grey.shade100,
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(color: Colors.grey.shade300),
+                                    borderSide: BorderSide(
+                                      color: Colors.grey.shade300,
+                                    ),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(color: Color(0xFF4257b4), width: 2),
+                                    borderSide: const BorderSide(
+                                      color: Color(0xFF4257b4),
+                                      width: 2,
+                                    ),
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(color: Colors.grey.shade300),
+                                    borderSide: BorderSide(
+                                      color: Colors.grey.shade300,
+                                    ),
                                   ),
                                 ),
                                 inputFormatters: [
                                   FilteringTextInputFormatter.digitsOnly,
                                 ],
-                                onChanged: (value) => _onOtpChanged(value, index),
+                                onChanged: (value) =>
+                                    _onOtpChanged(value, index),
                               ),
                             );
                           }),
                         ),
-                        
+
                         const SizedBox(height: 30),
-                        
-                        // Verify Button
+
                         AppElevatedButton(
-                          text: viewModel.isLoading ? AppStrings.verifying : AppStrings.verifyButton,
+                          text: viewModel.isLoading
+                              ? AppStrings.verifying
+                              : AppStrings.verifyButton,
                           borderColor: const Color(0xFFf49415),
                           color: const Color(0xFFf49415),
                           splashColor: AppColors.transparent,
                           highlightColor: AppColors.white,
-                          onPressed: viewModel.isLoading ? null : _verifyOtp,
+                          onPressed: viewModel.isLoading
+                              ? null
+                              : () => _verifyOtp(viewModel),
                         ),
-                        
+
                         const SizedBox(height: 20),
-                        
-                        // Resend OTP
-                        if (_canResend)
+
+                        if (viewModel.canResend)
                           TextButton(
                             onPressed: () async {
-
+                              // Gọi hàm resend từ VM
+                              final success = await viewModel.resetPassword(
+                                widget.email,
+                              );
+                              if (mounted) {
+                                if (success) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text("Đã gửi lại OTP"),
+                                      backgroundColor: Colors.green,
+                                    ),
+                                  );
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        viewModel.errorMessage ??
+                                            "Gửi lại thất bại",
+                                      ),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                }
+                              }
                             },
                             child: const Text(
                               AppStrings.resendOtpButton,
@@ -260,16 +308,17 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                           )
                         else
                           Text(
-                            AppStrings.resendOtpAfter + _countdown.toString() + AppStrings.seconds,
+                            AppStrings.resendOtpAfter +
+                                viewModel.countdown.toString() +
+                                AppStrings.seconds,
                             style: TextStyle(
                               color: Colors.grey.shade600,
                               fontSize: 14,
                             ),
                           ),
-                        
+
                         const SizedBox(height: 20),
-                        
-                        // Back to login
+
                         TextButton(
                           onPressed: () => context.go(RouterPath.login),
                           child: const Text(

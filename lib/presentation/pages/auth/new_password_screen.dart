@@ -13,6 +13,7 @@ import 'package:event_go/routers/router_name.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:provider/provider.dart';
 
 class NewPasswordScreen extends StatefulWidget {
   const NewPasswordScreen({super.key});
@@ -25,11 +26,15 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  bool _obscurePassword = true;
-  bool _obscureConfirmPassword = true;
 
   @override
   void dispose() {
+    try {
+      final viewModel = Provider.of<AuthViewModel>(context, listen: false);
+      viewModel.resetNewPasswordScreenState();
+    } catch (e) {
+      print("Error resetting state on dispose: $e");
+    }
     passwordController.dispose();
     confirmPasswordController.dispose();
     super.dispose();
@@ -55,7 +60,6 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
           resizeToAvoidBottomInset: false,
           body: Stack(
             children: [
-              // Header với logo
               Positioned.fill(
                 child: Container(
                   decoration: const BoxDecoration(
@@ -135,13 +139,11 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                           shadowColor: AppColors.transparent,
                           suffixIcon: IconButton(
                             icon: Icon(
-                              _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                              viewModel.obscurePassword ? Icons.visibility : Icons.visibility_off,
                               color: Colors.grey,
                             ),
                             onPressed: () {
-                              setState(() {
-                                _obscurePassword = !_obscurePassword;
-                              });
+                              viewModel.togglePasswordVisibility();
                             },
                           ),
                         ),
@@ -170,13 +172,11 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                           shadowColor: AppColors.transparent,
                           suffixIcon: IconButton(
                             icon: Icon(
-                              _obscureConfirmPassword ? Icons.visibility : Icons.visibility_off,
+                              viewModel.obscureConfirmPassword ? Icons.visibility : Icons.visibility_off,
                               color: Colors.grey,
                             ),
                             onPressed: () {
-                              setState(() {
-                                _obscureConfirmPassword = !_obscureConfirmPassword;
-                              });
+                              viewModel.toggleConfirmPasswordVisibility();
                             },
                           ),
                         ),

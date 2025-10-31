@@ -1,3 +1,4 @@
+
 import 'package:event_go/core/base/base_view.dart';
 import 'package:event_go/core/constants/app_colors.dart';
 import 'package:event_go/core/constants/app_image.dart';
@@ -141,50 +142,50 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(height: 20),
                         viewModel.isLoading
                             ? Center(
-                                child: LoadingAnimationWidget.hexagonDots(
-                                  color:Color(0xFFf49415),
-                                  size: AppSizes.size50,
-                                ),
-                              )
+                          child: LoadingAnimationWidget.hexagonDots(
+                            color:Color(0xFFf49415),
+                            size: AppSizes.size50,
+                          ),
+                        )
                             : AppElevatedButton(
-                                text: AppStrings.loginButton,
-                                borderColor: Color(0xFFf49415),
-                                color: Color(0xFFf49415),
-                                splashColor: AppColors.transparent,
-                                highlightColor: AppColors.white,
-                                onPressed: () async {
-                                  if (_formKey.currentState!.validate()) {
-                                    final success = await viewModel.login(
-                                      emailController.text.trim(),
-                                      passwordController.text,
-                                    );
-                                    if (success) {
-                                      await showCustomDialog(
-                                        context: context,
-                                        title: "ĐĂNG NHẬP THÀNH CÔNG",
-                                        message: "Bạn đã đăng nhập thành công!",
-                                        buttonText: "Okay",
-                                        icon: Icons.check_circle,
-                                        iconColor: Colors.green,
-                                        onPressed: () {
-                                          context.go(RouterPath.home);
-                                        },
-                                      );
-                                    } else {
-                                      await showCustomDialog(
-                                        context: context,
-                                        title: "ĐĂNG NHẬP THẤT BẠI",
-                                        message:
-                                            viewModel.errorMessage ?? "Sai email hoặc mật khẩu",
-                                        buttonText: "Okay",
-                                        icon: Icons.error,
-                                        iconColor: Colors.red,
-                                        onPressed: () {},
-                                      );
-                                    }
-                                  }
-                                },
-                              ),
+                          text: AppStrings.loginButton,
+                          borderColor: Color(0xFFf49415),
+                          color: Color(0xFFf49415),
+                          splashColor: AppColors.transparent,
+                          highlightColor: AppColors.white,
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              final success = await viewModel.login(
+                                emailController.text.trim(),
+                                passwordController.text,
+                              );
+                              if (success) {
+                                await showCustomDialog(
+                                  context: context,
+                                  title: "ĐĂNG NHẬP THÀNH CÔNG",
+                                  message: "Bạn đã đăng nhập thành công!",
+                                  buttonText: "Okay",
+                                  icon: Icons.check_circle,
+                                  iconColor: Colors.green,
+                                  onPressed: () {
+                                    context.go(RouterPath.home);
+                                  },
+                                );
+                              } else {
+                                await showCustomDialog(
+                                  context: context,
+                                  title: "ĐĂNG NHẬP THẤT BẠI",
+                                  message:
+                                  viewModel.errorMessage ?? "Sai email hoặc mật khẩu",
+                                  buttonText: "Okay",
+                                  icon: Icons.error,
+                                  iconColor: Colors.red,
+                                  onPressed: () {},
+                                );
+                              }
+                            }
+                          },
+                        ),
                         const SizedBox(height: 20),
                         RichText(
                           text: TextSpan(

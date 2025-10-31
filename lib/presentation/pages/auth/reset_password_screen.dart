@@ -7,18 +7,16 @@ import 'package:event_go/core/widgets/app_elevated_button.dart';
 import 'package:event_go/core/widgets/text_field.dart';
 import 'package:event_go/injection/injection.dart';
 import 'package:event_go/presentation/view_models/auth_view_model.dart';
+import 'package:event_go/routers/router_name.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   final String oobCode;
   final String? email;
 
-  const ResetPasswordScreen({
-    super.key,
-    required this.oobCode,
-    this.email,
-  });
+  const ResetPasswordScreen({super.key, required this.oobCode, this.email});
 
   @override
   State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
@@ -26,10 +24,10 @@ class ResetPasswordScreen extends StatefulWidget {
 
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  bool _obscurePassword = true;
-  bool _obscureConfirmPassword = true;
+
   String? _verifiedEmail;
   bool _isVerifying = true;
 
@@ -38,9 +36,14 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     super.initState();
   }
 
-
   @override
   void dispose() {
+    try {
+      final viewModel = Provider.of<AuthViewModel>(context, listen: false);
+      viewModel.resetNewPasswordScreenState();
+    } catch (e) {
+      print("Error resetting state on dispose: $e");
+    }
     passwordController.dispose();
     confirmPasswordController.dispose();
     super.dispose();
@@ -87,7 +90,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
           resizeToAvoidBottomInset: false,
           body: Stack(
             children: [
-              // Header với logo
               Positioned.fill(
                 child: Container(
                   decoration: const BoxDecoration(
@@ -116,7 +118,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          AppStrings.resetPasswordDescription + '\n' + _verifiedEmail!,
+                          AppStrings.resetPasswordDescription +
+                              '\n' +
+                              _verifiedEmail!,
                           style: const TextStyle(
                             color: Color(0xFFf49415),
                             fontSize: 12,
@@ -151,7 +155,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       children: [
                         const SizedBox(height: 30),
 
-                        // Mật khẩu mới
                         const Text(
                           AppStrings.newPasswordLabel,
                           style: TextStyle(
@@ -172,16 +175,17 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           prefixIcon: const Icon(Icons.lock),
                           suffixIcon: IconButton(
                             icon: Icon(
-                              _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                              viewModel.obscurePassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
                             ),
-                            onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                            onPressed: () =>
+                                viewModel.togglePasswordVisibility(),
                           ),
                           shadowColor: AppColors.transparent,
                         ),
 
                         const SizedBox(height: 20),
-
-                        // Xác nhận mật khẩu
                         const Text(
                           AppStrings.confirmPasswordLabel,
                           style: TextStyle(
@@ -209,19 +213,22 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           enabledBorderColor: Colors.grey.shade300,
                           prefixIcon: const Icon(Icons.lock),
                           suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscureConfirmPassword ? Icons.visibility : Icons.visibility_off,
+                            icon: Icon(viewModel.obscureConfirmPassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
                             ),
-                            onPressed: () => setState(() => _obscureConfirmPassword = !_obscureConfirmPassword),
+                            onPressed: () =>
+                                viewModel.toggleConfirmPasswordVisibility(),
                           ),
                           shadowColor: AppColors.transparent,
                         ),
 
                         const SizedBox(height: 30),
 
-                        // Button đặt lại mật khẩu
                         AppElevatedButton(
-                          text: viewModel.isLoading ? AppStrings.updating : AppStrings.updatePasswordButton,
+                          text: viewModel.isLoading
+                              ? AppStrings.updating
+                              : AppStrings.updatePasswordButton,
                           borderColor: const Color(0xFFf49415),
                           color: const Color(0xFFf49415),
                           splashColor: AppColors.transparent,
@@ -229,18 +236,15 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           onPressed: viewModel.isLoading
                               ? null
                               : () async {
-                                  if (_formKey.currentState!.validate()) {
-
-                                  }
+                                  if (_formKey.currentState!.validate()) {}
                                 },
                         ),
 
                         const SizedBox(height: 20),
 
-                        // Button quay lại
                         Center(
                           child: TextButton(
-                            onPressed: () => context.go('/login'),
+                            onPressed: () => context.go(RouterPath.login),
                             child: const Text(
                               AppStrings.backToLoginButton2,
                               style: TextStyle(

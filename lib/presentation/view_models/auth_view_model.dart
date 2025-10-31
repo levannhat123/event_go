@@ -1,8 +1,16 @@
+import 'dart:async';
+
+
 import 'package:event_go/core/base/base_view_model.dart';
 import 'package:event_go/core/constants/app_strings.dart';
-import 'package:event_go/data/models/profile_model.dart';
 import 'package:event_go/data/repositories/auth_repository.dart';
-import 'package:event_go/domain/usecase/login_usecase.dart';
+import 'package:event_go/domain/usecase/auth/login_usecase.dart';
+import 'package:event_go/domain/usecase/auth/logout_usecase.dart';
+import 'package:event_go/domain/usecase/auth/register_usecase.dart';
+import 'package:event_go/domain/usecase/auth/reset_password_usecase.dart';
+import 'package:event_go/domain/usecase/auth/send_email_usecase.dart';
+import 'package:event_go/domain/usecase/auth/update_password_use_case.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthViewModel extends BaseViewModel {
@@ -17,36 +25,145 @@ class AuthViewModel extends BaseViewModel {
   User? _currentUser;
   bool _isLoading = false;
   String? _errorMessage;
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
+
+  bool get obscurePassword => _obscurePassword;
+  bool get obscureConfirmPassword => _obscureConfirmPassword;
+
 
   AuthViewModel(
-   {
-    required LoginUseCase loginUseCase,
-    required RegisterUseCase registerUseCase,
-    required LogoutUseCase logoutUseCase,
-    required ResetPasswordUseCase resetPasswordUseCase,
-    required AuthRepository authRepository,
-    required SendEmailVerificationUseCase sendEmailVerificationUseCase,
-    required UpdatePasswordUseCase updatePasswordUseCase,
-  }) : _loginUseCase = loginUseCase,
-       _registerUseCase = registerUseCase,
-       _logoutUseCase = logoutUseCase,
-       _resetPasswordUseCase = resetPasswordUseCase,
+      {
+        required LoginUseCase loginUseCase,
+        required RegisterUseCase registerUseCase,
+        required LogoutUseCase logoutUseCase,
+        required ResetPasswordUseCase resetPasswordUseCase,
+        required AuthRepository authRepository,
+        required SendEmailVerificationUseCase sendEmailVerificationUseCase,
+        required UpdatePasswordUseCase updatePasswordUseCase,
+      }) : _loginUseCase = loginUseCase,
+        _registerUseCase = registerUseCase,
+        _logoutUseCase = logoutUseCase,
+        _resetPasswordUseCase = resetPasswordUseCase,
         _sendEmailVerificationUseCase = sendEmailVerificationUseCase,
         _updatePasswordUseCase = updatePasswordUseCase,
-       _authRepository = authRepository {
+        _authRepository = authRepository {
     _authRepository.authStateChanges.listen((authState) {
       _currentUser = authState.session?.user;
       notifyListeners();
     });
   }
-  ProfileModel? _currentProfile;
-  ProfileModel? get currentProfile => _currentProfile;
 
-  // Getters
   User? get currentUser => _currentUser;
   bool get isLoggedIn => _authRepository.isLoggedIn;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
+  bool _isInitialized = false;
+  bool get isInitialized => _isInitialized;
+  int _countdown = 60;
+  bool _canResend = false;
+  Timer? _otpTimer;
+
+  int get countdown => _countdown;
+  bool get canResend => _canResend;
+  void togglePasswordVisibility() {
+    _obscurePassword = !_obscurePassword;
+    notifyListeners();
+  }
+
+  void toggleConfirmPasswordVisibility() {
+    _obscureConfirmPassword = !_obscureConfirmPassword;
+    notifyListeners();
+  }
+
+  void resetNewPasswordScreenState() {
+    _obscurePassword = true;
+    _obscureConfirmPassword = true;
+  }
+  void startOtpCountdown() {
+    _otpTimer?.cancel();
+    _countdown = 60;
+    _canResend = false;
+    notifyListeners();
+
+    _otpTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_countdown > 0) {
+        _countdown--;
+      } else {
+        _canResend = true;
+        timer.cancel();
+      }
+      notifyListeners();
+    });
+  }
+
+  void stopOtpCountdown() {
+    _otpTimer?.cancel();
+  }
+  Future<void> checkAuthState() async {
+    try {
+      _setLoading(true);
+      final session = Supabase.instance.client.auth.currentSession;
+      if (session != null && session.user != null) {
+        final now = DateTime.now().millisecondsSinceEpoch / 1000;
+        if (session.expiresAt != null && session.expiresAt! > now) {
+          try {
+            final profile = await Supabase.instance.client
+                .from('profiles')
+                .select('role')
+                .eq('id', session.user!.id)
+                .maybeSingle();
+
+            if (profile != null && profile['role'] != 'admin') {
+              _currentUser = session.user;
+              await _saveLoginState(true);
+            } else {
+              await logout();
+            }
+          } catch (e) {
+            await _createUserProfile(session.user);
+            _currentUser = session.user;
+            await _saveLoginState(true);
+          }
+        } else {
+          await logout();
+        }
+      } else {
+        _currentUser = null;
+        await _saveLoginState(false);
+      }
+
+      _isInitialized = true;
+      _setLoading(false);
+    } catch (e) {
+      _isInitialized = true;
+      _setLoading(false);
+      print('Error checking auth state: $e');
+    }
+  }
+  Future<void> _saveLoginState(bool isLoggedIn) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', isLoggedIn);
+  }
+
+  Future<bool> isFirstLaunch() async {
+    final prefs = await SharedPreferences.getInstance();
+    final isFirst = prefs.getBool('isFirstLaunch') ?? true;
+    if (isFirst) {
+      await prefs.setBool('isFirstLaunch', false);
+    }
+    return isFirst;
+  }
+  Future<void> _createUserProfile(User user) async {
+    await Supabase.instance.client
+        .from('profiles')
+        .insert({
+      'id': user.id,
+      'role': 'user',
+      'email': user.email,
+    });
+  }
+  @override
   Future<bool> login(String email, String password) async {
     try {
       _setLoading(true);
@@ -55,11 +172,27 @@ class AuthViewModel extends BaseViewModel {
       final result = await _loginUseCase(email, password);
 
       if (result.isSuccess && result.user != null) {
-        _currentUser = result.user;
-        final profile = await _authRepository.getProfile(result.user!.id);
-        _currentProfile = profile;
-        _setLoading(false);
-        return true;
+        final profile = await Supabase.instance.client
+            .from('profiles')
+            .select('role')
+            .eq('id', result.user!.id)
+            .maybeSingle();
+
+        if (profile == null) {
+          await _createUserProfile(result.user!);
+        }
+
+        if (profile == null || profile['role'] != 'admin') {
+          _currentUser = result.user;
+          await _saveLoginState(true);
+          _setLoading(false);
+          return true;
+        } else {
+          await logout();
+          _setLoading(false);
+          _setError("Admin vui lòng đăng nhập ở trang quản trị.");
+          return false;
+        }
       } else {
         _setLoading(false);
         _setError(result.errorMessage ?? AppStrings.loginFailed);
@@ -71,6 +204,7 @@ class AuthViewModel extends BaseViewModel {
       return false;
     }
   }
+
   Future<bool> register(String email, String password) async {
     try {
       _setLoading(true);
@@ -78,8 +212,17 @@ class AuthViewModel extends BaseViewModel {
 
       final result = await _registerUseCase(email, password);
 
-      if (result.isSuccess) {
+      if (result.isSuccess && result.user != null) {
+        await Supabase.instance.client
+            .from('profiles')
+            .insert({
+          'id': result.user!.id,
+          'role': 'user',
+          'email': result.user!.email,
+        });
+
         _currentUser = result.user;
+        await _saveLoginState(true);
         _setLoading(false);
         return true;
       } else {
@@ -93,6 +236,7 @@ class AuthViewModel extends BaseViewModel {
       return false;
     }
   }
+
   Future<void> logout() async {
     try {
       final result = await _logoutUseCase();
@@ -115,6 +259,7 @@ class AuthViewModel extends BaseViewModel {
 
       if (result.isSuccess) {
         _setLoading(false);
+        startOtpCountdown();
         return true;
       } else {
         _setLoading(false);
@@ -169,6 +314,8 @@ class AuthViewModel extends BaseViewModel {
       return false;
     }
   }
+
+
   void _setLoading(bool loading) {
     _isLoading = loading;
     notifyListeners();
@@ -177,12 +324,10 @@ class AuthViewModel extends BaseViewModel {
     _errorMessage = error;
     notifyListeners();
   }
-
   void _clearError() {
     _errorMessage = null;
     notifyListeners();
   }
-
   void clearError() {
     _clearError();
   }

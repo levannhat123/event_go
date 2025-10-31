@@ -179,7 +179,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                         buttonText: "Okay",
                                         icon: Icons.check_circle,
                                         iconColor: Colors.green,
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          context.go(RouterPath.login);
+                                        },
                                       );
                                     } else {
                                       await showCustomDialog(
