@@ -18,13 +18,17 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final PageController _pageController = PageController();
+  PageController? _pageController;
   int _currentIndex = 0;
   Timer? _timer;
+
   @override
   void initState() {
     super.initState();
-    _startAutoSlide();
+    _pageController = PageController();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _startAutoSlide();
+    });
   }
 
   void _startAutoSlide() {
@@ -34,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
       } else {
         _currentIndex = 0;
       }
-      _pageController.animateToPage(
+      _pageController?.animateToPage(
         _currentIndex,
         duration: Duration(milliseconds: 500),
         curve: Curves.easeInOut,
@@ -54,9 +58,14 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Text('EventGo'),
         backgroundColor: Color(0xFF596DC3),
-        actions: [IconButton(onPressed: () {
-          context.push(RouterPath.search);
-        }, icon: Icon(Icons.search))],
+        actions: [
+          IconButton(
+            onPressed: () {
+              context.push(RouterPath.search);
+            },
+            icon: Icon(Icons.search),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(

@@ -11,4 +11,6 @@ class AppSvg {
   static const String order = '${baseUrl}order$type';
   static const String settings = '${baseUrl}settings$type';
   static const String user = '${baseUrl}user$type';
+  static const String zalopay = '${baseUrl}zalopay$type';
+  static const String vnpay = '${baseUrl}vnpay$type';
 }

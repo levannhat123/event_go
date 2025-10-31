@@ -11,6 +11,9 @@ class RouterPath {
   static const String user = '/user';
   static const String event_detail = '/event_detail';
   static const String search = '/search';
+  static const String booking = '/booking';
+  static const String payment = '/payment';
+
 
 
 }
@@ -39,4 +42,6 @@ class RouterName {
   static const String language = 'language';
   static const String assetFee = 'asset-fee';
   static const String event_detail = 'event_detail';
+  static const String booking = 'booking';
+  static const String payment = 'payment';
 }
