@@ -55,6 +55,10 @@ dependencies:
   flutter_dash: ^1.0.0
   sliding_up_panel: ^2.0.0+1
   marquee: ^2.3.0
+  http:
+  sprintf:
+  crypto:
+  flutter_zalopay_sdk:
 
 dev_dependencies:
   flutter_test:

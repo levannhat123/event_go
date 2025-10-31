@@ -18,8 +18,8 @@ void main() {
     await Supabase.initialize(
       url: SupabaseConfig.url,
       anonKey: SupabaseConfig.anonKey,
-    );
 
+    );
     final appRouter = AppRouter(AuthChangeNotifier());
 
     SystemChrome.setSystemUIOverlayStyle(
