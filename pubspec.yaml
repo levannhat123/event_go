@@ -60,6 +60,7 @@ dependencies:
   crypto:
   flutter_zalopay_sdk:
   shared_preferences: ^2.5.3
+  dio: ^5.9.0
 
 dev_dependencies:
   flutter_test:

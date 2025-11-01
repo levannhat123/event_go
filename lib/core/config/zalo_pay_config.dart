@@ -1,6 +1,6 @@
 import 'dart:convert';
-
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart'; // THÊM MỚI
+import 'package:event_go/data/models/payment/endpoints.dart';
 import 'package:sprintf/sprintf.dart';
 
 import '../../data/models/payment/create_order_response.dart';
@@ -14,9 +14,9 @@ class ZaloPayConfig {
   static const String appUser = "zalopaydemo";
   static int transIdDefault = 1;
 }
+
 Future<CreateOrderResponse?> createOrder(int price) async {
-  var header = new Map<String, String>();
-  header["Content-Type"] = "application/x-www-form-urlencoded";
+  final Dio dio = Dio();
 
   var body = new Map<String, String>();
   body["app_id"] = ZaloPayConfig.appId;
@@ -36,24 +36,40 @@ Future<CreateOrderResponse?> createOrder(int price) async {
     body["amount"],
     body["app_time"],
     body["embed_data"],
-    body["item"]
+    body["item"],
   ]);
   body["mac"] = utils.getMacCreateOrder(dataGetMac);
   print("mac: ${body["mac"]}");
 
-  http.Response response = await http.post(
-    Uri.parse("https://sb-openapi.zalopay.vn/v2/create"),
-    headers: header,
-    body: body,
-  );
-
   print("body_request: $body");
-  if (response.statusCode != 200) {
+
+  try {
+    Response response = await dio.post(
+      Endpoints.createOrderUrl,
+      data: body, // Dio dùng 'data' thay vì 'body'
+      options: Options(
+        // Dio tự động mã hóa body thành form-urlencoded khi bạn set contentType
+        contentType: Headers.formUrlEncodedContentType,
+      ),
+    );
+
+    // 4. Dio tự động giải mã JSON, không cần jsonDecode
+    // response.data đã là một Map<String, dynamic>
+    var data = response.data;
+    print("data_response: $data}");
+
+    return CreateOrderResponse.fromJson(data);
+  } on DioException catch (e) {
+    // 5. Dio ném lỗi cho các mã trạng thái không phải 2xx
+    // Thay thế cho việc kiểm tra 'response.statusCode != 200'
+    print("DioError: ${e.message}");
+    if (e.response != null) {
+      print("DioError response: ${e.response?.data}");
+    }
+    return null;
+  } catch (e) {
+    // Bắt các lỗi khác
+    print("Unexpected error: $e");
     return null;
   }
-
-  var data = jsonDecode(response.body);
-  print("data_response: $data}");
-
-  return CreateOrderResponse.fromJson(data);
 }

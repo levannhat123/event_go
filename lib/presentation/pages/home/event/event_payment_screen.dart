@@ -1,116 +1,140 @@
+import 'package:event_go/core/base/base_view.dart';
 import 'package:event_go/core/constants/app_colors.dart';
 import 'package:event_go/core/constants/app_svg.dart';
 import 'package:event_go/core/widgets/app_elevated_button.dart';
-import 'package:event_go/presentation/pages/home/home_screen.dart';
+import 'package:event_go/injection/injection.dart';
+import 'package:event_go/presentation/view_models/home_view_model.dart';
 import 'package:event_go/routers/router_name.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_zalopay_sdk/flutter_zalopay_sdk.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class EventPaymentScreen extends StatefulWidget {
   String token;
-   EventPaymentScreen({super.key, required this.token});
+  EventPaymentScreen({super.key, required this.token});
 
   @override
   State<EventPaymentScreen> createState() => _EventPaymentScreenState();
 }
 
 class _EventPaymentScreenState extends State<EventPaymentScreen> {
-  String _selectedPaymentMethod = 'vnpay';
-
-
-  late Timer _timer;
-  Duration _timeRemaining = const Duration(minutes: 11, seconds: 38);
-
-  @override
-  void initState() {
-    super.initState();
-
-
-    print('Token payment: ${widget.token}');
-    // Bắt đầu bộ đếm lùi
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_timeRemaining.inSeconds == 0) {
-        timer.cancel();
-        context.pop();
-      } else {
-        setState(() {
-          _timeRemaining = _timeRemaining - const Duration(seconds: 1);
-        });
-      }
-    });
-  }
-
   @override
   void dispose() {
-    _timer.cancel();
+    getIt<HomeViewModel>().disposePaymentTimer();
     super.dispose();
   }
 
-  String _formatDuration(Duration d) {
-    String twoDigits(int n) => n.toString().padLeft(2, '0');
-    String minutes = twoDigits(d.inMinutes.remainder(60));
-    String seconds = twoDigits(d.inSeconds.remainder(60));
-    return "$minutes : $seconds";
+  void _handlePayment(HomeViewModel vmReader) async {
+    final event = await vmReader.handlePayment();
+    if (vmReader.selectedPaymentMethod == 'vnpay' &&
+        event == FlutterZaloPayStatus.failed) {
+      _showPaymentMessage("Tính năng VNPay đang được phát triển", false);
+      return;
+    }
+  }
+
+  void _showPaymentMessage(String message, bool isSuccess) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(
+              isSuccess ? Icons.check_circle : Icons.error,
+              color: isSuccess ? Colors.green : Colors.red,
+            ),
+            const SizedBox(width: 8),
+            Text(message, style: const TextStyle(color: Colors.white)),
+          ],
+        ),
+        backgroundColor: isSuccess
+            ? Colors.green.shade700
+            : Colors.red.shade700,
+        duration: const Duration(seconds: 3),
+      ),
+    );
+  }
+
+  void _navigateToHome() {
+    if (!mounted) return;
+
+    Future.delayed(const Duration(seconds: 2), () {
+      if (!mounted) return;
+
+      while (context.canPop()) {
+        context.pop();
+      }
+      context.go(RouterPath.home);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     const Color cardColor = Color(0xFF2C2C2E);
     const Color backgroundColor = Color(0xFF121212);
-
-    return Scaffold(
-      backgroundColor: backgroundColor,
-      appBar: _buildAppBar(),
-      body: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(color: Colors.red),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.timer, color: Colors.white, size: 20),
-                const SizedBox(width: 8),
-                Text(
-                  "Thời gian giữ vé còn lại: ${_formatDuration(_timeRemaining)}",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
+    return BaseView<HomeViewModel>(
+      viewModelBuilder: () => getIt<HomeViewModel>(),
+      padding: false,
+      autoDispose: false,
+      onModelReady: (viewModel) {
+        viewModel.initPaymentScreen(widget.token, context);
+      },
+      builder: (context, viewModel, child) {
+        final vmReader = context.read<HomeViewModel>();
+        return Scaffold(
+          backgroundColor: backgroundColor,
+          appBar: _buildAppBar(),
+          body: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(color: Colors.red),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.timer, color: Colors.white, size: 20),
+                    const SizedBox(width: 8),
+                    Text(
+                      "Thời gian giữ vé còn lại: ${viewModel.formattedTimeRemaining}",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              _buildEventInfoCard(),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildSectionHeader("Thông tin nhận vé"),
+                      const SizedBox(height: 12),
+                      _buildRecipientInfoCard(cardColor),
+                      const SizedBox(height: 24),
+                      _buildSectionHeader("Phương thức thanh toán"),
+                      const SizedBox(height: 12),
+                      _buildPaymentMethodCard(cardColor, viewModel, vmReader),
+                      const SizedBox(height: 24),
+                      _buildSectionHeader("Thông tin đặt vé"),
+                      const SizedBox(height: 12),
+                      _buildOrderInfoCard(Colors.white),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ),
-          _buildEventInfoCard(),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildSectionHeader("Thông tin nhận vé"),
-                  const SizedBox(height: 12),
-                  _buildRecipientInfoCard(cardColor),
-                  const SizedBox(height: 24),
-                  _buildSectionHeader("Phương thức thanh toán"),
-                  const SizedBox(height: 12),
-                  _buildPaymentMethodCard(cardColor),
-                  const SizedBox(height: 24),
-                  _buildSectionHeader("Thông tin đặt vé"),
-                  const SizedBox(height: 12),
-                  _buildOrderInfoCard(Colors.white),
-                ],
               ),
-            ),
+            ],
           ),
-        ],
-      ),
-      bottomNavigationBar: _buildStickyFooter(context),
+          bottomNavigationBar: _buildStickyFooter(context, vmReader),
+        );
+      },
     );
   }
 
@@ -126,9 +150,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
   Widget _buildEventInfoCard() {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1A1A1A),
-      ),
+      decoration: BoxDecoration(color: const Color(0xFF1A1A1A)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -212,7 +234,11 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
     );
   }
 
-  Widget _buildPaymentMethodCard(Color cardColor) {
+  Widget _buildPaymentMethodCard(
+    Color cardColor,
+    HomeViewModel viewModel,
+    HomeViewModel vmReader,
+  ) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
@@ -224,21 +250,17 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
           _buildPaymentOptionRow(
             value: 'zalopay',
             title: 'Zalopay',
-            icon: SvgPicture.asset(
-              AppSvg.zalopay,
-              width: 20,
-              height: 20,
-            ), // Placeholder
+            icon: SvgPicture.asset(AppSvg.zalopay, width: 20, height: 20),
+            viewModel: viewModel,
+            vmReader: vmReader,
           ),
           Divider(color: Colors.grey[40], height: 0),
           _buildPaymentOptionRow(
             value: 'vnpay',
             title: 'VNPAY',
-            icon: SvgPicture.asset(
-              AppSvg.vnpay,
-              width: 20,
-              height: 20,
-            ), // Placeholder
+            icon: SvgPicture.asset(AppSvg.vnpay, width: 20, height: 20),
+            viewModel: viewModel,
+            vmReader: vmReader,
           ),
         ],
       ),
@@ -249,12 +271,12 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
     required String value,
     required String title,
     required Widget icon,
+    required HomeViewModel viewModel,
+    required HomeViewModel vmReader,
   }) {
     return InkWell(
       onTap: () {
-        setState(() {
-          _selectedPaymentMethod = value;
-        });
+        vmReader.selectPaymentMethod(value);
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -274,11 +296,10 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
             ),
             Radio<String>(
               value: value,
-              groupValue: _selectedPaymentMethod,
+              // ĐỌC STATE TỪ VIEWMODEL
+              groupValue: viewModel.selectedPaymentMethod,
               onChanged: (String? newValue) {
-                setState(() {
-                  _selectedPaymentMethod = newValue!;
-                });
+                vmReader.selectPaymentMethod(newValue!);
               },
               activeColor: Colors.green,
             ),
@@ -326,7 +347,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
               const Expanded(
                 flex: 3,
                 child: Text(
-                  "NHÀ NHEM",
+                  "NHÀ NHEM", // TODO: Nên đọc từ VM
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w500,
@@ -336,7 +357,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
               Expanded(
                 flex: 1,
                 child: Text(
-                  "01",
+                  "01", // TODO: Nên đọc từ VM
                   textAlign: TextAlign.end,
                   style: const TextStyle(color: Colors.black),
                 ),
@@ -350,14 +371,14 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
               const Expanded(
                 flex: 3,
                 child: Text(
-                  "250.000 đ",
+                  "250.000 đ", // TODO: Nên đọc từ VM
                   style: TextStyle(color: Colors.black, fontSize: 12),
                 ),
               ),
               Expanded(
                 flex: 1,
                 child: Text(
-                  "250.000 đ",
+                  "250.000 đ", // TODO: Nên đọc từ VM
                   textAlign: TextAlign.end,
                   style: const TextStyle(color: Colors.black, fontSize: 12),
                 ),
@@ -383,7 +404,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
               Expanded(
                 flex: 1,
                 child: Text(
-                  "250.000 đ",
+                  "250.000 đ", // TODO: Nên đọc từ VM
                   textAlign: TextAlign.end,
                   style: const TextStyle(color: Colors.black),
                 ),
@@ -409,7 +430,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
               Expanded(
                 flex: 1,
                 child: Text(
-                  "250.000 đ",
+                  "250.000 đ", // TODO: Nên đọc từ VM
                   textAlign: TextAlign.end,
                   style: const TextStyle(
                     color: Colors.green,
@@ -425,7 +446,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
     );
   }
 
-  Widget _buildStickyFooter(BuildContext context) {
+  Widget _buildStickyFooter(BuildContext context, HomeViewModel vmReader) {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return Container(
@@ -450,7 +471,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
               ),
               SizedBox(height: 4),
               Text(
-                "250.000 đ",
+                "250.000 đ", // TODO: Nên đọc từ VM
                 style: TextStyle(
                   color: Colors.green,
                   fontSize: 18,
@@ -461,7 +482,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
           ),
           AppElevatedButton(
             onPressed: () {
-              _handlePayment();
+              _handlePayment(vmReader);
             },
             text: 'Thanh toán',
             height: 40,
@@ -478,76 +499,4 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
       ),
     );
   }
-
-  void _handlePayment() {
-    if (_selectedPaymentMethod == 'zalopay') {
-      _processZaloPayPayment();
-    } else if (_selectedPaymentMethod == 'vnpay') {
-      _processVNPayPayment();
-    }
-  }
-
-  void _processZaloPayPayment() {
-    FlutterZaloPaySdk.payOrder(zpToken: widget.token).then((event) {
-      setState(() {
-        switch (event) {
-          case FlutterZaloPayStatus.cancelled:
-            _showPaymentMessage("Thanh toán đã bị hủy", false);
-            break;
-          case FlutterZaloPayStatus.success:
-            _showPaymentMessage("Thanh toán thành công!", true);
-            _navigateToHome();
-            break;
-          case FlutterZaloPayStatus.failed:
-            _showPaymentMessage("Thanh toán thất bại", false);
-            break;
-          default:
-            _showPaymentMessage("Thanh toán thất bại", false);
-            break;
-        }
-      });
-    });
-  }
-
-  void _processVNPayPayment() {
-    // Add VNPay payment logic here
-    _showPaymentMessage("Tính năng VNPay đang được phát triển", false);
-  }
-
-  void _showPaymentMessage(String message, bool isSuccess) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            Icon(
-              isSuccess ? Icons.check_circle : Icons.error,
-              color: isSuccess ? Colors.green : Colors.red,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              message,
-              style: const TextStyle(color: Colors.white),
-            ),
-          ],
-        ),
-        backgroundColor: isSuccess ? Colors.green.shade700 : Colors.red.shade700,
-        duration: const Duration(seconds: 3),
-      ),
-    );
-  }
-
-  void _navigateToHome() {
-    if (!mounted) return;
-
-    Future.delayed(const Duration(seconds: 2), () {
-      if (!mounted) return;
-
-      // Clear stack và navigate đến home
-      while (context.canPop()) {
-        context.pop();
-      }
-      context.go(RouterPath.home);
-    });
-  }
-
 }
