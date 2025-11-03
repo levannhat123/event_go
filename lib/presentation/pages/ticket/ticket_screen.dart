@@ -43,13 +43,12 @@ class _TicketScreenState extends State<TicketScreen> with TickerProviderStateMix
           CustomTabBar(controller: _tabController, tabs: tabs),
           Expanded(
             child: TabBarView(
-              physics: const NeverScrollableScrollPhysics(),
               controller: _tabController,
               children: [
-                TicketOrderScreen(),
-                TicketOrderScreen(),
-                TicketOrderScreen(),
-                TicketOrderScreen(),
+                TicketOrderScreen(statusFilter: null),
+                TicketOrderScreen(statusFilter: 'completed'),
+                TicketOrderScreen(statusFilter: 'failed'),
+                TicketOrderScreen(statusFilter: 'cancelled'),
               ],
             ),
           ),
@@ -58,3 +57,4 @@ class _TicketScreenState extends State<TicketScreen> with TickerProviderStateMix
     );
   }
 }
+

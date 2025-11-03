@@ -1,6 +1,8 @@
 import 'package:event_go/core/base/base_view.dart';
 import 'package:event_go/core/constants/app_colors.dart';
+import 'package:event_go/core/utils/format_price.dart';
 import 'package:event_go/core/widgets/app_elevated_button.dart';
+import 'package:event_go/data/models/event/event_detail_model.dart';
 import 'package:event_go/injection/injection.dart';
 import 'package:event_go/presentation/pages/home/event/widget/ticket_data.dart';
 import 'package:event_go/presentation/pages/home/event/widget/ticket_expansion_item.dart';
@@ -14,7 +16,8 @@ import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class EventBookingScreen extends StatefulWidget {
-  const EventBookingScreen({super.key});
+  final EventDetailModel event;
+  EventBookingScreen({super.key, required this.event});
 
   @override
   State<EventBookingScreen> createState() => _EventBookingScreenState();
@@ -29,6 +32,7 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
       autoDispose: false,
       onModelReady: (viewModel) {
         viewModel.initBooking();
+        viewModel.event = widget.event;
       },
       builder: (context, viewModel, child) {
         final vmReader = context.read<HomeViewModel>();
@@ -61,18 +65,19 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
             ),
             body: ListView.builder(
               padding: const EdgeInsets.only(
-                  left: 10, right: 10, top: 20, bottom: 150),
-              itemCount: viewModel.ticketList.length,
+                left: 10,
+                right: 10,
+                top: 20,
+                bottom: 150,
+              ),
+              itemCount: widget.event.ticketType!.length,
               itemBuilder: (context, index) {
-                final ticket = viewModel.ticketList[index];
+                final ticket = widget.event.ticketType![index];
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 10),
                   child: ChangeNotifierProvider.value(
                     value: viewModel,
-                    child: TicketExpansionItem(
-                      ticket: ticket,
-                      index: index,
-                    ),
+                    child: TicketExpansionItem(ticket: ticket, index: index),
                   ),
                 );
               },
@@ -86,16 +91,17 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
   }
 
   Widget _buildCollapsedPanel(
-      BuildContext context,
-      HomeViewModel vm,
-      HomeViewModel vmReader,
-      ) {
+    BuildContext context,
+    HomeViewModel vm,
+    HomeViewModel vmReader,
+  ) {
     final bool hasTickets = vm.hasTickets;
     final String buttonText = hasTickets
         ? 'Thanh toán ${vm.currencyFormat.format(vm.grandTotal)}'
         : 'Vui lòng chọn vé';
-    final Color buttonColor =
-    hasTickets ? Colors.green : const Color(0xFFDEE0E4);
+    final Color buttonColor = hasTickets
+        ? AppColors.green
+        : const Color(0xFFDEE0E4);
     final Color textColor = hasTickets ? Colors.white : AppColors.grey;
 
     return GestureDetector(
@@ -114,16 +120,16 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
           children: [
             const Icon(Icons.keyboard_arrow_up, color: Colors.grey),
             const SizedBox(height: 4),
-            const Text(
-              "Y-CONCERT BY YEAH1",
+            Text(
+              widget.event.title,
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
                 fontSize: 14,
               ),
             ),
-            const Text(
-              "14:00, 20 Tháng 12, 2025",
+            Text(
+              FormatPrice.formatDateTime(widget.event.startTime.toString()),
               style: TextStyle(color: Colors.grey, fontSize: 12),
             ),
             const SizedBox(height: 8),
@@ -150,7 +156,10 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
                   context.pop();
 
                   if (token != null) {
-                    context.push(RouterPath.payment, extra: token);
+                    context.push(RouterPath.payment,  extra: {
+                      'token': token,
+                      'event': widget.event,
+                    },);
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text(vmReader.zpTransToken)),
@@ -174,16 +183,17 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
   }
 
   Widget _buildPriceListPanel(
-      BuildContext context,
-      HomeViewModel vm,
-      HomeViewModel vmReader,
-      ) {
+    BuildContext context,
+    HomeViewModel vm,
+    HomeViewModel vmReader,
+  ) {
     final bool hasTickets = vm.hasTickets;
     final String buttonText = hasTickets
         ? 'Thanh toán ${vm.currencyFormat.format(vm.grandTotal)}'
         : 'Vui lòng chọn vé';
-    final Color buttonColor =
-    hasTickets ? Colors.green : const Color(0xFFDEE0E4);
+    final Color buttonColor = hasTickets
+        ? AppColors.green
+        : const Color(0xFFDEE0E4);
     final Color textColor = hasTickets ? Colors.white : AppColors.grey;
 
     return Container(
@@ -202,8 +212,8 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          const Text(
-            "Y-CONCERT BY YEAH1 Y-CONCERT BY YEAH1 Y-CONCERT BY YEAH1 Y-CONCERT BY YEAH1",
+          Text(
+            widget.event.title,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
@@ -214,10 +224,10 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
           ),
           const SizedBox(height: 10),
           const Divider(color: Color(0xFF27272E), thickness: 3),
-          const ListTile(
-            leading: Icon(Icons.location_on, color: Colors.green, size: 20),
+          ListTile(
+            leading: Icon(Icons.location_on, color: AppColors.green, size: 20),
             title: Text(
-              "VINHOMES OCEAN PARK 3",
+              widget.event.venue ?? '',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 12,
@@ -226,10 +236,10 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
             ),
             contentPadding: EdgeInsets.zero,
           ),
-          const ListTile(
-            leading: Icon(Icons.calendar_today, color: Colors.green, size: 20),
+          ListTile(
+            leading: Icon(Icons.calendar_today, color: AppColors.green, size: 20),
             title: Text(
-              "14:00 - 23:59, 20 Tháng 12, 2025",
+              FormatPrice.formatDateTime(widget.event.startTime.toString()),
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 12,
@@ -241,18 +251,18 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
           const Divider(color: Color(0xFF27272E), thickness: 3),
           Expanded(
             child: ListView.builder(
-              itemCount: vm.ticketList.length,
+              itemCount: widget.event.ticketType!.length,
               itemBuilder: (context, index) {
-                final zone = vm.ticketList[index];
+                final ticket = widget.event.ticketType![index];
                 return ListTile(
                   title: Text(
-                    zone.title,
+                    ticket.name,
                     style: const TextStyle(color: Colors.white),
                   ),
                   trailing: Text(
-                    "${zone.price}",
+                    "${FormatPrice.format(double.tryParse(ticket.price.toString()) ?? 0)}",
                     style: const TextStyle(
-                      color: Colors.greenAccent,
+                      color: AppColors.green,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

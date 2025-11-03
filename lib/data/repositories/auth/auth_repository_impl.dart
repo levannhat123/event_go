@@ -1,5 +1,5 @@
 
-import 'package:event_go/data/repositories/auth_repository.dart';
+import 'package:event_go/data/repositories/auth/auth_repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthRepositoryImpl implements AuthRepository {

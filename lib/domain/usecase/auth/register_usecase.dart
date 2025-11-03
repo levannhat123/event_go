@@ -1,6 +1,6 @@
 
 
-import 'package:event_go/data/repositories/auth_repository.dart';
+import 'package:event_go/data/repositories/auth/auth_repository.dart';
 import 'package:event_go/domain/entities/auth_result.dart';
 import 'package:event_go/domain/utils/auth_error_handler.dart';
 

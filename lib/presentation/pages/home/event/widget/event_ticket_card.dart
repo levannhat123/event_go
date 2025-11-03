@@ -1,3 +1,4 @@
+import 'package:event_go/core/utils/format_price.dart';
 import 'package:event_go/presentation/pages/home/event/widget/jagged_edge_clipper.dart';
 import 'package:event_go/presentation/pages/home/event/widget/ticket_clipper.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +46,7 @@ class EventTicketCard extends StatelessWidget {
           topLeft: Radius.circular(12),
           topRight: Radius.circular(12),
         ),
-        child: Image.asset(
+        child: Image.network(
           imagePath,
           fit: BoxFit.cover,
           height: imageHeight,
@@ -106,7 +107,7 @@ class EventTicketCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                primaryText,
+                FormatPrice.formatDate(primaryText),
                 style: TextStyle(color: iconColor, fontSize: 12, fontWeight: FontWeight.bold),
               ),
               if (secondaryText != null) ...[

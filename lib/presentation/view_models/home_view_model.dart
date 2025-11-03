@@ -1,20 +1,31 @@
 import 'dart:async';
 import 'dart:math';
+import 'dart:convert';
+import 'package:dio/dio.dart';
+import 'package:http/http.dart' as http;
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_go/core/base/base_view_model.dart';
 import 'package:event_go/core/config/zalo_pay_config.dart';
 import 'package:event_go/core/constants/app_image.dart';
-import 'package:event_go/presentation/pages/home/event/event_booking_screen.dart';
-import 'package:event_go/presentation/pages/home/event/widget/ticket_data.dart';
+import 'package:event_go/data/models/event/event_detail_model.dart';
+import 'package:event_go/data/models/event/ticket_type_model.dart';
+import 'package:event_go/domain/usecase/event/watch_all_events_usecase.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_zalopay_sdk/flutter_zalopay_sdk.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 enum CaptchaResult { success, fail, lockedOut }
 
-
 class HomeViewModel extends BaseViewModel {
+  final WatchAllEventsUsecase watchAllEventsUsecase;
+  HomeViewModel(this.watchAllEventsUsecase);
+  final String _emailJSServiceID = 'service_ylcyotg';
+  final String _emailJSTemplateID = 'template_w5qexdc';
+  final String _emailJSPublicKey = 'eU0EwYJSkgAxSxz3K';
+
   int _currentIndex = 0;
   int get currentIndex => _currentIndex;
 
@@ -47,7 +58,6 @@ class HomeViewModel extends BaseViewModel {
           duration: const Duration(milliseconds: 500),
           curve: Curves.easeInOut,
         );
-        // Cập nhật state sau khi animation chạy
         onPageChanged(nextIndex);
       }
     });
@@ -79,7 +89,7 @@ class HomeViewModel extends BaseViewModel {
         _selectedDateText = DateFormat('dd/MM/yyyy').format(selectedDay);
       } else if (rangeStart != null && rangeEnd != null) {
         _selectedDateText =
-            '${DateFormat('dd/MM').format(rangeStart)} - ${DateFormat('dd/MM').format(rangeEnd)}';
+        '${DateFormat('dd/MM').format(rangeStart)} - ${DateFormat('dd/MM').format(rangeEnd)}';
       }
     }
     notifyListeners();
@@ -205,13 +215,9 @@ class HomeViewModel extends BaseViewModel {
   String _selectedLocation = 'Toàn quốc';
   bool _isFree = false;
   final Set<String> _selectedCategories = {};
-
-  // Getters
   String get selectedLocation => _selectedLocation;
   bool get isFree => _isFree;
   Set<String> get selectedCategories => _selectedCategories;
-
-  // Data
   final List<String> filterLocations = [
     'Toàn quốc',
     'Hồ Chí Minh',
@@ -226,7 +232,6 @@ class HomeViewModel extends BaseViewModel {
     'Khác',
   ];
 
-  // Logic
   void initFilter() {
     _selectedLocation = 'Toàn quốc';
     _isFree = false;
@@ -270,21 +275,11 @@ class HomeViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  // Data
   final List<String> _captchaImages = [
     AppImage.logo,
     AppImage.banner_1,
     AppImage.banner_2,
   ];
-  final String eventFullText = '''
-Với không gian được đầu tư hệ thống ánh sáng - âm thanh đẳng cấp quốc tế với sức chứa lên đến 350 người, cùng quầy bar phục vụ cocktail pha chế độc đáo bởi bartender chuyên nghiệp.
-
-Mùa cuối năm, liệu bạn đã sẵn sàng để tâm hồn đắm mình trong giai điệu, để trái tim tan chảy bởi giọng hát cảm xúc của Hương Tràm vào 20g00 - 9/11/2025 (Chủ nhật) tại Cat&Mouse?
-
-Với những ca khúc quen thuộc đạt hàng trăm triệu lượt xem như “Duyên mình lỡ”, “Em gái mưa”, “Cho em gần anh thêm chút nữa”… kết hợp với hệ thống âm thanh Adamson chuẩn quốc tế của Cat&Mouse sẽ tạo nên một đêm diễn sâu lắng và khó quên dành cho bạn.
-''';
-
-  // Getters
   bool get isExpanded => _isExpanded;
   String? get captchaErrorText => _captchaErrorText;
   bool get isLockedOut =>
@@ -294,7 +289,6 @@ Với những ca khúc quen thuộc đạt hàng trăm triệu lượt xem như 
     return _lockoutEndTime!.difference(DateTime.now()).inSeconds + 1;
   }
 
-  // Methods
   String getRandomCaptchaImage() {
     final random = Random();
     return _captchaImages[random.nextInt(_captchaImages.length)];
@@ -334,94 +328,54 @@ Với những ca khúc quen thuộc đạt hàng trăm triệu lượt xem như 
         return CaptchaResult.lockedOut;
       } else {
         _captchaErrorText =
-            'Xác minh không đúng! (Thử lại: $_captchaFailCount/5)';
+        'Xác minh không đúng! (Thử lại: $_captchaFailCount/5)';
         notifyListeners();
         return CaptchaResult.fail;
       }
     }
   }
 
-  final List<TicketData> ticketList = [
-    TicketData(
-      title: 'Ga-Vé Thường',
-      price: '299.000đ',
-      priceValue: 299000,
-      description:
-          'Vé bao gồm: \n- Vé vào cổng sự kiện\n- Quà tặng từ ban tổ chức\n- Voucher ưu đãi từ các đối tác',
-      titleColor: Colors.green,
-    ),
-    TicketData(
-      title: 'Ga-Vé VIP',
-      price: '599.000đ',
-      priceValue: 599000,
-      description:
-          'Vé bao gồm: \n- Vé vào cổng sự kiện\n- Quà tặng VIP\n- Lối đi riêng\n- Voucher ưu đãi từ các đối tác',
-      titleColor: Colors.orange,
-    ),
-    TicketData(
-      title: 'Ga-Vé VVIP',
-      price: '999.000đ',
-      priceValue: 999000,
-      description:
-          'Vé bao gồm: \n- Vé vào cổng sự kiện\n- Quà tặng VVIP\n- Lối đi riêng\n- Gặp gỡ nghệ sĩ\n- Voucher ưu đãi từ các đối tác',
-      titleColor: Colors.purpleAccent,
-    ),
-    TicketData(
-      title: 'Vé Sinh Viên',
-      price: '199.000đ',
-      priceValue: 199000,
-      description:
-          'Vé bao gồm: \n- Vé vào cổng sự kiện\n- (Yêu cầu xuất trình thẻ sinh viên)',
-      titleColor: Colors.blueAccent,
-    ),
-  ];
   final PanelController panelController = PanelController();
-
-  // State chính: Map<index_của_vé, số_lượng>
   final Map<int, int> _ticketQuantities = {};
-
-  // State cho ZaloPay
   String _zpTransToken = "";
-
-  // Utility
   final NumberFormat _currencyFormat = NumberFormat.currency(
     locale: 'vi_VN',
     symbol: 'đ',
   );
   void initBooking() {
     _ticketQuantities.clear();
-    // Không cần notifyListeners() vì đây là hàm init
   }
 
-  // --- Getters cho Booking ---
   String get zpTransToken => _zpTransToken;
   NumberFormat get currencyFormat => _currencyFormat;
-
-  // Lấy số lượng của 1 loại vé
   int getQuantity(int index) {
     return _ticketQuantities[index] ?? 0;
   }
 
-  // Lấy tổng tiền của toàn bộ đơn hàng
   double get grandTotal {
     double total = 0;
+    if (event == null) {
+      return 0;
+    }
+    final List<TicketTypeModel>? tickets = event!.ticketType;
+    if (tickets == null) {
+      return 0;
+    }
     _ticketQuantities.forEach((index, quantity) {
-      if (index < ticketList.length) {
-        total += ticketList[index].priceValue * quantity;
+      if (index < tickets.length) {
+        final ticketPrice = tickets[index].price ?? 0;
+        total += ticketPrice * quantity;
       }
     });
+
     return total;
   }
 
   bool get hasTickets => grandTotal > 0;
-
-  // --- Actions cho Booking ---
-
-  // Cập nhật số lượng và thông báo cho UI
   void _updateQuantity(int index, int newQuantity) {
     if (newQuantity < 0) return;
     _ticketQuantities[index] = newQuantity;
-    notifyListeners(); // Đây là mấu chốt, thay thế cho setState()
+    notifyListeners();
   }
 
   void incrementTicket(int index) {
@@ -438,24 +392,19 @@ Với những ca khúc quen thuộc đạt hàng trăm triệu lượt xem như 
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
-  // Logic nghiệp vụ: Tạo đơn hàng ZaloPay
   Future<String?> createPaymentOrder() async {
-    setLoading(true); // Dùng hàm từ BaseViewModel
-
+    setLoading(true);
     int amount = grandTotal.toInt();
     if (amount < 1000 || amount > 1000000) {
       _zpTransToken = "Invalid Amount";
       setLoading(false);
       return null;
     }
-
     try {
       var result = await createOrder(amount);
-
       if (result != null) {
         _zpTransToken = result.zptranstoken;
         setLoading(false);
-        print("zpTransToken $_zpTransToken'.");
         return _zpTransToken;
       } else {
         setLoading(false);
@@ -474,12 +423,9 @@ Với những ca khúc quen thuộc đạt hàng trăm triệu lượt xem như 
   }
 
   Timer? _paymentTimer;
-  Duration _timeRemaining = const Duration(minutes: 11, seconds: 38);
-  String _selectedPaymentMethod = 'vnpay'; // Giá trị mặc định
+  Duration _timeRemaining = const Duration(minutes: 1, seconds: 38);
+  String _selectedPaymentMethod = 'zalopay';
   String _paymentToken = "";
-
-  // --- Getters cho Payment ---
-
   String get formattedTimeRemaining {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
     String minutes = twoDigits(_timeRemaining.inMinutes.remainder(60));
@@ -489,39 +435,28 @@ Với những ca khúc quen thuộc đạt hàng trăm triệu lượt xem như 
 
   String get selectedPaymentMethod => _selectedPaymentMethod;
 
-  // --- Actions cho Payment ---
-
-  /// Khởi tạo state cho màn hình thanh toán, bao gồm cả việc bắt đầu timer.
-  void initPaymentScreen(String token, BuildContext context) {
+  void initPaymentScreen(String token, BuildContext context,
+      {VoidCallback? onTimerExpired}) {
     _paymentToken = token;
-    print('Token payment (from VM): $_paymentToken');
-
-    // Reset timer về giá trị ban đầu
-    _timeRemaining = const Duration(minutes: 11, seconds: 38);
-    _paymentTimer?.cancel(); // Hủy bất kỳ timer cũ nào đang chạy
-
-    // Bắt đầu timer mới
+    _timeRemaining = const Duration(minutes: 1, seconds: 38);
+    _paymentTimer?.cancel();
     _paymentTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_timeRemaining.inSeconds == 0) {
         timer.cancel();
-        // Tự động pop khi hết giờ (giữ nguyên logic gốc của bạn)
-        if (context.mounted) {
-          context.pop();
-        }
+        initBooking();
+        notifyListeners();
+        onTimerExpired?.call();
       } else {
         _timeRemaining = _timeRemaining - const Duration(seconds: 1);
-        notifyListeners(); // Cập nhật UI mỗi giây
+        notifyListeners();
       }
     });
   }
 
-  /// Phải được gọi từ dispose() của EventPaymentScreen để dừng timer.
   void disposePaymentTimer() {
     _paymentTimer?.cancel();
-    print("Payment timer disposed");
   }
 
-  /// Cập nhật phương thức thanh toán được chọn
   void selectPaymentMethod(String method) {
     if (_selectedPaymentMethod != method) {
       _selectedPaymentMethod = method;
@@ -529,32 +464,225 @@ Với những ca khúc quen thuộc đạt hàng trăm triệu lượt xem như 
     }
   }
 
-  /// Xử lý logic thanh toán và trả về kết quả.
   Future<FlutterZaloPayStatus> handlePayment() async {
+    clearError();
+    FlutterZaloPayStatus status;
     if (_selectedPaymentMethod == 'zalopay') {
-      return await _processZaloPayPayment();
-    } else if (_selectedPaymentMethod == 'vnpay') {
-      return await _processVNPayPayment();
+      status = await _processZaloPayPayment();
+    } else {
+      status = FlutterZaloPayStatus.failed;
     }
-    return FlutterZaloPayStatus.failed;
+
+    String? orderId;
+    if (status == FlutterZaloPayStatus.success) {
+      orderId = await saveOrderToFirebase('completed');
+      if (orderId != null) {
+        final email = userEmail;
+        if (event != null && email != null && email.contains('@')) {
+          sendOrderEmailWithQR(orderId, email, event!.title)
+              .catchError((e) {
+          });
+        } else {
+          print(
+              'Không gửi email: Email không hợp lệ hoặc người dùng không đăng nhập ($email)');
+        }
+        initBooking();
+        notifyListeners();
+      }
+    } else if (status == FlutterZaloPayStatus.failed) {
+      await saveOrderToFirebase('failed');
+    } else if (status == FlutterZaloPayStatus.cancelled) {
+      await saveOrderToFirebase('cancelled');
+    }
+
+    return status;
   }
 
   Future<FlutterZaloPayStatus> _processZaloPayPayment() async {
-    // Dùng token đã lưu để thanh toán
     final event = await FlutterZaloPaySdk.payOrder(zpToken: _paymentToken);
     return event;
   }
 
-  Future<FlutterZaloPayStatus> _processVNPayPayment() async {
-    // Logic placeholder
-    // Trả về 'failed' để logic ở View có thể bắt và hiển thị thông báo "đang phát triển"
-    return FlutterZaloPayStatus.failed;
+  List<EventDetailModel> _events = [];
+  EventDetailModel? event;
+  List<EventDetailModel> get events => _events;
+  StreamSubscription<List<EventDetailModel>>? _subscription;
+  List<EventDetailModel> _hotEvents = [];
+  List<EventDetailModel> get hotEvents => _hotEvents;
+  Map<String, List<EventDetailModel>> _eventsByCategory = {};
+  Map<String, List<EventDetailModel>> get eventsByCategory => _eventsByCategory;
+
+  void watchAll() {
+    _subscription?.cancel();
+    setBusy(true);
+    clearError();
+    try {
+      _subscription = watchAllEventsUsecase.call().listen(
+            (list) {
+          _events = list;
+          _hotEvents = list.where((event) => event.isHot == true).toList();
+          final allCategories = groupBy(
+            list,
+                (EventDetailModel e) => e.categories?.name ?? 'Khác',
+          );
+          const desiredCategories = [
+            'Nhạc sống',
+            'Thể thao',
+            'Sân khấu nghệ thuật',
+            'Khác',
+          ];
+          _eventsByCategory = Map.fromEntries(
+            allCategories.entries.where(
+                  (entry) => desiredCategories.contains(entry.key),
+            ),
+          );
+          setBusy(false);
+          Future.microtask(() {
+            notifyListeners();
+          });
+        },
+        onError: (err) {
+          setError('Failed to watch events: ${err.toString()}');
+          setBusy(false);
+        },
+      );
+    } catch (e) {
+      setError('Failed to start watching events: ${e.toString()}');
+      setBusy(false);
+    }
+  }
+
+  String? get userEmail {
+    final user = Supabase.instance.client.auth.currentUser;
+    return user?.email;
+  }
+
+  FirebaseFirestore get _db => FirebaseFirestore.instance;
+
+  String? get _userId => Supabase.instance.client.auth.currentUser?.id;
+  Future<String?> saveOrderToFirebase(String paymentStatus) async {
+    if (event == null) {
+      setError("Sự kiện không tồn tại.");
+      return null;
+    }
+    if (_userId == null) {
+      setError("Người dùng không tồn tại.");
+      return null;
+    }
+    final allTicketTypes = event!.ticketType;
+    if (allTicketTypes == null) {
+      setError("Loại vé không tồn tại.");
+      return null;
+    }
+    final List<Map<String, dynamic>> purchasedTickets = [];
+    _ticketQuantities.forEach((index, quantity) {
+      if (quantity > 0 && index < allTicketTypes.length) {
+        final ticket = allTicketTypes[index];
+        purchasedTickets.add({
+          'name': ticket.name,
+          'price': ticket.price ?? 0,
+          'quantity': quantity,
+        });
+      }
+    });
+
+    if (purchasedTickets.isEmpty && paymentStatus == 'completed') {
+      setError("Không có vé nào được chọn.");
+      return null;
+    }
+    final orderData = {
+      'userId': _userId,
+      'userEmail': userEmail ?? 'Không có email',
+      'eventId': event!.id,
+      'eventName': event!.title,
+      'venue': event!.venue ?? '',
+      'tickets': purchasedTickets,
+      'totalAmount': grandTotal,
+      'paymentMethod': selectedPaymentMethod,
+      'paymentStatus': paymentStatus,
+      'createdAt': FieldValue.serverTimestamp(),
+    };
+    try {
+      final docRef = await _db
+          .collection('users')
+          .doc(_userId)
+          .collection('orders')
+          .add(orderData);
+      return docRef.id;
+    } catch (e) {
+      setError("Lỗi lưu đơn hàng: ${e.toString()}. Vui lòng liên hệ hỗ trợ.");
+      return null;
+    }
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>>? get ordersStream {
+    if (_userId == null) {
+      print("Không thể lấy order stream: UserID is null.");
+      return null;
+    }
+    try {
+      return _db
+          .collection('users')
+          .doc(_userId)
+          .collection('orders')
+          .orderBy('createdAt', descending: true)
+          .snapshots();
+    } catch (e) {
+      print("Lỗi khi lấy orders stream: $e");
+      return null;
+    }
+  }
+
+  Future<void> sendOrderEmailWithQR(
+      String orderId, String userEmail, String eventName) async {
+    final dio = Dio();
+    try {
+      final String qrCodeData = orderId;
+      final String qrCodeUrl =
+          'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=$qrCodeData';
+
+      final templateParams = {
+        'email': userEmail,
+        'order_id': orderId,
+        'event_name': eventName,
+        'qr_code_url': qrCodeUrl,
+      };
+      final url = 'https://api.emailjs.com/api/v1.0/email/send';
+      final data = {
+        'service_id': _emailJSServiceID,
+        'template_id': _emailJSTemplateID,
+        'user_id': _emailJSPublicKey,
+        'template_params': templateParams,
+      };
+      final response = await dio.post(
+        url,
+        data: data,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'origin': 'http://localhost'
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        print('Gửi email xác nhận đơn hàng thành công.');
+      } else {
+        print(
+            'Gửi email thất bại. Status: ${response.statusCode}, Body: ${response.data}');
+      }
+    } on DioException catch (e) {
+      print('Lỗi khi gửi email (DioException): ${e.response?.data ?? e.message}');
+    } catch (e) {
+      print('Lỗi khi gửi email (unknown): $e');
+    }
   }
 
   @override
   void dispose() {
-    _timer?.cancel(); // Dọn dẹp timer slideshow
-    searchController.dispose(); // Dọn dẹp controller search
+    _timer?.cancel();
+    searchController.dispose();
     super.dispose();
   }
 }
+

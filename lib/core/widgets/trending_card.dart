@@ -46,7 +46,7 @@ class RankedEventCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12.0),
                 color: Colors.grey[800],
               ),
-              child: Image.asset(
+              child: Image.network(
                 imageUrl,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {

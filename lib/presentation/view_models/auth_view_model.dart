@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:event_go/core/base/base_view_model.dart';
 import 'package:event_go/core/constants/app_strings.dart';
-import 'package:event_go/data/repositories/auth_repository.dart';
+import 'package:event_go/data/repositories/auth/auth_repository.dart';
 import 'package:event_go/domain/usecase/auth/login_usecase.dart';
 import 'package:event_go/domain/usecase/auth/logout_usecase.dart';
 import 'package:event_go/domain/usecase/auth/register_usecase.dart';
@@ -247,6 +247,11 @@ class AuthViewModel extends BaseViewModel {
     } catch (e) {
       _setError(AppStrings.logoutError);
     }
+  }
+
+  String get userEmail {
+    final user = Supabase.instance.client.auth.currentUser;
+    return user?.email ?? 'Không tìm thấy email';
   }
 
   Future<bool> resetPassword(String email) async {

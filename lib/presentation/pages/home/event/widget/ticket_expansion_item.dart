@@ -1,9 +1,11 @@
+import 'package:event_go/core/utils/format_price.dart';
 import 'package:event_go/presentation/pages/home/event/widget/ticket_data.dart';
 import 'package:event_go/presentation/view_models/home_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../../core/constants/app_colors.dart';
+import '../../../../../data/models/event/ticket_type_model.dart';
 
 class TicketExpansionItem extends StatelessWidget {
   const TicketExpansionItem({
@@ -12,7 +14,7 @@ class TicketExpansionItem extends StatelessWidget {
     required this.index,
   });
 
-  final TicketData ticket;
+  final TicketTypeModel ticket;
   final int index;
 
 
@@ -42,15 +44,15 @@ class TicketExpansionItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      ticket.title,
+                      ticket.name,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 12,
-                        color: ticket.titleColor,
+                        color: AppColors.green,
                       ),
                     ),
                     Text(
-                      ticket.price,
+                      FormatPrice.format(double.tryParse(ticket.price.toString()) ?? 0),
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 12,
@@ -69,7 +71,7 @@ class TicketExpansionItem extends StatelessWidget {
             childrenPadding: const EdgeInsets.all(12),
             children: [
               Text(
-                ticket.description,
+                ticket.description??'',
                 style: TextStyle(color: Colors.grey[400], fontSize: 12),
               ),
             ],

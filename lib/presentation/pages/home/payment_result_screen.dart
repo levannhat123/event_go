@@ -86,7 +86,7 @@ class PaymentResultScreen extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                   context.go(RouterPath.home);
+                   context.go(RouterPath.ticket);
                 },
                 child: const Text(
                   "Về trang chủ",

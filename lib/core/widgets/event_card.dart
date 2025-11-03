@@ -1,4 +1,5 @@
 import 'package:event_go/core/constants/app_colors.dart';
+import 'package:event_go/core/utils/format_price.dart';
 import 'package:flutter/material.dart';
 
 // Widget Card có thể tái sử dụng
@@ -33,20 +34,13 @@ class EventCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.background,
           borderRadius: BorderRadius.circular(12.0),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
-              child: Image.asset(
+              child: Image.network(
                 imageUrl,
                 height: height,
                 width: double.infinity,
@@ -66,22 +60,27 @@ class EventCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Tiêu đề
-                  Text(
-                    title,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                  SizedBox(
+                    height: 45,
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        title,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 8),
 
                   // Giá vé
                   Text(
-                    price,
+                    "Từ ${FormatPrice.format(double.tryParse(price) ?? 0)}",
                     style: const TextStyle(
                       color: Color(0xFF23D288),
                       fontSize: 14,
@@ -93,7 +92,7 @@ class EventCard extends StatelessWidget {
                     children: [
                       const Icon(Icons.calendar_today_outlined, color: Colors.white70, size: 14),
                       const SizedBox(width: 6),
-                      Text(date, style: const TextStyle(color: Colors.white70, fontSize: 12)),
+                      Text(FormatPrice.formatDate(date), style: const TextStyle(color: Colors.white70, fontSize: 12)),
                     ],
                   ),
                 ],
