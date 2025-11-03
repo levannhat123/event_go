@@ -21,13 +21,11 @@ ProfileModel _$ProfileModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ProfileModel {
-  String get id =>
-      throw _privateConstructorUsedError; // luôn có vì auth.users.id
-  String? get fullName =>
-      throw _privateConstructorUsedError; // có thể null lúc mới tạo
-  String? get avatarUrl => throw _privateConstructorUsedError; // có thể null
-  String? get phone => throw _privateConstructorUsedError; // có thể null
-  DateTime? get createdAt => throw _privateConstructorUsedError; // auto từ DB
+  String get id => throw _privateConstructorUsedError;
+  String? get fullName => throw _privateConstructorUsedError;
+  String? get avatarUrl => throw _privateConstructorUsedError;
+  String? get phone => throw _privateConstructorUsedError;
+  DateTime? get createdAt => throw _privateConstructorUsedError;
   String? get email => throw _privateConstructorUsedError;
 
   /// Serializes this ProfileModel to a JSON map.
@@ -199,19 +197,14 @@ class _$ProfileModelImpl implements _ProfileModel {
 
   @override
   final String id;
-  // luôn có vì auth.users.id
   @override
   final String? fullName;
-  // có thể null lúc mới tạo
   @override
   final String? avatarUrl;
-  // có thể null
   @override
   final String? phone;
-  // có thể null
   @override
   final DateTime? createdAt;
-  // auto từ DB
   @override
   final String? email;
 
@@ -276,15 +269,15 @@ abstract class _ProfileModel implements ProfileModel {
       _$ProfileModelImpl.fromJson;
 
   @override
-  String get id; // luôn có vì auth.users.id
+  String get id;
   @override
-  String? get fullName; // có thể null lúc mới tạo
+  String? get fullName;
   @override
-  String? get avatarUrl; // có thể null
+  String? get avatarUrl;
   @override
-  String? get phone; // có thể null
+  String? get phone;
   @override
-  DateTime? get createdAt; // auto từ DB
+  DateTime? get createdAt;
   @override
   String? get email;
 

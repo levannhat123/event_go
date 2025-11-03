@@ -1,6 +1,12 @@
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
+import 'package:event_go/core/base/base_view.dart';
 import 'package:event_go/core/constants/app_colors.dart';
+import 'package:event_go/injection/injection.dart';
+import 'package:event_go/presentation/view_models/auth_view_model.dart';
+import 'package:event_go/presentation/view_models/home_view_model.dart';
+import 'package:event_go/routers/router_name.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class UserScreen extends StatefulWidget {
   const UserScreen({super.key});
@@ -15,69 +21,91 @@ class _UserScreenState extends State<UserScreen> {
   Widget build(BuildContext context) {
     const Color itemBackgroundColor = Color(0xFF2C2C2C);
     const Color secondaryTextColor = Color(0xFF8A8A8A);
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _buildHeader(),
-            const SizedBox(height: 100),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildSettingsGroup(
-                    icon: Icons.person_outline,
-                    title: 'Cài đặt tài khoản',
-                    backgroundColor: itemBackgroundColor,
+
+    // Bọc bằng BaseView để lấy HomeViewModel
+    return BaseView<AuthViewModel>(
+      viewModelBuilder: () => getIt<AuthViewModel>(),
+      autoDispose: false, // ViewModel này là singleton
+      builder: (context, viewModel, child) {
+        return Scaffold(
+          backgroundColor: AppColors.background,
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                _buildHeader(viewModel),
+                const SizedBox(height: 100),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildSettingsItem(title: 'Thông tin tài khoản', onTap: () {}),
-                      _buildSettingsItem(title: 'Đổi mã PIN', onTap: () {}, showDivider: false),
+                      _buildSettingsGroup(
+                        icon: Icons.person_outline,
+                        title: 'Cài đặt tài khoản',
+                        backgroundColor: itemBackgroundColor,
+                        children: [
+                          _buildSettingsItem(
+                              title: 'Thông tin tài khoản', onTap: () {}),
+                          _buildSettingsItem(
+                              title: 'Đổi mã PIN',
+                              onTap: () {},
+                              showDivider: false),
+                        ],
+                      ),
+                      const SizedBox(height: 40),
+                      _buildSettingsGroup(
+                        icon: Icons.settings_outlined,
+                        title: 'Cài đặt ứng dụng',
+                        backgroundColor: itemBackgroundColor,
+                        children: [_buildLanguageItem(onTap: () {})],
+                      ),
+                      const SizedBox(height: 40),
+                      _buildSingleSettingsItem(
+                        icon: Icons.public,
+                        title: 'Trung tâm trợ giúp',
+                        backgroundColor: itemBackgroundColor,
+                        onTap: () {},
+                      ),
+                      const SizedBox(height: 8),
+                      // Nút Đăng xuất
+                      _buildSingleSettingsItem(
+                        icon: Icons.logout,
+                        title: 'Đăng xuất',
+                        backgroundColor: itemBackgroundColor,
+                        onTap: () async {
+                          // Gọi hàm signOut từ ViewModel
+                          await viewModel.logout();
+                          if (mounted) {
+                            context.go(RouterPath.login);
+                          }
+                        },
+                      ),
                     ],
                   ),
-                  const SizedBox(height: 40),
-                  _buildSettingsGroup(
-                    icon: Icons.settings_outlined,
-                    title: 'Cài đặt ứng dụng',
-                    backgroundColor: itemBackgroundColor,
-                    children: [_buildLanguageItem(onTap: () {})],
-                  ),
-                  const SizedBox(height: 40),
-                  _buildSingleSettingsItem(
-                    icon: Icons.public,
-                    title: 'Trung tâm trợ giúp',
-                    backgroundColor: itemBackgroundColor,
-                    onTap: () {},
-                  ),
-                  const SizedBox(height: 8),
-                  _buildSingleSettingsItem(
-                    icon: Icons.logout,
-                    title: 'Đăng xuất',
-                    backgroundColor: itemBackgroundColor,
-                    onTap: () {},
-                  ),
-                ],
-              ),
+                ),
+                const SizedBox(height: 40),
+                const Text(
+                  'Phiên bản 3.1.13(30284)',
+                  style: TextStyle(color: secondaryTextColor, fontSize: 12),
+                ),
+                const SizedBox(height: 20),
+              ],
             ),
-            const SizedBox(height: 40),
-            const Text(
-              'Phiên bản 3.1.13(30284)',
-              style: TextStyle(color: secondaryTextColor, fontSize: 12),
-            ),
-            const SizedBox(height: 20),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildHeader() {
+  // Sửa lại để nhận ViewModel
+  Widget _buildHeader(AuthViewModel viewModel) {
     return Stack(
       clipBehavior: Clip.none,
       alignment: Alignment.center,
       children: [
-        Container(height: 150, decoration: const BoxDecoration(color: Color(0xFF596DC3))),
+        Container(
+            height: 150,
+            decoration: const BoxDecoration(color: Color(0xFF596DC3))),
         Positioned(
           bottom: -70,
           child: Column(
@@ -94,9 +122,13 @@ class _UserScreenState extends State<UserScreen> {
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'Nhật Lê Văn',
-                style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+              // Lấy email từ ViewModel
+              Text(
+                viewModel.userEmail,
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -153,12 +185,18 @@ class _UserScreenState extends State<UserScreen> {
       onTap: onTap,
       child: Container(
         height: 50,
+        padding: const EdgeInsets.symmetric(horizontal: 16), // Thêm padding
+        decoration: BoxDecoration( // Thêm decoration
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(12),
+        ),
         child: Row(
           children: [
             Icon(icon, color: Colors.white, size: 22),
             const SizedBox(width: 12),
             Expanded(
-              child: Text(title, style: const TextStyle(color: Colors.white, fontSize: 16)),
+              child:
+              Text(title, style: const TextStyle(color: Colors.white, fontSize: 16)),
             ),
             const Icon(Icons.chevron_right, color: Colors.white70),
           ],
@@ -181,14 +219,16 @@ class _UserScreenState extends State<UserScreen> {
             child: Row(
               children: [
                 Expanded(
-                  child: Text(title, style: const TextStyle(color: Colors.white, fontSize: 16)),
+                  child: Text(title,
+                      style: const TextStyle(color: Colors.white, fontSize: 16)),
                 ),
                 const Icon(Icons.chevron_right, color: Colors.white70),
               ],
             ),
           ),
           if (showDivider)
-            Divider(color: Colors.grey.shade700, height: 1, indent: 16, endIndent: 16),
+            Divider(
+                color: Colors.grey.shade700, height: 1, indent: 16, endIndent: 16),
         ],
       ),
     );
@@ -202,7 +242,8 @@ class _UserScreenState extends State<UserScreen> {
         child: Row(
           children: [
             const Expanded(
-              child: Text('Thay đổi ngôn ngữ', style: TextStyle(color: Colors.white, fontSize: 16)),
+              child: Text('Thay đổi ngôn ngữ',
+                  style: TextStyle(color: Colors.white, fontSize: 16)),
             ),
             AnimatedToggleSwitch<bool>.size(
               current: isDarkMode,
@@ -215,7 +256,8 @@ class _UserScreenState extends State<UserScreen> {
                 style: TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.bold,
-                  color: Color.lerp(Colors.black, Colors.white, local.animationValue),
+                  color: Color.lerp(
+                      Colors.black, Colors.white, local.animationValue),
                 ),
               ),
               style: ToggleStyle(

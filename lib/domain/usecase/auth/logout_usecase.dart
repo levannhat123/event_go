@@ -1,6 +1,6 @@
 
 import 'package:event_go/core/constants/app_strings.dart';
-import 'package:event_go/data/repositories/auth_repository.dart';
+import 'package:event_go/data/repositories/auth/auth_repository.dart';
 import 'package:event_go/domain/entities/auth_result.dart';
 
 class LogoutUseCase {

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:event_go/core/base/base_view.dart';
+import 'package:event_go/data/models/event/event_detail_model.dart';
 import 'package:event_go/injection/injection.dart'; // Import getIt
 import 'package:event_go/core/constants/app_colors.dart';
 import 'package:event_go/core/constants/app_image.dart';
@@ -42,9 +43,11 @@ class _HomeScreenState extends State<HomeScreen> {
       viewModelBuilder: () => getIt<HomeViewModel>(),
       onModelReady: (viewModel) {
         viewModel.startAutoSlide(_pageController!);
+        viewModel.watchAll();
       },
       builder: (context, viewModel, child) {
         return Scaffold(
+          backgroundColor: AppColors.background,
           appBar: AppBar(
             title: Text('EventGo'),
             backgroundColor: Color(0xFF596DC3),
@@ -76,26 +79,25 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         SizedBox(height: 20),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: SingleChildScrollView(
+                        SizedBox(
+                          height: 140,
+                          child: ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: [
-                                RankedEventCard(
-                                  imageUrl: AppImage.banner_1,
-                                  rank: 1,
+                            itemCount: viewModel.hotEvents.length,
+                            itemBuilder: (context, index) {
+                              final EventDetailModel event = viewModel.hotEvents[index];
+                              final String imageUrl = event.bannerURL ?? AppImage.banner_2;
+                              return Padding(
+                                padding: EdgeInsets.only(right: 10),
+                                child: RankedEventCard(
+                                  imageUrl: imageUrl,
+                                  rank: index + 1,
+                                  onTap: () {
+                                    context.push(RouterPath.event_detail,extra: event);
+                                  },
                                 ),
-                                RankedEventCard(
-                                  imageUrl: AppImage.banner_2,
-                                  rank: 2,
-                                ),
-                                RankedEventCard(
-                                  imageUrl: AppImage.banner_3,
-                                  rank: 3,
-                                ),
-                              ],
-                            ),
+                              );
+                            },
                           ),
                         ),
                         SizedBox(height: 20),
@@ -106,261 +108,96 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         SizedBox(height: 20),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: [
-                              EventCard(
-                                imageUrl: AppImage.banner_1,
-                                title:
-                                    "LULULOLA SHOW TĂNG PHÚC | MONG MANH NỖI ĐAU",
-                                price: 'Từ 570.000đ',
-                                date: '13 tháng 12, 2025',
+                        SizedBox(
+                          height: 300,
+                          child: ListView.separated(
+                            separatorBuilder: (context, index) => SizedBox(width: 10),
+                            scrollDirection: Axis.horizontal,
+                            itemCount: viewModel.events.length,
+                            itemBuilder: (context, index) {
+                              final EventDetailModel event = viewModel.events[index];
+                              final String imageUrl = event.bannerURL ?? AppImage.banner_2;
+                              return EventCard(
+                                imageUrl: imageUrl,
+                                title:event.title,
+                                price: event.minTicketPrice.toString(),
+                                date: event.startTime.toString(),
                                 onTap: () {
-                                  context.push(RouterPath.event_detail);
+                                  context.push(RouterPath.event_detail,extra: event);
                                 },
-                              ),
-                              SizedBox(width: 10),
-                              EventCard(
-                                imageUrl: AppImage.banner_2,
-                                title:
-                                    "LULULOLA SHOW TĂNG PHÚC | MONG MANH NỖI ĐAU",
-                                price: 'Từ 570.000đ',
-                                date: '13 tháng 12, 2025',
-                              ),
-                              SizedBox(width: 10),
-                              EventCard(
-                                imageUrl: AppImage.banner_3,
-                                title:
-                                    "LULULOLA SHOW TĂNG PHÚC | MONG MANH NỖI ĐAU",
-                                price: 'Từ 570.000đ',
-                                date: '13 tháng 12, 2025',
-                              ),
-                            ],
+                              );
+                            },
                           ),
                         ),
-                        SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Nhạc sống',
-                              style: AppTextStyles.title2.copyWith(
-                                fontWeight: FontWeight.w700,
+                        ...viewModel.eventsByCategory.entries.map((entry) {
+                          final categoryName = entry.key;
+                          final events = entry.value;
+
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    categoryName,
+                                    style: AppTextStyles.title2.copyWith(
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          'Xem thêm',
+                                          style: TextStyle(color: AppColors.grey),
+                                        ),
+                                        SizedBox(width: 5),
+                                        Icon(
+                                          Icons.arrow_forward_ios,
+                                          size: 14,
+                                          color: AppColors.grey,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  'Xem thêm',
-                                  style: TextStyle(color: AppColors.grey),
+                              SizedBox(height: 20),
+                              GridView.builder(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: events.length,
+                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  mainAxisSpacing: 10,
+                                  crossAxisSpacing: 10,
+                                  childAspectRatio: 0.8,
                                 ),
-                                SizedBox(width: 5),
-                                Icon(
-                                  Icons.arrow_forward_ios,
-                                  size: 14,
-                                  color: AppColors.grey,
-                                  weight: 700,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 20),
-                        GridView.count(
-                          crossAxisCount: 2,
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          mainAxisSpacing: 10,
-                          crossAxisSpacing: 10,
-                          childAspectRatio: 0.8,
-                          children: [
-                            EventCard(
-                              height: 100,
-                              width: 200,
-                              imageUrl: AppImage.banner_1,
-                              title:
-                                  "LULULOLA SHOW TĂNG PHÚC | MONG MANH NỖI ĐAU",
-                              price: 'Từ 570.000đ',
-                              date: '13 tháng 12, 2025',
-                            ),
-                            EventCard(
-                              height: 100,
-                              width: 200,
-                              imageUrl: AppImage.banner_2,
-                              title:
-                                  "LULULOLA SHOW TĂNG PHÚC | MONG MANH NỖI ĐAU",
-                              price: 'Từ 570.000đ',
-                              date: '13 tháng 12, 2025',
-                            ),
-                            EventCard(
-                              height: 100,
-                              width: 200,
-                              imageUrl: AppImage.banner_3,
-                              title:
-                                  "LULULOLA SHOW TĂNG PHÚC | MONG MANH NỖI ĐAU",
-                              price: 'Từ 570.000đ',
-                              date: '13 tháng 12, 2025',
-                            ),
-                            EventCard(
-                              height: 100,
-                              width: 200,
-                              imageUrl: AppImage.banner_4,
-                              title:
-                                  "LULULOLA SHOW TĂNG PHÚC | MONG MANH NỖI ĐAU",
-                              price: 'Từ 570.000đ',
-                              date: '13 tháng 12, 2025',
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Sân khấu & Nghệ thuật',
-                              style: AppTextStyles.title2.copyWith(
-                                fontWeight: FontWeight.w700,
+                                itemBuilder: (context, index) {
+                                  final event = events[index];
+                                  return EventCard(
+                                    height: 100,
+                                    width: 200,
+                                    imageUrl: event.bannerURL ?? AppImage.banner_1,
+                                    title: event.title,
+                                    price: event.minTicketPrice != null
+                                        ? event.minTicketPrice.toString()
+                                        : 'Miễn phí',
+                                    date: event.startTime.toString(),
+                                    onTap: () {
+                                      context.push(RouterPath.event_detail,extra: event);
+                                    },
+                                  );
+                                },
                               ),
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  'Xem thêm',
-                                  style: TextStyle(color: AppColors.grey),
-                                ),
-                                SizedBox(width: 5),
-                                Icon(
-                                  Icons.arrow_forward_ios,
-                                  size: 14,
-                                  color: AppColors.grey,
-                                  weight: 700,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 20),
-                        GridView.count(
-                          crossAxisCount: 2,
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          mainAxisSpacing: 10,
-                          crossAxisSpacing: 10,
-                          childAspectRatio: 0.8,
-                          children: [
-                            EventCard(
-                              height: 100,
-                              width: 200,
-                              imageUrl: AppImage.banner_1,
-                              title:
-                                  "LULULOLA SHOW TĂNG PHÚC | MONG MANH NỖI ĐAU",
-                              price: 'Từ 570.000đ',
-                              date: '13 tháng 12, 2025',
-                            ),
-                            EventCard(
-                              height: 100,
-                              width: 200,
-                              imageUrl: AppImage.banner_2,
-                              title:
-                                  "LULULOLA SHOW TĂNG PHÚC | MONG MANH NỖI ĐAU",
-                              price: 'Từ 570.000đ',
-                              date: '13 tháng 12, 2025',
-                            ),
-                            EventCard(
-                              height: 100,
-                              width: 200,
-                              imageUrl: AppImage.banner_3,
-                              title:
-                                  "LULULOLA SHOW TĂNG PHÚC | MONG MANH NỖI ĐAU",
-                              price: 'Từ 570.000đ',
-                              date: '13 tháng 12, 2025',
-                            ),
-                            EventCard(
-                              height: 100,
-                              width: 200,
-                              imageUrl: AppImage.banner_4,
-                              title:
-                                  "LULULOLA SHOW TĂNG PHÚC | MONG MANH NỖI ĐAU",
-                              price: 'Từ 570.000đ',
-                              date: '13 tháng 12, 2025',
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Thể loại khác',
-                              style: AppTextStyles.title2.copyWith(
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  'Xem thêm',
-                                  style: TextStyle(color: AppColors.grey),
-                                ),
-                                SizedBox(width: 5),
-                                Icon(
-                                  Icons.arrow_forward_ios,
-                                  size: 14,
-                                  color: AppColors.grey,
-                                  weight: 700,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 20),
-                        GridView.count(
-                          crossAxisCount: 2,
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          mainAxisSpacing: 10,
-                          crossAxisSpacing: 10,
-                          childAspectRatio: 0.8,
-                          children: [
-                            EventCard(
-                              height: 100,
-                              width: 200,
-                              imageUrl: AppImage.banner_1,
-                              title:
-                                  "LULULOLA SHOW TĂNG PHÚC | MONG MANH NỖI ĐAU",
-                              price: 'Từ 570.000đ',
-                              date: '13 tháng 12, 2025',
-                            ),
-                            EventCard(
-                              height: 100,
-                              width: 200,
-                              imageUrl: AppImage.banner_2,
-                              title:
-                                  "LULULOLA SHOW TĂNG PHÚC | MONG MANH NỖI ĐAU",
-                              price: 'Từ 570.000đ',
-                              date: '13 tháng 12, 2025',
-                            ),
-                            EventCard(
-                              height: 100,
-                              width: 200,
-                              imageUrl: AppImage.banner_3,
-                              title:
-                                  "LULULOLA SHOW TĂNG PHÚC | MONG MANH NỖI ĐAU",
-                              price: 'Từ 570.000đ',
-                              date: '13 tháng 12, 2025',
-                            ),
-                            EventCard(
-                              height: 100,
-                              width: 200,
-                              imageUrl: AppImage.banner_4,
-                              title:
-                                  "LULULOLA SHOW TĂNG PHÚC | MONG MANH NỖI ĐAU",
-                              price: 'Từ 570.000đ',
-                              date: '13 tháng 12, 2025',
-                            ),
-                          ],
-                        ),
+                              SizedBox(height: 30),
+                            ],
+                          );
+                        }).toList(),
                         SizedBox(height: 20),
                         Text(
                           'Chọn địa điểm ',

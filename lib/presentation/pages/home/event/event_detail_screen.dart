@@ -3,8 +3,10 @@ import 'dart:math';
 import 'package:event_go/core/base/base_view.dart';
 import 'package:event_go/core/constants/app_colors.dart';
 import 'package:event_go/core/constants/app_image.dart';
+import 'package:event_go/core/utils/format_price.dart';
 import 'package:event_go/core/widgets/app_elevated_button.dart';
 import 'package:event_go/core/widgets/event_card.dart';
+import 'package:event_go/data/models/event/event_detail_model.dart';
 import 'package:event_go/injection/injection.dart';
 import 'package:event_go/presentation/pages/home/event/widget/event_ticket_card.dart';
 import 'package:event_go/presentation/pages/home/location_card.dart';
@@ -17,23 +19,36 @@ import 'package:provider/provider.dart';
 import 'package:slider_captcha/slider_captcha.dart';
 
 class EventDetailScreen extends StatefulWidget {
-  const EventDetailScreen({Key? key}) : super(key: key);
+  final EventDetailModel event;
+   EventDetailScreen({Key? key, required this.event}) : super(key: key);
 
   @override
   State<EventDetailScreen> createState() => _EventDetailScreenState();
 }
 
 class _EventDetailScreenState extends State<EventDetailScreen> {
+
   @override
   Widget build(BuildContext context) {
-    // 1. Bọc bằng BaseView
     return BaseView<HomeViewModel>(
       viewModelBuilder: () => getIt<HomeViewModel>(),
+      padding: false,
       autoDispose: false, // Vì là Singleton
       onModelReady: (viewModel) {
-        viewModel.initEventDetail(); // 2. Reset state của màn hình này
+        viewModel.initEventDetail();
+        viewModel.watchAll();
       },
       builder: (context, viewModel, child) {
+        final String fullAddress = widget.event.address ?? '';
+        final int lastCommaIndex = fullAddress.lastIndexOf(',');
+        String line1 = '';
+        String line2 = '';
+        if (lastCommaIndex != -1) {
+          line1 = fullAddress.substring(0, lastCommaIndex).trim();
+          line2 = fullAddress.substring(lastCommaIndex + 1).trim();
+        } else {
+          line1 = fullAddress;
+        }
         return Scaffold(
           backgroundColor: Color(0xFFE6EAF5),
           appBar: AppBar(
@@ -52,12 +67,12 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 RichText(
-                  text: const TextSpan(
+                  text:  TextSpan(
                     style: TextStyle(color: Colors.white, fontSize: 16),
                     children: [
-                      TextSpan(text: 'Giá từ '), // Sửa 'Giá từ` '
+                      TextSpan(text: 'Giá từ '),
                       TextSpan(
-                        text: '500.000 đ',
+                        text: FormatPrice.format(double.tryParse(widget.event.minTicketPrice.toString()) ?? 0),
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ],
@@ -66,7 +81,6 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                 AppElevatedButton(
                   text: 'Mua vé ngay',
                   onPressed: () {
-                    // 3. Đọc state từ VM
                     if (viewModel.isLockedOut) {
                       final remainingSeconds =
                           viewModel.lockoutRemainingSeconds;
@@ -88,10 +102,8 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                       builder: (dialogContext) {
                         final SliderController controller = SliderController();
 
-                        // 5. Cung cấp VM cho Dialog
                         return ChangeNotifierProvider.value(
                           value: viewModel,
-                          // 6. Dùng Consumer theo yêu cầu của bạn
                           child: Consumer<HomeViewModel>(
                             builder: (context, vm, _) {
                               return Dialog(
@@ -158,7 +170,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
 
                                           if (result == CaptchaResult.success) {
                                             dialogContext.pop();
-                                            context.push(RouterPath.booking);
+                                            context.push(RouterPath.booking,extra: widget.event);
                                           } else if (result ==
                                               CaptchaResult.lockedOut) {
                                             dialogContext.pop();
@@ -253,8 +265,8 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                   height: MediaQuery.of(context).size.height * 0.6,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    image: const DecorationImage(
-                      image: AssetImage(AppImage.banner_1),
+                    image:  DecorationImage(
+                      image: NetworkImage(widget.event.bannerURL?? AppImage.banner_1),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -269,21 +281,21 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                       Padding(
                         padding: const EdgeInsets.all(20.0),
                         child: EventTicketCard(
-                          imagePath: AppImage.banner_1,
-                          title: 'ART WORKSHOP "SNICKERS MOUSSE STICK"',
-                          date: '17:30 - 19:30, 17 Tháng 10, 2025',
-                          location: 'Garden Art',
+                          imagePath: widget.event.bannerURL ?? AppImage.banner_1,
+                          title: widget.event.title,
+                          date: widget.event.startTime.toString(),
+                          location: widget.event.venue??'',
                           address:
-                              'Lầu 1, 386/17C Lê Văn Sỹ, Phường 14, Quận 3, Thành Phố Hồ Chí Minh',
+                              widget.event.address ?? '',
                         ),
                       ),
                     ],
                   ),
                 ),
                 ImprovedLocationCard(
-                  title: "Làng Marathon: Global City",
-                  line1: "Đường Đỗ Xuân Hợp, Phường An Khánh,",
-                  line2: "Thành Phố Hồ Chí Minh",
+                  title: widget.event.venue??'',
+                  line1: line1,
+                  line2: line2,
                 ),
                 Container(
                   margin: const EdgeInsets.all(12),
@@ -318,7 +330,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                         AnimatedCrossFade(
                           duration: const Duration(milliseconds: 300),
                           firstChild: Text(
-                            viewModel.eventFullText, // 10. Đọc text từ VM
+                            widget.event.description??'',
                             maxLines: 3,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
@@ -328,7 +340,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                             ),
                           ),
                           secondChild: Text(
-                            viewModel.eventFullText, // 10. Đọc text từ VM
+                            widget.event.description??'',
                             style: const TextStyle(
                               fontSize: 15,
                               height: 1.4,
@@ -337,7 +349,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                           ),
                           crossFadeState:
                               viewModel
-                                  .isExpanded // 11. Đọc state từ VM
+                                  .isExpanded
                               ? CrossFadeState.showSecond
                               : CrossFadeState.showFirst,
                         ),
@@ -347,7 +359,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                             icon: AnimatedRotation(
                               turns: viewModel.isExpanded
                                   ? 0.5
-                                  : 0, // 11. Đọc state từ VM
+                                  : 0,
                               duration: const Duration(milliseconds: 300),
                               child: const Icon(
                                 Icons.keyboard_arrow_down,
@@ -356,7 +368,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                             ),
                             onPressed: () {
                               viewModel
-                                  .toggleDescriptionExpanded(); // 12. Gọi VM
+                                  .toggleDescriptionExpanded();
                             },
                           ),
                         ),
@@ -397,16 +409,8 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  '20:00 - 23:00,',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                const Text(
-                                  '09 tháng 11, 2025',
+                                 Text(
+                                   FormatPrice.formatDate(widget.event.startTime.toString()),
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 12,
@@ -418,8 +422,6 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                             AppElevatedButton(
                               text: 'Mua vé ngay',
                               onPressed: () {
-                                // TODO: Bạn có thể gọi lại logic show dialog ở đây
-                                // (Giống hệt nút ở bottomNavigationBar)
                               },
                               height: 40,
                               width: 125,
@@ -437,35 +439,20 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                         ),
                         childrenPadding: const EdgeInsets.all(12),
                         children: [
-                          TicketItemRow(
-                            ticketName: 'Regular Ticket',
-                            price: '755.000 đ',
-                            isSoldOut: false,
-                          ),
-                          const SizedBox(height: 16),
-                          TicketItemRow(
-                            ticketName: 'Combo 1 Regular Ticket + 1...',
-                            price: '1.081.920 đ',
-                            isSoldOut: false,
-                          ),
-                          const SizedBox(height: 16),
-                          TicketItemRow(
-                            ticketName: 'Combo 10 Regular Ticket (-15%)',
-                            price: '641.750 đ',
-                            isSoldOut: true,
-                          ),
-                          const SizedBox(height: 16),
-                          TicketItemRow(
-                            ticketName: 'Combo 4 Regular Ticket (-5%)',
-                            price: '717.250 đ',
-                            isSoldOut: true,
-                          ),
-                          const SizedBox(height: 16),
-                          TicketItemRow(
-                            ticketName: 'Early Bird Ticket',
-                            price: '620.000 đ',
-                            isSoldOut: true,
-                          ),
+                          ListView.separated(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: widget.event.ticketType!.length,
+                            separatorBuilder: (context, index) => const SizedBox(height: 16),
+                            itemBuilder: (context, index) {
+                              final ticket = widget.event.ticketType![index];
+                              return TicketItemRow(
+                                ticketName: ticket.name,
+                                price: ticket.price.toString(),
+                                isSoldOut: false,
+                              );
+                            },
+                          )
                         ],
                       ),
                     ],
@@ -501,8 +488,8 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                           ),
                         ),
                         const Divider(color: Colors.grey),
-                        Image.asset(
-                          AppImage.logo,
+                        Image.network(
+                          widget.event.orgLogoURL ?? AppImage.banner_1,
                           height: 50,
                           errorBuilder: (context, error, stackTrace) =>
                               Container(
@@ -517,7 +504,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                         ),
                         SizedBox(height: 12),
                         Text(
-                          'Công ty TNHH Sự Kiện Và Giải Trí Event Go',
+                          widget.event.orgName ?? '',
                           style: TextStyle(
                             fontSize: 15,
                             color: Colors.black,
@@ -526,7 +513,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                         ),
                         SizedBox(height: 12),
                         Text(
-                          'Event Go là công ty hàng đầu trong lĩnh vực tổ chức sự kiện và giải trí tại Việt Nam, với nhiều năm kinh nghiệm và đội ngũ chuyên nghiệp, chúng tôi cam kết mang đến những trải nghiệm tuyệt vời và đáng nhớ cho khách hàng.',
+                          widget.event.orgDescription ?? '',
                           style: TextStyle(fontSize: 14, color: Colors.black),
                         ),
                       ],
@@ -546,94 +533,41 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                         ),
                       ),
                       SizedBox(height: 25),
-                      GridView.count(
-                        crossAxisCount: 2,
+                      GridView.builder(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
-                        mainAxisSpacing: 10,
-                        crossAxisSpacing: 10,
-                        childAspectRatio: 0.8,
-                        children: [
-                          EventCard(
+                        itemCount: viewModel.events.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 10,
+                          crossAxisSpacing: 10,
+                          childAspectRatio: 0.8,
+                        ),
+                        itemBuilder: (context, index) {
+                          final event = viewModel.events[index];
+                          return EventCard(
                             height: 100,
                             width: 200,
-                            imageUrl: AppImage.banner_1,
-                            title:
-                                "LULULOLA SHOW TĂNG PHÚC | MONG MANH NỖI ĐAU",
-                            price: 'Từ 570.000đ',
-                            date: '13 tháng 12, 2025',
-                          ),
-                          EventCard(
-                            height: 100,
-                            width: 200,
-                            imageUrl: AppImage.banner_2,
-                            title:
-                                "LULULOLA SHOW TĂNG PHÚC | MONG MANH NỖI ĐAU",
-                            price: 'Từ 570.000đ',
-                            date: '13 tháng 12, 2025',
-                          ),
-                          EventCard(
-                            height: 100,
-                            width: 200,
-                            imageUrl: AppImage.banner_3,
-                            title:
-                                "LULULOLA SHOW TĂNG PHÚC | MONG MANH NỖI ĐAU",
-                            price: 'Từ 570.000đ',
-                            date: '13 tháng 12, 2025',
-                          ),
-                          EventCard(
-                            height: 100,
-                            width: 200,
-                            imageUrl: AppImage.banner_4,
-                            title:
-                                "LULULOLA SHOW TĂNG PHÚC | MONG MANH NỖI ĐAU",
-                            price: 'Từ 570.000đ',
-                            date: '13 tháng 12, 2025',
-                          ),
-                          EventCard(
-                            height: 100,
-                            width: 200,
-                            imageUrl: AppImage.banner_1,
-                            title:
-                                "LULULOLA SHOW TĂNG PHÚC | MONG MANH NỖI ĐAU",
-                            price: 'Từ 570.000đ',
-                            date: '13 tháng 12, 2025',
-                          ),
-                          EventCard(
-                            height: 100,
-                            width: 200,
-                            imageUrl: AppImage.banner_2,
-                            title:
-                                "LULULOLA SHOW TĂNG PHÚC | MONG MANH NỖI ĐAU",
-                            price: 'Từ 570.000đ',
-                            date: '13 tháng 12, 2025',
-                          ),
-                          EventCard(
-                            height: 100,
-                            width: 200,
-                            imageUrl: AppImage.banner_3,
-                            title:
-                                "LULULOLA SHOW TĂNG PHÚC | MONG MANH NỖI ĐAU",
-                            price: 'Từ 570.000đ',
-                            date: '13 tháng 12, 2025',
-                          ),
-                          EventCard(
-                            height: 100,
-                            width: 200,
-                            imageUrl: AppImage.banner_4,
-                            title:
-                                "LULULOLA SHOW TĂNG PHÚC | MONG MANH NỖI ĐAU",
-                            price: 'Từ 570.000đ',
-                            date: '13 tháng 12, 2025',
-                          ),
-                        ],
+                            imageUrl: event.bannerURL ?? AppImage.banner_1,
+                            title: event.title,
+                            price: event.minTicketPrice != null
+                                ? event.minTicketPrice.toString()
+                                : 'Miễn phí',
+                            date: event.startTime.toString(),
+                            onTap: () {
+                              context.push(RouterPath.event_detail,extra: event);
+                            },
+                          );
+                        },
                       ),
                       SizedBox(height: 10),
                       Align(
                         alignment: Alignment.center,
                         child: AppElevatedButton(
                           text: 'Xem thêm',
-                          onPressed: () {},
+                          onPressed: () {
+                            context.push(RouterPath.search);
+                          },
                           height: 40,
                           width: 120,
                           textColor: AppColors.white,

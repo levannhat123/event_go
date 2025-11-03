@@ -1,3 +1,4 @@
+import 'package:event_go/data/models/event/event_detail_model.dart';
 import 'package:event_go/presentation/pages/auth/forgot_password_screen.dart';
 import 'package:event_go/presentation/pages/auth/login_screen.dart';
 import 'package:event_go/presentation/pages/auth/new_password_screen.dart';
@@ -71,13 +72,18 @@ class AppRouter {
           ),
           GoRoute(
             path: RouterPath.booking,
-            builder: (context, state) => EventBookingScreen(),
+            builder: (context, state) {
+              final event = state.extra as EventDetailModel;
+              return EventBookingScreen(event: event);
+  },
           ),
           GoRoute(
             path: RouterPath.payment,
             builder: (context, state) {
-              final String token = state.extra as String;
-              return EventPaymentScreen(token: token);
+              final data = state.extra as Map<String, dynamic>;
+              final String token = data['token'];
+              final EventDetailModel event = data['event'];
+              return EventPaymentScreen(token: token, event: event);
             },
           ),
           GoRoute(
@@ -94,7 +100,10 @@ class AppRouter {
           ),
           GoRoute(
             path: RouterPath.event_detail,
-            builder: (context, state) => EventDetailScreen(),
+            builder: (context, state) {
+              final event = state.extra as EventDetailModel;
+              return EventDetailScreen(event: event);
+  } ,
           ),
           ShellRoute(
             routes: [

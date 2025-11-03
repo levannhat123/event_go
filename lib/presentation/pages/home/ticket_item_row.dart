@@ -1,4 +1,5 @@
 import 'package:event_go/core/constants/app_colors.dart';
+import 'package:event_go/core/utils/format_price.dart';
 import 'package:flutter/material.dart';
 
 class TicketItemRow extends StatelessWidget {
@@ -44,7 +45,7 @@ class TicketItemRow extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              price,
+              FormatPrice.format(double.tryParse(price) ?? 0),
               style: TextStyle(
                 color: Colors.grey[600],
                 fontWeight: FontWeight.w600,
@@ -71,7 +72,7 @@ class TicketItemRow extends StatelessWidget {
           ],
         )
             : Text(
-          price,
+          FormatPrice.format(double.tryParse(price) ?? 0),
           style: TextStyle(
             color: AppColors.green,
             fontWeight: FontWeight.bold,

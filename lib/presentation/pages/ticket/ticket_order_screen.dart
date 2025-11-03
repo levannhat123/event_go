@@ -1,60 +1,141 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_go/core/base/base_view.dart';
 import 'package:event_go/core/constants/app_colors.dart';
 import 'package:event_go/core/constants/app_image.dart';
 import 'package:event_go/core/widgets/app_elevated_button.dart';
 import 'package:event_go/core/widgets/event_card.dart';
 import 'package:event_go/core/widgets/order_history_card.dart';
+import 'package:event_go/injection/injection.dart';
+import 'package:event_go/presentation/view_models/home_view_model.dart';
+import 'package:event_go/routers/router_name.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class TicketOrderScreen extends StatefulWidget {
-  const TicketOrderScreen({Key? key}) : super(key: key);
+  final String? statusFilter;
+
+  const TicketOrderScreen({Key? key, this.statusFilter}) : super(key: key);
 
   @override
   State<TicketOrderScreen> createState() => _TicketOrderScreenState();
 }
 
-class _TicketOrderScreenState extends State<TicketOrderScreen> {
+class _TicketOrderScreenState extends State<TicketOrderScreen>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+  Map<String, dynamic> _getStatusDisplay(String? status) {
+    switch (status) {
+      case 'completed':
+        return {'text': 'Thành công', 'color': Colors.green};
+      case 'cancelled':
+        return {'text': 'Đã hủy', 'color': Colors.red};
+      case 'failed':
+        return {'text': 'Thất bại', 'color': Colors.orange};
+      default:
+        return {'text': 'Không xác định', 'color': Colors.grey};
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        child: SingleChildScrollView(
+    super.build(context);
+    return BaseView<HomeViewModel>(
+      viewModelBuilder: () => getIt<HomeViewModel>(),
+      padding: false,
+      autoDispose: false,
+      onModelReady: (viewModel) {
+        viewModel.watchAll();
+      },
+      builder: (context, viewModel, child) {
+        final ordersStream = viewModel.ordersStream;
+        if (ordersStream == null) {
+          return _buildEmptyState(
+            "Vui lòng đăng nhập để xem vé của bạn.",
+            Icons.login,
+          );
+        }
+        return SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              OrderHistoryCard(
-                title: '[Hồ Chí Minh] Xe bus 2 tầng City Sightseeing',
-                statusText: 'Đã hủy',
-                statusColor: Colors.red,
-                orderCode: '5AIT69YD',
-                orderDate: DateTime(2025, 10, 15, 21, 34),
-                amount: 200000,
-                onTap: () {
-                  print('Card Đã hủy được nhấn!');
-                },
-              ),
-              SizedBox(height: 10),
-              OrderHistoryCard(
-                title: '[Đà Nẵng] Vé cáp treo Bà Nà Hills',
-                statusText: 'Thành công',
-                statusColor: Colors.green,
-                orderCode: 'DN2B3C4D',
-                orderDate: DateTime(2025, 10, 14, 10, 05),
-                amount: 850000,
-                onTap: () {
-                  print('Card Thành công được nhấn!');
-                },
-              ),
-              SizedBox(height: 10),
-              OrderHistoryCard(
-                title: '[Hà Nội] Tour ẩm thực phố cổ',
-                statusText: 'Đang xử lý',
-                statusColor: Colors.orange,
-                orderCode: 'HN5F6G7H',
-                orderDate: DateTime.now(),
-                amount: 550000,
-                onTap: () {
-                  print('Card Đang xử lý được nhấn!');
+              StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                stream: ordersStream,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshot.hasError) {
+                    return _buildEmptyState(
+                      "Lỗi khi tải đơn hàng: ${snapshot.error}",
+                      Icons.error,
+                    );
+                  }
+                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                    return _buildEmptyState(
+                      "Bạn chưa có đơn hàng nào.",
+                      Icons.receipt_long,
+                    );
+                  }
+                  final allOrders = snapshot.data!.docs;
+                  final filteredOrders = allOrders.where((doc) {
+                    if (widget.statusFilter == null) {
+                      return true;
+                    }
+                    final data = doc.data();
+                    final status = data['paymentStatus'] as String?;
+                    if (widget.statusFilter == 'failed') {
+                      return status == 'failed';
+                    }
+                    return status == widget.statusFilter;
+                  }).toList();
+                  if (filteredOrders.isEmpty) {
+                    return _buildEmptyState(
+                      "Không có đơn hàng nào trong mục này.",
+                      Icons.inventory_2,
+                    );
+                  }
+                  return ListView(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 10,
+                    ),
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    children: [
+                      ListView.builder(
+                        itemCount: filteredOrders.length,
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          final orderDoc = filteredOrders[index];
+                          final data = orderDoc.data();
+                          final String orderId = orderDoc.id;
+                          final statusInfo = _getStatusDisplay(
+                            data['paymentStatus'] as String?,
+                          );
+                          final orderDate =
+                              (data['createdAt'] as Timestamp?)?.toDate() ??
+                              DateTime.now();
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: OrderHistoryCard(
+                              title:
+                                  data['eventName'] as String? ?? 'Tên sự kiện',
+                              statusText: statusInfo['text'],
+                              statusColor: statusInfo['color'],
+                              orderCode: orderId,
+                              orderDate: orderDate,
+                              amount:
+                                  (data['totalAmount'] as num?)?.toDouble() ??
+                                  0.0,
+                              onTap: () {},
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  );
                 },
               ),
               SizedBox(height: 20),
@@ -67,79 +148,32 @@ class _TicketOrderScreenState extends State<TicketOrderScreen> {
                 ),
               ),
               SizedBox(height: 25),
-              GridView.count(
-                crossAxisCount: 2,
+              GridView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
-                childAspectRatio: 0.8,
-                children: [
-                  EventCard(
+                itemCount: viewModel.events.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 10,
+                  childAspectRatio: 0.8,
+                ),
+                itemBuilder: (context, index) {
+                  final event = viewModel.events[index];
+                  return EventCard(
                     height: 100,
                     width: 200,
-                    imageUrl: AppImage.banner_1,
-                    title: "LULULOLA SHOW TĂNG PHÚC | MONG MANH NỖI ĐAU",
-                    price: 'Từ 570.000đ',
-                    date: '13 tháng 12, 2025',
-                  ),
-                  EventCard(
-                    height: 100,
-                    width: 200,
-                    imageUrl: AppImage.banner_2,
-                    title: "LULULOLA SHOW TĂNG PHÚC | MONG MANH NỖI ĐAU",
-                    price: 'Từ 570.000đ',
-                    date: '13 tháng 12, 2025',
-                  ),
-                  EventCard(
-                    height: 100,
-                    width: 200,
-                    imageUrl: AppImage.banner_3,
-                    title: "LULULOLA SHOW TĂNG PHÚC | MONG MANH NỖI ĐAU",
-                    price: 'Từ 570.000đ',
-                    date: '13 tháng 12, 2025',
-                  ),
-                  EventCard(
-                    height: 100,
-                    width: 200,
-                    imageUrl: AppImage.banner_4,
-                    title: "LULULOLA SHOW TĂNG PHÚC | MONG MANH NỖI ĐAU",
-                    price: 'Từ 570.000đ',
-                    date: '13 tháng 12, 2025',
-                  ),
-                  EventCard(
-                    height: 100,
-                    width: 200,
-                    imageUrl: AppImage.banner_1,
-                    title: "LULULOLA SHOW TĂNG PHÚC | MONG MANH NỖI ĐAU",
-                    price: 'Từ 570.000đ',
-                    date: '13 tháng 12, 2025',
-                  ),
-                  EventCard(
-                    height: 100,
-                    width: 200,
-                    imageUrl: AppImage.banner_2,
-                    title: "LULULOLA SHOW TĂNG PHÚC | MONG MANH NỖI ĐAU",
-                    price: 'Từ 570.000đ',
-                    date: '13 tháng 12, 2025',
-                  ),
-                  EventCard(
-                    height: 100,
-                    width: 200,
-                    imageUrl: AppImage.banner_3,
-                    title: "LULULOLA SHOW TĂNG PHÚC | MONG MANH NỖI ĐAU",
-                    price: 'Từ 570.000đ',
-                    date: '13 tháng 12, 2025',
-                  ),
-                  EventCard(
-                    height: 100,
-                    width: 200,
-                    imageUrl: AppImage.banner_4,
-                    title: "LULULOLA SHOW TĂNG PHÚC | MONG MANH NỖI ĐAU",
-                    price: 'Từ 570.000đ',
-                    date: '13 tháng 12, 2025',
-                  ),
-                ],
+                    imageUrl: event.bannerURL ?? AppImage.banner_1,
+                    title: event.title,
+                    price: event.minTicketPrice != null
+                        ? event.minTicketPrice.toString()
+                        : 'Miễn phí',
+                    date: event.startTime.toString(),
+                    onTap: () {
+                      context.push(RouterPath.event_detail, extra: event);
+                    },
+                  );
+                },
               ),
               SizedBox(height: 10),
               Align(
@@ -160,6 +194,26 @@ class _TicketOrderScreenState extends State<TicketOrderScreen> {
               SizedBox(height: 20),
             ],
           ),
+        );
+      },
+    );
+  }
+
+  Widget _buildEmptyState(String message, IconData icon) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 60, color: Colors.grey),
+            SizedBox(height: 16),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.grey, fontSize: 16),
+            ),
+          ],
         ),
       ),
     );
