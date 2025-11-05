@@ -165,13 +165,16 @@ class FilterBottomSheet extends StatelessWidget {
     return Wrap(
       spacing: 8.0,
       runSpacing: 4.0,
-      children: viewModel.filterCategories.map((category) {
-        final bool isSelected = viewModel.selectedCategories.contains(category);
+      // Sửa: Dùng 'fetchedCategories' (List<CategoryModel>)
+      children: viewModel.fetchedCategories.map((category) {
+        // Sửa: Lấy tên từ 'category.name'
+        final bool isSelected = viewModel.selectedCategories.contains(category.name);
         return FilterChip(
-          label: Text(category),
+          label: Text(category.name),
           selected: isSelected,
           onSelected: (bool selected) {
-            viewModel.toggleCategory(category);
+            // Sửa: Lấy tên từ 'category.name'
+            viewModel.toggleCategory(category.name);
           },
           selectedColor: AppColors.primary.withOpacity(0.4),
           checkmarkColor: AppColors.primary,
@@ -213,6 +216,7 @@ class FilterBottomSheet extends StatelessWidget {
           child: AppElevatedButton(
             text: 'Áp dụng',
             onPressed: () {
+              viewModel.applyFilterSheet();
               context.pop();
             },
             height: 45,

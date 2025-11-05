@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:event_go/data/models/category/category_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_go/core/base/base_view_model.dart';
@@ -14,6 +15,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_zalopay_sdk/flutter_zalopay_sdk.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -21,7 +23,10 @@ enum CaptchaResult { success, fail, lockedOut }
 
 class HomeViewModel extends BaseViewModel {
   final WatchAllEventsUsecase watchAllEventsUsecase;
-  HomeViewModel(this.watchAllEventsUsecase);
+  HomeViewModel(this.watchAllEventsUsecase){
+    loadRecentSearches();
+    fetchCategories();
+  }
   final String _emailJSServiceID = 'service_ylcyotg';
   final String _emailJSTemplateID = 'template_w5qexdc';
   final String _emailJSPublicKey = 'eU0EwYJSkgAxSxz3K';
@@ -63,9 +68,7 @@ class HomeViewModel extends BaseViewModel {
     });
   }
 
-  final TextEditingController searchController = TextEditingController();
 
-  final List<String> recentSearches = ['Fan Meeting', 'QUA NHỮNG ÁNH NHÌN'];
   final List<String> trendingTopics = [
     'soobin',
     'gdragon',
@@ -76,24 +79,7 @@ class HomeViewModel extends BaseViewModel {
   String _selectedDateText = 'Tất cả các ngày';
   String get selectedDateText => _selectedDateText;
 
-  void updateDateFilter(Map<String, dynamic>? result) {
-    if (result != null) {
-      bool isAllDays = result['isAllDays'] as bool;
-      DateTime? selectedDay = result['selectedDay'] as DateTime?;
-      DateTime? rangeStart = result['rangeStart'] as DateTime?;
-      DateTime? rangeEnd = result['rangeEnd'] as DateTime?;
 
-      if (isAllDays) {
-        _selectedDateText = 'Tất cả các ngày';
-      } else if (selectedDay != null) {
-        _selectedDateText = DateFormat('dd/MM/yyyy').format(selectedDay);
-      } else if (rangeStart != null && rangeEnd != null) {
-        _selectedDateText =
-        '${DateFormat('dd/MM').format(rangeStart)} - ${DateFormat('dd/MM').format(rangeEnd)}';
-      }
-    }
-    notifyListeners();
-  }
 
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
@@ -220,22 +206,16 @@ class HomeViewModel extends BaseViewModel {
   Set<String> get selectedCategories => _selectedCategories;
   final List<String> filterLocations = [
     'Toàn quốc',
-    'Hồ Chí Minh',
     'Hà Nội',
+    'Hồ Chí Minh',
     'Đà Lạt',
     'Vị trí khác',
   ];
-  final List<String> filterCategories = [
-    'Nhạc sống',
-    'Sân khấu & Nghệ thuật',
-    'Thể Thao',
-    'Khác',
-  ];
-
   void initFilter() {
-    _selectedLocation = 'Toàn quốc';
-    _isFree = false;
+    _selectedLocation = _appliedLocation;
+    _isFree = _appliedIsFree;
     _selectedCategories.clear();
+    _selectedCategories.addAll(_appliedCategories);
   }
 
   void selectLocation(String location) {
@@ -261,9 +241,20 @@ class HomeViewModel extends BaseViewModel {
     _selectedLocation = 'Toàn quốc';
     _isFree = false;
     _selectedCategories.clear();
+    _appliedLocation = 'Toàn quốc';
+    _appliedIsFree = false;
+    _appliedCategories.clear();
+
+    _applyFilters();
     notifyListeners();
   }
-
+  void applyFilterSheet() {
+    _appliedLocation = _selectedLocation;
+    _appliedIsFree = _isFree;
+    _appliedCategories.clear();
+    _appliedCategories.addAll(_selectedCategories);
+    _applyFilters();
+  }
   int _captchaFailCount = 0;
   DateTime? _lockoutEndTime;
   bool _isExpanded = false;
@@ -677,7 +668,280 @@ class HomeViewModel extends BaseViewModel {
       print('Lỗi khi gửi email (unknown): $e');
     }
   }
+  final TextEditingController searchController = TextEditingController();
 
+
+  List<EventDetailModel> _searchResults = [];
+  List<EventDetailModel> get searchResults => _searchResults;
+
+
+
+
+  static const String _recentSearchesKey = 'recent_searches';
+
+  List<String> recentSearches = [];
+  Future<void> loadRecentSearches() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      recentSearches = prefs.getStringList(_recentSearchesKey) ?? [];
+      notifyListeners();
+    } catch (e) {
+      print("Lỗi khi tải lịch sử tìm kiếm: $e");
+    }
+  }
+
+  Future<void> addRecentSearch(String query) async {
+    if (query.isEmpty) {
+      return;
+    }
+
+    final String lowercaseQuery = query.toLowerCase();
+
+    recentSearches.removeWhere((item) => item.toLowerCase() == lowercaseQuery);
+    recentSearches.insert(0, query);
+    const int maxSize = 5;
+    if (recentSearches.length > maxSize) {
+      recentSearches = recentSearches.sublist(0, maxSize);
+    }
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setStringList(_recentSearchesKey, recentSearches);
+    } catch (e) {
+      print("Lỗi khi lưu lịch sử tìm kiếm: $e");
+    }
+    notifyListeners();
+  }
+  Future<void> removeRecentSearch(String query) async {
+    recentSearches.removeWhere((item) => item.toLowerCase() == query.toLowerCase());
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setStringList(_recentSearchesKey, recentSearches);
+    } catch (e) {
+      print("Lỗi khi xóa 1 mục lịch sử tìm kiếm: $e");
+    }
+    notifyListeners();
+  }
+  String _appliedSearchQuery = '';
+  DateTime? _appliedSelectedDay;
+  DateTime? _appliedRangeStart;
+  DateTime? _appliedRangeEnd;
+  bool _appliedIsAllDays = true; // Mặc định là 'Tất cả các ngày'
+
+  // Biến này sẽ quyết định UI hiển thị "Khám phá" hay "Kết quả"
+  bool get isFilterActive {
+    return _appliedSearchQuery.isNotEmpty ||
+        !_appliedIsAllDays || // Có lọc ngày
+        _appliedLocation != 'Toàn quốc' || // <-- Thêm dòng này
+        _appliedIsFree || // <-- Thêm dòng này
+        _appliedCategories.isNotEmpty; // <-- Thêm dòng này
+  }
+  // [THÊM MỚI] Hàm lọc trung tâm
+  void _applyFilters() {
+    // 1. Bắt đầu với danh sách đầy đủ
+    List<EventDetailModel> filteredEvents = List.from(_events);
+
+    // 2. Lọc theo Text Query (nếu có)
+    if (_appliedSearchQuery.isNotEmpty) {
+      filteredEvents = filteredEvents.where((event) {
+        final title = event.title.toLowerCase();
+        final venue = (event.venue ?? '').toLowerCase();
+        final query = _appliedSearchQuery.toLowerCase();
+        return title.contains(query) || venue.contains(query);
+      }).toList();
+    }
+
+    // 3. Lọc theo Ngày (nếu có)
+    if (!_appliedIsAllDays) {
+      if (_appliedSelectedDay != null) {
+        // Lọc theo ngày cụ thể
+        filteredEvents = filteredEvents.where((event) {
+          if (event.startTime == null) return false;
+          // Chỉ so sánh Năm-Tháng-Ngày
+          final eventDate = event.startTime!;
+          return eventDate.year == _appliedSelectedDay!.year &&
+              eventDate.month == _appliedSelectedDay!.month &&
+              eventDate.day == _appliedSelectedDay!.day;
+        }).toList();
+      } else if (_appliedRangeStart != null && _appliedRangeEnd != null) {
+        // Lọc theo khoảng ngày
+        final rangeEndMidnight = _appliedRangeEnd!.add(const Duration(days: 1));
+
+        filteredEvents = filteredEvents.where((event) {
+          if (event.startTime == null) return false;
+          final eventDate = event.startTime!;
+          return !eventDate.isBefore(_appliedRangeStart!) &&
+              eventDate.isBefore(rangeEndMidnight);
+        }).toList();
+      }
+    }
+
+    // 4. [THÊM LOGIC LỌC MỚI]
+    // Lọc địa điểm
+    if (_appliedLocation != 'Toàn quốc') {
+      if (_appliedLocation == 'Vị trí khác') {
+        final mainLocations = ['hà nội', 'hồ chí minh', 'đà lạt'];
+        filteredEvents = filteredEvents.where((event) {
+          final venue = (event.locationId ?? '').toLowerCase();
+          return !mainLocations.any((loc) => venue.contains(loc));
+        }).toList();
+      } else {
+        filteredEvents = filteredEvents.where((event) {
+          final venue = (event.locationId ?? '').toLowerCase();
+          return venue.contains(_appliedLocation.toLowerCase());
+        }).toList();
+      }
+    }
+
+    // Lọc miễn phí
+    if (_appliedIsFree) {
+      filteredEvents = filteredEvents
+          .where((event) => (event.isFree ?? false) == true)
+          .toList();
+    }
+
+    // Lọc thể loại
+    if (_appliedCategories.isNotEmpty) {
+      filteredEvents = filteredEvents.where((event) {
+        final eventCategory = event.categories?.name;
+        if (eventCategory == null) return false;
+        // Kiểm tra xem category của event có nằm trong danh sách đã chọn không
+        return _appliedCategories.contains(eventCategory);
+      }).toList();
+    }
+
+    // 5. Cập nhật kết quả cuối cùng
+    _searchResults = filteredEvents;
+    notifyListeners();
+  }
+  void searchEvents(String query) {
+    _appliedSearchQuery = query.trim();
+    _applyFilters(); // Gọi hàm lọc trung tâm
+  }
+
+  // [THAY THẾ] Hàm này
+  void clearSearch() {
+    searchController.clear();
+    _appliedSearchQuery = '';
+    _applyFilters(); // Gọi hàm lọc trung tâm
+  }
+
+  // [THAY THẾ] Hàm này
+  void updateDateFilter(Map<String, dynamic>? result) {
+    if (result != null) {
+      // Cập nhật trạng thái bộ lọc ĐÃ ÁP DỤNG
+      _appliedIsAllDays = result['isAllDays'] as bool;
+      _appliedSelectedDay = result['selectedDay'] as DateTime?;
+      _appliedRangeStart = result['rangeStart'] as DateTime?;
+      _appliedRangeEnd = result['rangeEnd'] as DateTime?;
+
+      // Cập nhật văn bản hiển thị
+      if (_appliedIsAllDays) {
+        _selectedDateText = 'Tất cả các ngày';
+      } else if (_appliedSelectedDay != null) {
+        _selectedDateText = DateFormat('dd/MM/yyyy').format(_appliedSelectedDay!);
+      } else if (_appliedRangeStart != null && _appliedRangeEnd != null) {
+        _selectedDateText =
+        '${DateFormat('dd/MM').format(_appliedRangeStart!)} - ${DateFormat('dd/MM').format(_appliedRangeEnd!)}';
+      }
+    } else {
+      // Nếu người dùng đóng sheet (result == null), reset về mặc định
+      _appliedIsAllDays = true;
+      _appliedSelectedDay = null;
+      _appliedRangeStart = null;
+      _appliedRangeEnd = null;
+      _selectedDateText = 'Tất cả các ngày';
+    }
+
+    _applyFilters(); // Gọi hàm lọc trung tâm
+  }
+  List<CategoryModel> _fetchedCategories = [];
+  List<CategoryModel> get fetchedCategories => _fetchedCategories;
+  Future<void> fetchCategories() async {
+    _fetchedCategories = await getAllCategories();
+    notifyListeners();
+  }
+  Future<List<CategoryModel>> getAllCategories() async {
+    try {
+      final snapshot = await _db.collection('categories').get();
+      final categories = snapshot.docs.map((doc) {
+
+        return CategoryModel.fromJson(doc.data());
+      }).toList();
+
+      return categories;
+    } catch (e) {
+      print("Lỗi khi lấy categories: $e");
+      return [];
+    }
+  }
+  String _appliedLocation = 'Toàn quốc';
+  bool _appliedIsFree = false;
+  final Set<String> _appliedCategories = {};
+  bool get appliedIsAllDays => _appliedIsAllDays;
+  String get appliedLocation => _appliedLocation;
+  bool get appliedIsFree => _appliedIsFree;
+  Set<String> get appliedCategories => _appliedCategories;
+  void removeDateFilter() {
+    _appliedIsAllDays = true;
+    _appliedSelectedDay = null;
+    _appliedRangeStart = null;
+    _appliedRangeEnd = null;
+    // Cập nhật lại text của nút
+    _selectedDateText = 'Tất cả các ngày';
+    _applyFilters();
+    notifyListeners(); // Cần notify để cập nhật text trên nút
+  }
+
+  /// Gỡ bỏ bộ lọc địa điểm
+  void removeLocationFilter() {
+    _appliedLocation = 'Toàn quốc';
+    _applyFilters();
+  }
+
+  /// Gỡ bỏ bộ lọc giá (miễn phí)
+  void removePriceFilter() {
+    _appliedIsFree = false;
+    _applyFilters();
+  }
+
+  /// Gỡ bỏ một thể loại cụ thể
+  void removeCategoryFilter(String categoryName) {
+    _appliedCategories.remove(categoryName);
+    _applyFilters();
+  }
+  bool get isDateFilterActive {
+    return !_appliedIsAllDays;
+  }
+
+  bool get isMainFilterActive {
+    return _appliedLocation != 'Toàn quốc' ||
+        _appliedIsFree ||
+        _appliedCategories.isNotEmpty;
+  }
+  void resetAllFiltersAndSearch() {
+    // 1. Reset text search
+    searchController.clear(); // Xóa chữ trong ô text
+    _appliedSearchQuery = '';
+
+    // 2. Reset bộ lọc ngày
+    _appliedIsAllDays = true;
+    _appliedSelectedDay = null;
+    _appliedRangeStart = null;
+    _appliedRangeEnd = null;
+    _selectedDateText = 'Tất cả các ngày'; // Reset text của nút
+
+    // 3. Reset các bộ lọc chính
+    _appliedLocation = 'Toàn quốc';
+    _appliedIsFree = false;
+    _appliedCategories.clear();
+
+    // 4. Áp dụng bộ lọc (rỗng) để xóa kết quả tìm kiếm
+    _applyFilters();
+
+    // 5. Thông báo cho UI (SearchScreen) cập nhật lại (ví dụ: màu nút)
+    notifyListeners();
+  }
   @override
   void dispose() {
     _timer?.cancel();

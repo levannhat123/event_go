@@ -21,7 +21,7 @@ class AppTextField extends StatelessWidget {
     this.errorColor,
     this.suffixIcon,
     this.lableText,
-    this.onTap, this.textColor=Colors.black,
+    this.onTap, this.textColor=Colors.black, this.onChanged,
   });
 
   final TextEditingController? controller;
@@ -33,6 +33,7 @@ class AppTextField extends StatelessWidget {
   final Widget? suffixIcon;
   final Function(String)? onFieldSubmitted;
   final VoidCallback? onTap;
+   final ValueChanged<String>? onChanged;
   final TextInputAction? textInputAction;
   final FormFieldValidator<String>? validator;
   final bool readOnly;
@@ -70,7 +71,7 @@ class AppTextField extends StatelessWidget {
         ),
         TextFormField(
           style: TextStyle(color: textColor, fontSize: 16),
-
+          onChanged: onChanged,
           controller: controller,
           focusNode: focusNode,
           keyboardType: keyboardType,
