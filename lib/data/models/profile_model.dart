@@ -7,10 +7,10 @@ part 'profile_model.g.dart';
 class ProfileModel with _$ProfileModel {
   const factory ProfileModel({
     required String id,
-    String? fullName,
-    String? avatarUrl,
+    @JsonKey(name: "full_name") String? fullName,
+    @JsonKey(name: "avatar_url") String? avatarUrl,
     String? phone,
-    DateTime? createdAt,
+    @JsonKey(name: "created_at") DateTime? createdAt,
     String? email,
   }) = _ProfileModel;
 

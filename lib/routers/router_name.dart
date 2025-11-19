@@ -14,6 +14,8 @@ class RouterPath {
   static const String search = '/search';
   static const String booking = '/booking';
   static const String payment = '/payment';
+  static const String profile = '/profile';
+  static const String check_in = '/check_in';
 
 
 
@@ -45,4 +47,5 @@ class RouterName {
   static const String event_detail = 'event_detail';
   static const String booking = 'booking';
   static const String payment = 'payment';
+  static const String check_in = 'check_in';
 }

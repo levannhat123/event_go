@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:event_go/core/base/base_view_model.dart';
 import 'package:event_go/core/constants/app_strings.dart';
+import 'package:event_go/data/models/profile_model.dart';
 import 'package:event_go/data/repositories/auth/auth_repository.dart';
 import 'package:event_go/domain/usecase/auth/login_usecase.dart';
 import 'package:event_go/domain/usecase/auth/logout_usecase.dart';
@@ -9,6 +11,8 @@ import 'package:event_go/domain/usecase/auth/register_usecase.dart';
 import 'package:event_go/domain/usecase/auth/reset_password_usecase.dart';
 import 'package:event_go/domain/usecase/auth/send_email_usecase.dart';
 import 'package:event_go/domain/usecase/auth/update_password_use_case.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -20,6 +24,8 @@ class AuthViewModel extends BaseViewModel {
   final SendEmailVerificationUseCase _sendEmailVerificationUseCase;
   final AuthRepository _authRepository;
   final UpdatePasswordUseCase _updatePasswordUseCase;
+  ProfileModel? _userProfile;
+  ProfileModel? get userProfile => _userProfile;
 
   User? _currentUser;
   bool _isLoading = false;
@@ -103,16 +109,17 @@ class AuthViewModel extends BaseViewModel {
     try {
       _setLoading(true);
       final session = Supabase.instance.client.auth.currentSession;
-      if (session != null && session.user != null) {
+      if (session != null) {
         final now = DateTime.now().millisecondsSinceEpoch / 1000;
         if (session.expiresAt != null && session.expiresAt! > now) {
           try {
             final profile = await Supabase.instance.client
                 .from('profiles')
                 .select('role')
-                .eq('id', session.user!.id)
+                .eq('id', session.user.id)
                 .maybeSingle();
 
+            print('User profile: $profile');
             if (profile != null && profile['role'] != 'admin') {
               _currentUser = session.user;
               await _saveLoginState(true);
@@ -338,5 +345,141 @@ class AuthViewModel extends BaseViewModel {
 
   void clearError() {
     _clearError();
+  }
+
+  final nameController = TextEditingController();
+  final phoneController = TextEditingController();
+  final emailController = TextEditingController();
+
+  File? _imageFile;
+  File? get imageFile => _imageFile;
+
+  String? _networkAvatarUrl;
+  String? get networkAvatarUrl => _networkAvatarUrl;
+
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> pickImage() async {
+    try {
+      final XFile? pickedFile = await _picker.pickImage(
+        source: ImageSource.gallery,
+      );
+
+      if (pickedFile != null) {
+        _imageFile = File(pickedFile.path);
+        _networkAvatarUrl = null;
+        notifyListeners();
+      }
+    } catch (e) {
+      print("Lỗi chọn ảnh: $e");
+    }
+  }
+
+  Future<void> updateUserProfile(ProfileModel user) async {
+    try {
+      String? finalAvatarUrl = _userProfile?.avatarUrl;
+      _setLoading(true);
+
+      if (_imageFile != null) {
+        print('Đang upload ảnh mới...');
+        final file = _imageFile!;
+        final fileName = 'public/${user.id}.jpg';
+        await Supabase.instance.client.storage
+            .from('avatars_profile')
+            .upload(
+              fileName,
+              file, // File local
+              fileOptions: const FileOptions(
+                cacheControl: '3600',
+                upsert: true,
+              ),
+            );
+        final tempUrl = Supabase.instance.client.storage
+            .from('avatars_profile')
+            .getPublicUrl(fileName);
+
+        finalAvatarUrl =
+            tempUrl + '?t=' + DateTime.now().millisecondsSinceEpoch.toString();
+
+        print('Upload thành công: $finalAvatarUrl');
+      }
+
+      final profileToSave = user.copyWith(avatarUrl: finalAvatarUrl);
+      await Supabase.instance.client.from('profiles').upsert({
+        'id': profileToSave.id,
+        'email': profileToSave.email,
+        'full_name': profileToSave.fullName,
+        'avatar_url': profileToSave.avatarUrl,
+        'phone': profileToSave.phone,
+      });
+
+      _userProfile = profileToSave;
+      _networkAvatarUrl = profileToSave.avatarUrl;
+      print('✅ Upserted profile for user: ${user.email}');
+      notifyListeners();
+    } catch (e) {
+      _setLoading(false);
+      print('❌ Error upserting profile: $e');
+    }
+  }
+  Future<void> refreshUserProfile() async {
+    await _fetchUserProfile();
+    if (_userProfile != null) {
+      nameController.text = _userProfile?.fullName ?? '';
+      phoneController.text = _userProfile?.phone ?? '';
+      emailController.text = _userProfile?.email ?? '';
+      _networkAvatarUrl = _userProfile?.avatarUrl;
+      _imageFile = null;
+    }
+    notifyListeners();
+  }
+
+  Future<void> initialize() async {
+    await _fetchUserProfile();
+    final user = Supabase.instance.client.auth.currentUser;
+    if (user == null) return;
+    if (_userProfile != null) {
+      nameController.text = _userProfile?.fullName ?? '';
+      phoneController.text = _userProfile?.phone ?? '';
+      emailController.text = _userProfile?.email ?? user.email ?? '';
+      _networkAvatarUrl = _userProfile?.avatarUrl;
+      _imageFile = null;
+    } else {
+      nameController.text = '';
+      phoneController.text = '';
+      emailController.text = user.email ?? '';
+      _imageFile = null;
+      _networkAvatarUrl = null;
+    }
+    notifyListeners();
+  }
+
+  Future<void> _fetchUserProfile() async {
+    final user = Supabase.instance.client.auth.currentUser;
+    if (user == null) {
+      _userProfile = null;
+      return;
+    }
+
+    try {
+      final profileData = await Supabase.instance.client
+          .from('profiles')
+          .select()
+          .eq('id', user.id)
+          .single();
+      _userProfile = ProfileModel.fromJson(profileData);
+      print('✅ Profile đã được TẢI LẠI: ${_userProfile?.fullName}');
+    } catch (e) {
+      print("❌ Lỗi khi tải profile: $e");
+      _userProfile = null;
+    }
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    phoneController.dispose();
+    emailController.dispose();
+    super.dispose();
   }
 }
