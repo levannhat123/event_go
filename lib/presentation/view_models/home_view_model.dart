@@ -592,6 +592,8 @@ class HomeViewModel extends BaseViewModel {
       'paymentMethod': selectedPaymentMethod,
       'paymentStatus': paymentStatus,
       'createdAt': FieldValue.serverTimestamp(),
+      'checkinStatus': 'pending',
+      'checkinTimestamp': null,
     };
     try {
       final docRef = await _db
@@ -599,13 +601,68 @@ class HomeViewModel extends BaseViewModel {
           .doc(_userId)
           .collection('orders')
           .add(orderData);
+      final String orderId = docRef.id;
+      if (paymentStatus == 'completed') {
+        await _db.collection('tickets').doc(orderId).set(orderData);
+      }
       return docRef.id;
     } catch (e) {
       setError("Lỗi lưu đơn hàng: ${e.toString()}. Vui lòng liên hệ hỗ trợ.");
       return null;
     }
   }
+  Future<String> processCheckIn(String orderId) async {
+    // Tham chiếu đến vé trong collection 'tickets'
+    final ticketRef = _db.collection('tickets').doc(orderId);
 
+    try {
+      // Chạy một transaction để đảm bảo an toàn dữ liệu
+      final String message = await _db.runTransaction((transaction) async {
+        // 1. Đọc dữ liệu vé
+        final ticketDoc = await transaction.get(ticketRef);
+
+        // 2. Kiểm tra vé có tồn tại không
+        if (!ticketDoc.exists) {
+          return "LỖI: Vé không hợp lệ hoặc không tồn tại.";
+        }
+
+        final data = ticketDoc.data();
+        if (data == null) {
+          return "LỖI: Không thể đọc dữ liệu vé.";
+        }
+
+        // 3. Kiểm tra trạng thái thanh toán
+        if (data['paymentStatus'] != 'completed') {
+          return "LỖI: Vé này chưa hoàn tất thanh toán.";
+        }
+
+        // 4. Kiểm tra trạng thái check-in
+        final checkinStatus = data['checkinStatus'];
+
+        if (checkinStatus == 'completed') {
+          final timestamp = data['checkinTimestamp'] as Timestamp?;
+          final timeStr = timestamp != null
+              ? DateFormat('HH:mm dd/MM/yyyy').format(timestamp.toDate())
+              : 'không rõ';
+          return "LỖI: Vé này ĐÃ ĐƯỢC CHECK-IN lúc $timeStr.";
+        }
+
+        // 5. [THÀNH CÔNG] Cập nhật trạng thái
+        transaction.update(ticketRef, {
+          'checkinStatus': 'completed',
+          'checkinTimestamp': FieldValue.serverTimestamp(),
+        });
+
+        final email = data['userEmail'] ?? 'Khách';
+        return "THÀNH CÔNG: Check-in cho [$email] thành công!";
+      });
+
+      return message; // Trả về thông báo từ transaction
+    } catch (e) {
+      print("Lỗi transaction check-in: $e");
+      return "LỖI HỆ THỐNG: Đã xảy ra lỗi. Vui lòng thử lại.";
+    }
+  }
   Stream<QuerySnapshot<Map<String, dynamic>>>? get ordersStream {
     if (_userId == null) {
       print("Không thể lấy order stream: UserID is null.");

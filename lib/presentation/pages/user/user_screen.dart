@@ -3,10 +3,10 @@ import 'package:event_go/core/base/base_view.dart';
 import 'package:event_go/core/constants/app_colors.dart';
 import 'package:event_go/injection/injection.dart';
 import 'package:event_go/presentation/view_models/auth_view_model.dart';
-import 'package:event_go/presentation/view_models/home_view_model.dart';
 import 'package:event_go/routers/router_name.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class UserScreen extends StatefulWidget {
   const UserScreen({super.key});
@@ -16,16 +16,20 @@ class UserScreen extends StatefulWidget {
 }
 
 class _UserScreenState extends State<UserScreen> {
+
+
   bool isDarkMode = false;
   @override
   Widget build(BuildContext context) {
     const Color itemBackgroundColor = Color(0xFF2C2C2C);
     const Color secondaryTextColor = Color(0xFF8A8A8A);
 
-    // Bọc bằng BaseView để lấy HomeViewModel
     return BaseView<AuthViewModel>(
       viewModelBuilder: () => getIt<AuthViewModel>(),
-      autoDispose: false, // ViewModel này là singleton
+      autoDispose: false,
+      onModelReady: (viewModel) {
+        viewModel.initialize();
+      },
       builder: (context, viewModel, child) {
         return Scaffold(
           backgroundColor: AppColors.background,
@@ -45,11 +49,17 @@ class _UserScreenState extends State<UserScreen> {
                         backgroundColor: itemBackgroundColor,
                         children: [
                           _buildSettingsItem(
-                              title: 'Thông tin tài khoản', onTap: () {}),
-                          _buildSettingsItem(
-                              title: 'Đổi mã PIN',
-                              onTap: () {},
-                              showDivider: false),
+                            showDivider: false,
+                            title: 'Thông tin tài khoản',
+                            onTap: ()async {
+                              // final didUpdate = await context.push<bool>(RouterPath.profile);
+                              // if (didUpdate == true && mounted) {
+                              //   viewModel.refreshUserProfile();
+                              // }
+                              context.push(RouterPath.check_in);
+
+                            },
+                          ),
                         ],
                       ),
                       const SizedBox(height: 40),
@@ -60,14 +70,6 @@ class _UserScreenState extends State<UserScreen> {
                         children: [_buildLanguageItem(onTap: () {})],
                       ),
                       const SizedBox(height: 40),
-                      _buildSingleSettingsItem(
-                        icon: Icons.public,
-                        title: 'Trung tâm trợ giúp',
-                        backgroundColor: itemBackgroundColor,
-                        onTap: () {},
-                      ),
-                      const SizedBox(height: 8),
-                      // Nút Đăng xuất
                       _buildSingleSettingsItem(
                         icon: Icons.logout,
                         title: 'Đăng xuất',
@@ -104,8 +106,9 @@ class _UserScreenState extends State<UserScreen> {
       alignment: Alignment.center,
       children: [
         Container(
-            height: 150,
-            decoration: const BoxDecoration(color: Color(0xFF596DC3))),
+          height: 150,
+          decoration: const BoxDecoration(color: Color(0xFF596DC3)),
+        ),
         Positioned(
           bottom: -70,
           child: Column(
@@ -115,20 +118,37 @@ class _UserScreenState extends State<UserScreen> {
                   shape: BoxShape.circle,
                   border: Border.all(color: const Color(0xFF1E1E1E), width: 5),
                 ),
-                child: const CircleAvatar(
+                child: CircleAvatar(
                   radius: 40,
                   backgroundColor: Color(0xFF596DC3),
-                  child: Icon(Icons.flutter_dash, color: Colors.white, size: 40),
+                  backgroundImage: () {
+                    if (viewModel.imageFile != null) {
+                      return FileImage(viewModel.imageFile!) as ImageProvider;
+                    }
+                    if (viewModel.networkAvatarUrl != null) {
+                      return NetworkImage(viewModel.networkAvatarUrl!);
+                    }
+                    return null;
+                  }(),
+                  child:
+                      (viewModel.imageFile == null &&
+                          viewModel.networkAvatarUrl == null)
+                      ? const Icon(
+                          Icons.flutter_dash,
+                          color: Colors.white,
+                          size: 50,
+                        )
+                      : null,
                 ),
               ),
               const SizedBox(height: 8),
-              // Lấy email từ ViewModel
               Text(
                 viewModel.userEmail,
                 style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold),
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),
@@ -186,7 +206,8 @@ class _UserScreenState extends State<UserScreen> {
       child: Container(
         height: 50,
         padding: const EdgeInsets.symmetric(horizontal: 16), // Thêm padding
-        decoration: BoxDecoration( // Thêm decoration
+        decoration: BoxDecoration(
+          // Thêm decoration
           color: backgroundColor,
           borderRadius: BorderRadius.circular(12),
         ),
@@ -195,8 +216,10 @@ class _UserScreenState extends State<UserScreen> {
             Icon(icon, color: Colors.white, size: 22),
             const SizedBox(width: 12),
             Expanded(
-              child:
-              Text(title, style: const TextStyle(color: Colors.white, fontSize: 16)),
+              child: Text(
+                title,
+                style: const TextStyle(color: Colors.white, fontSize: 16),
+              ),
             ),
             const Icon(Icons.chevron_right, color: Colors.white70),
           ],
@@ -219,8 +242,10 @@ class _UserScreenState extends State<UserScreen> {
             child: Row(
               children: [
                 Expanded(
-                  child: Text(title,
-                      style: const TextStyle(color: Colors.white, fontSize: 16)),
+                  child: Text(
+                    title,
+                    style: const TextStyle(color: Colors.white, fontSize: 16),
+                  ),
                 ),
                 const Icon(Icons.chevron_right, color: Colors.white70),
               ],
@@ -228,7 +253,11 @@ class _UserScreenState extends State<UserScreen> {
           ),
           if (showDivider)
             Divider(
-                color: Colors.grey.shade700, height: 1, indent: 16, endIndent: 16),
+              color: Colors.grey.shade700,
+              height: 1,
+              indent: 16,
+              endIndent: 16,
+            ),
         ],
       ),
     );
@@ -242,8 +271,10 @@ class _UserScreenState extends State<UserScreen> {
         child: Row(
           children: [
             const Expanded(
-              child: Text('Thay đổi ngôn ngữ',
-                  style: TextStyle(color: Colors.white, fontSize: 16)),
+              child: Text(
+                'Thay đổi ngôn ngữ',
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
             ),
             AnimatedToggleSwitch<bool>.size(
               current: isDarkMode,
@@ -257,7 +288,10 @@ class _UserScreenState extends State<UserScreen> {
                   fontSize: 10,
                   fontWeight: FontWeight.bold,
                   color: Color.lerp(
-                      Colors.black, Colors.white, local.animationValue),
+                    Colors.black,
+                    Colors.white,
+                    local.animationValue,
+                  ),
                 ),
               ),
               style: ToggleStyle(

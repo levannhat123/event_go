@@ -22,9 +22,12 @@ ProfileModel _$ProfileModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$ProfileModel {
   String get id => throw _privateConstructorUsedError;
+  @JsonKey(name: "full_name")
   String? get fullName => throw _privateConstructorUsedError;
+  @JsonKey(name: "avatar_url")
   String? get avatarUrl => throw _privateConstructorUsedError;
   String? get phone => throw _privateConstructorUsedError;
+  @JsonKey(name: "created_at")
   DateTime? get createdAt => throw _privateConstructorUsedError;
   String? get email => throw _privateConstructorUsedError;
 
@@ -47,10 +50,10 @@ abstract class $ProfileModelCopyWith<$Res> {
   @useResult
   $Res call({
     String id,
-    String? fullName,
-    String? avatarUrl,
+    @JsonKey(name: "full_name") String? fullName,
+    @JsonKey(name: "avatar_url") String? avatarUrl,
     String? phone,
-    DateTime? createdAt,
+    @JsonKey(name: "created_at") DateTime? createdAt,
     String? email,
   });
 }
@@ -120,10 +123,10 @@ abstract class _$$ProfileModelImplCopyWith<$Res>
   @useResult
   $Res call({
     String id,
-    String? fullName,
-    String? avatarUrl,
+    @JsonKey(name: "full_name") String? fullName,
+    @JsonKey(name: "avatar_url") String? avatarUrl,
     String? phone,
-    DateTime? createdAt,
+    @JsonKey(name: "created_at") DateTime? createdAt,
     String? email,
   });
 }
@@ -185,10 +188,10 @@ class __$$ProfileModelImplCopyWithImpl<$Res>
 class _$ProfileModelImpl implements _ProfileModel {
   const _$ProfileModelImpl({
     required this.id,
-    this.fullName,
-    this.avatarUrl,
+    @JsonKey(name: "full_name") this.fullName,
+    @JsonKey(name: "avatar_url") this.avatarUrl,
     this.phone,
-    this.createdAt,
+    @JsonKey(name: "created_at") this.createdAt,
     this.email,
   });
 
@@ -198,12 +201,15 @@ class _$ProfileModelImpl implements _ProfileModel {
   @override
   final String id;
   @override
+  @JsonKey(name: "full_name")
   final String? fullName;
   @override
+  @JsonKey(name: "avatar_url")
   final String? avatarUrl;
   @override
   final String? phone;
   @override
+  @JsonKey(name: "created_at")
   final DateTime? createdAt;
   @override
   final String? email;
@@ -258,10 +264,10 @@ class _$ProfileModelImpl implements _ProfileModel {
 abstract class _ProfileModel implements ProfileModel {
   const factory _ProfileModel({
     required final String id,
-    final String? fullName,
-    final String? avatarUrl,
+    @JsonKey(name: "full_name") final String? fullName,
+    @JsonKey(name: "avatar_url") final String? avatarUrl,
     final String? phone,
-    final DateTime? createdAt,
+    @JsonKey(name: "created_at") final DateTime? createdAt,
     final String? email,
   }) = _$ProfileModelImpl;
 
@@ -271,12 +277,15 @@ abstract class _ProfileModel implements ProfileModel {
   @override
   String get id;
   @override
+  @JsonKey(name: "full_name")
   String? get fullName;
   @override
+  @JsonKey(name: "avatar_url")
   String? get avatarUrl;
   @override
   String? get phone;
   @override
+  @JsonKey(name: "created_at")
   DateTime? get createdAt;
   @override
   String? get email;

@@ -14,6 +14,8 @@ import 'package:event_go/presentation/pages/home/search/search_screen.dart';
 import 'package:event_go/presentation/pages/langding/langding_screen.dart';
 import 'package:event_go/presentation/pages/main/main_screen.dart';
 import 'package:event_go/presentation/pages/ticket/ticket_screen.dart';
+import 'package:event_go/presentation/pages/user/check_in_scanner_screen.dart';
+import 'package:event_go/presentation/pages/user/profile_screen.dart';
 import 'package:event_go/presentation/pages/user/user_screen.dart';
 import 'package:event_go/presentation/view_models/auth_change_notifier.dart';
 import 'package:event_go/routers/router_name.dart';
@@ -39,6 +41,10 @@ class AppRouter {
           GoRoute(
             path: RouterPath.login,
             builder: (context, state) => LoginScreen(),
+          ),
+          GoRoute(
+            path: RouterPath.check_in,
+            builder: (context, state) => CheckInScannerScreen(),
           ),
           GoRoute(
             path: '/',
@@ -69,6 +75,10 @@ class AppRouter {
           GoRoute(
             path: RouterPath.search,
             builder: (context, state) => SearchScreen(),
+          ),
+          GoRoute(
+            path: RouterPath.profile,
+            builder: (context, state) => ProfileScreen(),
           ),
           GoRoute(
             path: RouterPath.booking,
