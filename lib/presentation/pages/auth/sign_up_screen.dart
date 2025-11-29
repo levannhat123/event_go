@@ -2,6 +2,7 @@ import 'package:event_go/core/base/base_view.dart';
 import 'package:event_go/core/constants/app_colors.dart';
 import 'package:event_go/core/constants/app_image.dart';
 import 'package:event_go/core/constants/app_sizes.dart';
+import 'package:event_go/core/constants/app_spacing.dart';
 import 'package:event_go/core/constants/app_strings.dart';
 import 'package:event_go/core/constants/app_svg.dart';
 import 'package:event_go/core/utils/validator.dart';
@@ -44,20 +45,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
             children: [
               Positioned.fill(
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space30),
                   decoration: const BoxDecoration(
                     color: Color(0xFF4257b4),
                     borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(40),
-                      bottomRight: Radius.circular(40),
+                      bottomLeft: Radius.circular(AppSizes.size40),
+                      bottomRight: Radius.circular(AppSizes.size40),
                     ),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 60),
+                    padding: const EdgeInsets.only(top: AppSpacing.space60),
                     child: Column(
                       children: [
-                        CircleAvatar(backgroundImage: AssetImage(AppImage.logo), radius: 40),
-                        SizedBox(height: 10),
+                        CircleAvatar(backgroundImage: AssetImage(AppImage.logo), radius: AppSizes.size40),
+                        const SizedBox(height: AppSpacing.space10),
                         Text(
                           AppStrings.signUpTitle,
                           style: TextStyle(
@@ -66,7 +67,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: AppSpacing.space10),
                         Text(
                           AppStrings.signUpDescription,
                           style: TextStyle(color: Color(0xFFf49415), fontSize: 12),
@@ -84,13 +85,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 left: 0,
                 right: 0,
                 child: Container(
-                  padding: const EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.all(AppSpacing.space20),
                   height: MediaQuery.of(context).size.height * 0.70,
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30),
+                      topLeft: Radius.circular(AppSizes.size30),
+                      topRight: Radius.circular(AppSizes.size30),
                     ),
                   ),
                   child: Form(
@@ -99,7 +100,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       children: [
                         AppTextField(
                           controller: emailController,
-                          hintText: 'Email',
+                          hintText: AppStrings.emailHint,
                           borderColor: Colors.grey.shade300,
                           validator: Validator.email,
                           fillColor: Colors.white,
@@ -109,8 +110,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             },
                             icon: SvgPicture.asset(
                               AppSvg.close,
-                              width: 24,
-                              height: 24,
+                              width: AppSizes.size24,
+                              height: AppSizes.size24,
                               color: Colors.grey,
                             ),
                           ),
@@ -119,7 +120,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           prefixIcon: const Icon(Icons.email),
                           shadowColor: AppColors.transparent,
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: AppSpacing.space20),
                         AppTextFieldPassword(
                           controller: passwordController,
                           validator: Validator.password,
@@ -130,7 +131,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           enabledBorderColor: Colors.grey.shade300,
                           shadowColor: AppColors.transparent,
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: AppSpacing.space20),
                         AppTextFieldPassword(
                           controller: configpasswordController,
                           hintText: AppStrings.confirmPasswordHint,
@@ -148,7 +149,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           enabledBorderColor: Colors.grey.shade300,
                           shadowColor: AppColors.transparent,
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: AppSpacing.space20),
                         viewModel.isLoading
                             ? Center(
                                 child: LoadingAnimationWidget.hexagonDots(
@@ -174,9 +175,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     if (success) {
                                       await showCustomDialog(
                                         context: context,
-                                        title: "ĐĂNG KÝ THÀNH CÔNG",
-                                        message: "Bạn đã đăng ký thành công!",
-                                        buttonText: "Okay",
+                                        title: AppStrings.signUpSuccessTitle,
+                                        message: AppStrings.signUpSuccessMessage,
+                                        buttonText: AppStrings.okayButton,
                                         icon: Icons.check_circle,
                                         iconColor: Colors.green,
                                         onPressed: () {
@@ -186,11 +187,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     } else {
                                       await showCustomDialog(
                                         context: context,
-                                        title: "ĐĂNG KÝ THẤT BẠI",
+                                        title: AppStrings.signUpFailedTitle,
                                         message:
                                             viewModel.errorMessage ??
-                                            "Đã có lỗi xảy ra, vui lòng thử lại.",
-                                        buttonText: "Okay",
+                                            AppStrings.errorOccurredMessage,
+                                        buttonText: AppStrings.okayButton,
                                         icon: Icons.error,
                                         iconColor: Colors.red,
                                         onPressed: () {},
@@ -199,7 +200,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   }
                                 },
                               ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: AppSpacing.space20),
                         RichText(
                           text: TextSpan(
                             text: AppStrings.hasAccount,

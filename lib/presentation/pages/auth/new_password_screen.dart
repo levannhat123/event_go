@@ -2,6 +2,7 @@ import 'package:event_go/core/base/base_view.dart';
 import 'package:event_go/core/constants/app_colors.dart';
 import 'package:event_go/core/constants/app_image.dart';
 import 'package:event_go/core/constants/app_sizes.dart';
+import 'package:event_go/core/constants/app_spacing.dart';
 import 'package:event_go/core/constants/app_strings.dart';
 import 'package:event_go/core/utils/validator.dart';
 import 'package:event_go/core/widgets/app_elevated_button.dart';
@@ -65,16 +66,16 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                   decoration: const BoxDecoration(
                     color: Color(0xFF4257b4),
                     borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(40),
-                      bottomRight: Radius.circular(40),
+                      bottomLeft: Radius.circular(AppSizes.size40),
+                      bottomRight: Radius.circular(AppSizes.size40),
                     ),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 60),
+                    padding: const EdgeInsets.only(top: AppSpacing.space60),
                     child: Column(
                       children: [
-                        CircleAvatar(backgroundImage: AssetImage(AppImage.logo), radius: 40),
-                        const SizedBox(height: 10),
+                        CircleAvatar(backgroundImage: AssetImage(AppImage.logo), radius: AppSizes.size40),
+                        const SizedBox(height: AppSpacing.space10),
                         const Text(
                           AppStrings.newPasswordTitle,
                           style: TextStyle(
@@ -83,7 +84,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: AppSpacing.space10),
                         Text(
                           AppStrings.newPasswordDescription,
                           style: const TextStyle(color: Color(0xFFf49415), fontSize: 12),
@@ -101,13 +102,13 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                 left: 0,
                 right: 0,
                 child: Container(
-                  padding: const EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.all(AppSpacing.space20),
                   height: MediaQuery.of(context).size.height * 0.70,
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30),
+                      topLeft: Radius.circular(AppSizes.size30),
+                      topRight: Radius.circular(AppSizes.size30),
                     ),
                   ),
                   child: Form(
@@ -115,7 +116,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(height: 30),
+                        const SizedBox(height: AppSpacing.space30),
 
                         // Password field
                         const Text(
@@ -126,7 +127,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                             color: Color(0xFF333333),
                           ),
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: AppSpacing.space10),
                         AppTextField(
                           controller: passwordController,
                           hintText: AppStrings.newPasswordHint,
@@ -148,7 +149,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                           ),
                         ),
 
-                        const SizedBox(height: 20),
+                        const SizedBox(height: AppSpacing.space20),
 
                         // Confirm password field
                         const Text(
@@ -159,7 +160,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                             color: Color(0xFF333333),
                           ),
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: AppSpacing.space10),
                         AppTextField(
                           controller: confirmPasswordController,
                           hintText: AppStrings.confirmNewPasswordHint,
@@ -180,7 +181,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                             },
                           ),
                         ),
-                        const SizedBox(height: 30),
+                        const SizedBox(height: AppSpacing.space30),
                         viewModel.isLoading
                             ? Center(
                           child: LoadingAnimationWidget.hexagonDots(
@@ -204,9 +205,9 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                                     if (success) {
                                       await showCustomDialog(
                                         context: context,
-                                        title: "ĐẶT LẠI MẬT KHẨU THÀNH CÔNG",
-                                        message: "Mật khẩu của bạn đã được cập nhật.",
-                                        buttonText: "Đăng nhập",
+                                        title: AppStrings.resetPasswordSuccessTitle,
+                                        message: AppStrings.passwordUpdatedMessage,
+                                        buttonText: AppStrings.loginButton,
                                         icon: Icons.check_circle,
                                         iconColor: Colors.green,
                                         onPressed: () {
@@ -216,9 +217,9 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                                     } else {
                                       await showCustomDialog(
                                         context: context,
-                                        title: "ĐẶT LẠI MẬT KHẨU THẤT BẠI",
-                                        message: viewModel.errorMessage ?? "Có lỗi xảy ra, vui lòng thử lại.",
-                                        buttonText: "Okay",
+                                        title: AppStrings.resetPasswordFailedTitle,
+                                        message: viewModel.errorMessage ?? AppStrings.errorOccurredTryAgain,
+                                        buttonText: AppStrings.okayButton,
                                         icon: Icons.error,
                                         iconColor: Colors.red,
                                         onPressed: () {

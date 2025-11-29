@@ -349,6 +349,7 @@ class HomeViewModel extends BaseViewModel {
       return 0;
     }
     final List<TicketTypeModel>? tickets = event!.ticketType;
+    print('123tickets: ${tickets?.length}');
     if (tickets == null) {
       return 0;
     }

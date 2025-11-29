@@ -1,4 +1,7 @@
 import 'package:event_go/core/constants/app_colors.dart';
+import 'package:event_go/core/constants/app_sizes.dart';
+import 'package:event_go/core/constants/app_spacing.dart';
+import 'package:event_go/core/constants/app_strings.dart';
 import 'package:event_go/core/widgets/app_elevated_button.dart';
 import 'package:event_go/presentation/view_models/home_view_model.dart';
 import 'package:flutter/material.dart';
@@ -16,33 +19,33 @@ class FilterBottomSheet extends StatelessWidget {
           decoration: BoxDecoration(
             color: AppColors.white,
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20.0),
-              topRight: Radius.circular(20.0),
+              topLeft: Radius.circular(AppSizes.size20),
+              topRight: Radius.circular(AppSizes.size20),
             ),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.all(AppSpacing.space10),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildHeader(context),
                 _buildDivider(),
-                SizedBox(height: 24),
-                _buildSectionTitle('Vị trí'),
+                const SizedBox(height: AppSpacing.space24),
+                _buildSectionTitle(AppStrings.location),
                 ...viewModel.filterLocations
                     .map((location) => _buildRadioListItem(location, viewModel))
                     .toList(),
-                SizedBox(height: 12),
+                const SizedBox(height: AppSpacing.space12),
                 _buildDivider(),
-                SizedBox(height: 12),
+                const SizedBox(height: AppSpacing.space12),
                 _buildPriceSection(viewModel),
-                SizedBox(height: 12),
+                const SizedBox(height: AppSpacing.space12),
                 _buildDivider(),
-                SizedBox(height: 12),
-                _buildSectionTitle('Thể loại'),
+                const SizedBox(height: AppSpacing.space12),
+                _buildSectionTitle(AppStrings.category),
                 _buildCategoryChips(viewModel),
-                SizedBox(height: 32),
+                const SizedBox(height: AppSpacing.space32),
                 _buildFooterButtons(context, viewModel),
               ],
             ),
@@ -56,9 +59,9 @@ class FilterBottomSheet extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        SizedBox(width: 40),
+        const SizedBox(width: AppSpacing.space40),
         Text(
-          'Bộ lọc',
+          AppStrings.filterButton,
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -75,7 +78,7 @@ class FilterBottomSheet extends StatelessWidget {
 
   Widget _buildSectionTitle(String title) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
+      padding: const EdgeInsets.only(bottom: AppSpacing.space8),
       child: Text(
         title,
         style: TextStyle(
@@ -94,12 +97,12 @@ class FilterBottomSheet extends StatelessWidget {
         viewModel.selectLocation(title);
       },
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.space8),
         child: Row(
           children: [
             Container(
-              width: 20,
-              height: 20,
+              width: AppSizes.size20,
+              height: AppSizes.size20,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
@@ -110,8 +113,8 @@ class FilterBottomSheet extends StatelessWidget {
               child: isSelected
                   ? Center(
                       child: Container(
-                        width: 10,
-                        height: 10,
+                        width: AppSizes.size10,
+                        height: AppSizes.size10,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: AppColors.primary,
@@ -120,7 +123,7 @@ class FilterBottomSheet extends StatelessWidget {
                     )
                   : null,
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: AppSpacing.space12),
             Text(title, style: TextStyle(fontSize: 16, color: Colors.black)),
           ],
         ),
@@ -129,21 +132,21 @@ class FilterBottomSheet extends StatelessWidget {
   }
 
   Widget _buildDivider() {
-    return Divider(color: Color(0xFFDDDDE3), height: 1);
+    return const Divider(color: Color(0xFFDDDDE3), height: AppSpacing.space1);
   }
 
   Widget _buildPriceSection(HomeViewModel viewModel) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _buildSectionTitle('Giá tiền'),
+        _buildSectionTitle(AppStrings.price),
         Row(
           children: [
             Text(
-              'Miễn phí',
+              AppStrings.free,
               style: TextStyle(fontSize: 16, color: Colors.black),
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: AppSpacing.space8),
             Switch(
               value: viewModel.isFree,
               onChanged: (value) {
@@ -163,8 +166,8 @@ class FilterBottomSheet extends StatelessWidget {
 
   Widget _buildCategoryChips(HomeViewModel viewModel) {
     return Wrap(
-      spacing: 8.0,
-      runSpacing: 4.0,
+      spacing: AppSpacing.space8,
+      runSpacing: AppSpacing.space4,
       // Sửa: Dùng 'fetchedCategories' (List<CategoryModel>)
       children: viewModel.fetchedCategories.map((category) {
         // Sửa: Lấy tên từ 'category.name'
@@ -197,12 +200,12 @@ class FilterBottomSheet extends StatelessWidget {
       children: [
         Expanded(
           child: AppElevatedButton(
-            text: 'Thiết lập lại',
+            text: AppStrings.resetButton,
             onPressed: () {
               viewModel.resetFilter();
             },
-            height: 45,
-            borderRadius: const BorderRadius.all(Radius.circular(4)),
+            height: AppSizes.size45,
+            borderRadius: const BorderRadius.all(Radius.circular(AppSizes.size4)),
             textColor: AppColors.primary,
             color: AppColors.transparent,
             fontSize: 15.0,
@@ -211,16 +214,16 @@ class FilterBottomSheet extends StatelessWidget {
             highlightColor: AppColors.white,
           ),
         ),
-        const SizedBox(width: 16),
+        const SizedBox(width: AppSpacing.space16),
         Expanded(
           child: AppElevatedButton(
-            text: 'Áp dụng',
+            text: AppStrings.applyButton,
             onPressed: () {
               viewModel.applyFilterSheet();
               context.pop();
             },
-            height: 45,
-            borderRadius: const BorderRadius.all(Radius.circular(4)),
+            height: AppSizes.size45,
+            borderRadius: const BorderRadius.all(Radius.circular(AppSizes.size4)),
             textColor: AppColors.white,
             color: AppColors.primary,
             fontSize: 15.0,

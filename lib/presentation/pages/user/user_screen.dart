@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:event_go/core/base/base_view.dart';
 import 'package:event_go/core/constants/app_colors.dart';
+import 'package:event_go/core/constants/app_strings.dart';
 import 'package:event_go/injection/injection.dart';
 import 'package:event_go/presentation/view_models/auth_view_model.dart';
 import 'package:event_go/routers/router_name.dart';
@@ -45,12 +47,12 @@ class _UserScreenState extends State<UserScreen> {
                     children: [
                       _buildSettingsGroup(
                         icon: Icons.person_outline,
-                        title: 'Cài đặt tài khoản',
+                        title: AppStrings.accountSettings,
                         backgroundColor: itemBackgroundColor,
                         children: [
                           _buildSettingsItem(
                             showDivider: false,
-                            title: 'Thông tin tài khoản',
+                            title: AppStrings.accountInfo,
                             onTap: ()async {
                               // final didUpdate = await context.push<bool>(RouterPath.profile);
                               // if (didUpdate == true && mounted) {
@@ -65,14 +67,14 @@ class _UserScreenState extends State<UserScreen> {
                       const SizedBox(height: 40),
                       _buildSettingsGroup(
                         icon: Icons.settings_outlined,
-                        title: 'Cài đặt ứng dụng',
+                        title: AppStrings.appSettings,
                         backgroundColor: itemBackgroundColor,
                         children: [_buildLanguageItem(onTap: () {})],
                       ),
                       const SizedBox(height: 40),
                       _buildSingleSettingsItem(
                         icon: Icons.logout,
-                        title: 'Đăng xuất',
+                        title: AppStrings.logout,
                         backgroundColor: itemBackgroundColor,
                         onTap: () async {
                           // Gọi hàm signOut từ ViewModel
@@ -86,8 +88,8 @@ class _UserScreenState extends State<UserScreen> {
                   ),
                 ),
                 const SizedBox(height: 40),
-                const Text(
-                  'Phiên bản 3.1.13(30284)',
+                Text(
+                  AppStrings.version,
                   style: TextStyle(color: secondaryTextColor, fontSize: 12),
                 ),
                 const SizedBox(height: 20),
@@ -270,9 +272,9 @@ class _UserScreenState extends State<UserScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: Row(
           children: [
-            const Expanded(
+            Expanded(
               child: Text(
-                'Thay đổi ngôn ngữ',
+                AppStrings.changeLanguage,
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
             ),
@@ -283,7 +285,7 @@ class _UserScreenState extends State<UserScreen> {
               indicatorSize: const Size(30, 30),
               borderWidth: 1.0,
               customIconBuilder: (context, local, global) => Text(
-                local.value ? 'vie' : 'en',
+                local.value ? AppStrings.languageVietnamese : AppStrings.languageEnglish,
                 style: TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.bold,

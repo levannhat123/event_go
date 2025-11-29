@@ -3,6 +3,9 @@ import 'dart:math';
 import 'package:event_go/core/base/base_view.dart';
 import 'package:event_go/core/constants/app_colors.dart';
 import 'package:event_go/core/constants/app_image.dart';
+import 'package:event_go/core/constants/app_sizes.dart';
+import 'package:event_go/core/constants/app_spacing.dart';
+import 'package:event_go/core/constants/app_strings.dart';
 import 'package:event_go/core/utils/format_price.dart';
 import 'package:event_go/core/widgets/app_elevated_button.dart';
 import 'package:event_go/core/widgets/event_card.dart';
@@ -53,7 +56,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
           backgroundColor: Color(0xFFE6EAF5),
           appBar: AppBar(
             title: const Text(
-              'Chi tiết sự kiện',
+              AppStrings.eventDetailTitle,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             backgroundColor: const Color(0xFF596DC3),
@@ -61,7 +64,10 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
             actions: [IconButton(onPressed: () {}, icon: Icon(Icons.share))],
           ),
           bottomNavigationBar: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.space20,
+              vertical: AppSpacing.space12,
+            ),
             decoration: const BoxDecoration(color: Colors.black),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -70,7 +76,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                   text:  TextSpan(
                     style: TextStyle(color: Colors.white, fontSize: 16),
                     children: [
-                      TextSpan(text: 'Giá từ '),
+                      TextSpan(text: AppStrings.priceFrom),
                       TextSpan(
                         text: FormatPrice.format(double.tryParse(widget.event.minTicketPrice.toString()) ?? 0),
                         style: TextStyle(fontWeight: FontWeight.bold),
@@ -79,7 +85,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                   ),
                 ),
                 AppElevatedButton(
-                  text: 'Mua vé ngay',
+                  text: AppStrings.buyTicketNow,
                   onPressed: () {
                     if (viewModel.isLockedOut) {
                       final remainingSeconds =
@@ -87,7 +93,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                            'Bạn đã thử quá 5 lần. Vui lòng thử lại sau $remainingSeconds giây.',
+                            AppStrings.captchaLockoutMessage.replaceAll('{seconds}', remainingSeconds.toString()),
                           ),
                           backgroundColor: Colors.red,
                         ),
@@ -108,13 +114,13 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                             builder: (context, vm, _) {
                               return Dialog(
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: BorderRadius.circular(AppSizes.size12),
                                 ),
                                 child: Container(
-                                  padding: const EdgeInsets.all(16),
+                                  padding: const EdgeInsets.all(AppSpacing.space16),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
-                                    borderRadius: BorderRadius.circular(12),
+                                    borderRadius: BorderRadius.circular(AppSizes.size12),
                                   ),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
@@ -126,7 +132,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            'Xác Minh Người Dùng',
+                                            AppStrings.captchaTitle,
                                             style: TextStyle(
                                               color: Colors.black,
                                             ),
@@ -143,17 +149,17 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                           ),
                                         ],
                                       ),
-                                      SizedBox(height: 20),
+                                      const SizedBox(height: AppSpacing.space20),
                                       Text(
-                                        'Chống bot tự động mua vé',
+                                        AppStrings.captchaDescription,
                                         style: TextStyle(color: Colors.black),
                                       ),
-                                      SizedBox(height: 10),
+                                      const SizedBox(height: AppSpacing.space10),
                                       Text(
-                                        'Kéo mũi tên qua phải để hoàn thiện bức hình, giúp EventGo xác minh bạn là người mua thực sự.',
+                                        AppStrings.captchaInstruction,
                                         style: TextStyle(color: Colors.black),
                                       ),
-                                      SizedBox(height: 20),
+                                      const SizedBox(height: AppSpacing.space20),
                                       SliderCaptcha(
                                         controller: controller,
                                         image: Image.asset(
@@ -179,7 +185,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                             ).showSnackBar(
                                               const SnackBar(
                                                 content: Text(
-                                                  'Bạn đã thử quá 5 lần. Vui lòng thử lại sau 1 phút.',
+                                                  AppStrings.captchaLockoutMessage1Min,
                                                 ),
                                                 backgroundColor: Colors.red,
                                               ),
@@ -197,7 +203,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                           }
                                         },
                                       ),
-                                      SizedBox(height: 20),
+                                      const SizedBox(height: AppSpacing.space20),
                                       Row(
                                         children: [
                                           InkWell(
@@ -213,9 +219,9 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                               color: Colors.grey,
                                             ),
                                           ),
-                                          SizedBox(width: 8),
+                                          SizedBox(width: AppSizes.size8),
                                           Text(
-                                            'Tải lại',
+                                            AppStrings.captchaReload,
                                             style: TextStyle(
                                               color: Colors.black,
                                             ),
@@ -226,7 +232,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                       if (vm.captchaErrorText != null)
                                         Padding(
                                           padding: const EdgeInsets.only(
-                                            top: 8.0,
+                                            top: AppSpacing.space8,
                                           ),
                                           child: Text(
                                             vm.captchaErrorText!,
@@ -245,12 +251,12 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                       },
                     );
                   },
-                  height: 40,
-                  width: 125,
+                  height: AppSizes.size40,
+                  width: AppSizes.size125,
                   textColor: AppColors.white,
                   color: AppColors.green,
                   fontSize: 15.0,
-                  borderRadius: const BorderRadius.all(Radius.circular(4)),
+                  borderRadius: const BorderRadius.all(Radius.circular(AppSizes.size4)),
                   borderColor: AppColors.green,
                   splashColor: AppColors.transparent,
                   highlightColor: AppColors.white,
@@ -279,7 +285,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.all(20.0),
+                        padding: const EdgeInsets.all(AppSpacing.space20),
                         child: EventTicketCard(
                           imagePath: widget.event.bannerURL ?? AppImage.banner_1,
                           title: widget.event.title,
@@ -298,10 +304,10 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                   line2: line2,
                 ),
                 Container(
-                  margin: const EdgeInsets.all(12),
+                  margin: const EdgeInsets.all(AppSpacing.space12),
                   decoration: BoxDecoration(
                     color: Color(0xFFFFFFFF),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppSizes.size12),
                     boxShadow: const [
                       BoxShadow(
                         color: Colors.black12,
@@ -312,14 +318,14 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
+                      horizontal: AppSpacing.space16,
+                      vertical: AppSpacing.space12,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'Giới thiệu',
+                          AppStrings.introduction,
                           style: TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.bold,
@@ -379,16 +385,21 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                 Container(
                   decoration: BoxDecoration(
                     color: Color(0xFF2A2D34),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppSizes.size12),
                   ),
-                  margin: const EdgeInsets.all(20),
+                  margin: const EdgeInsets.all(AppSpacing.space20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                        padding: const EdgeInsets.fromLTRB(
+                          AppSpacing.space16,
+                          AppSpacing.space16,
+                          AppSpacing.space16,
+                          AppSpacing.space0,
+                        ),
                         child: Text(
-                          'Thông tin vé',
+                          AppStrings.ticketInfo,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -420,13 +431,13 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                               ],
                             ),
                             AppElevatedButton(
-                              text: 'Mua vé ngay',
+                              text: AppStrings.buyTicketNow,
                               onPressed: () {
                               },
-                              height: 40,
-                              width: 125,
+                              height: AppSizes.size40,
+                              width: AppSizes.size125,
                               borderRadius: const BorderRadius.all(
-                                Radius.circular(4),
+                                Radius.circular(AppSizes.size4),
                               ),
                               textColor: AppColors.white,
                               color: AppColors.green,
@@ -437,13 +448,14 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                             ),
                           ],
                         ),
-                        childrenPadding: const EdgeInsets.all(12),
+                        childrenPadding: const EdgeInsets.all(AppSpacing.space12),
                         children: [
                           ListView.separated(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
                             itemCount: widget.event.ticketType!.length,
-                            separatorBuilder: (context, index) => const SizedBox(height: 16),
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(height: AppSpacing.space16),
                             itemBuilder: (context, index) {
                               final ticket = widget.event.ticketType![index];
                               return TicketItemRow(
@@ -459,10 +471,10 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.all(12),
+                  margin: const EdgeInsets.all(AppSpacing.space12),
                   decoration: BoxDecoration(
                     color: Color(0xFFFFFFFF),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppSizes.size12),
                     boxShadow: const [
                       BoxShadow(
                         color: Colors.black12,
@@ -473,14 +485,14 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
+                      horizontal: AppSpacing.space16,
+                      vertical: AppSpacing.space12,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'Ban tổ chức',
+                          AppStrings.organizer,
                           style: TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.bold,
@@ -490,10 +502,10 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                         const Divider(color: Colors.grey),
                         Image.network(
                           widget.event.orgLogoURL ?? AppImage.banner_1,
-                          height: 50,
+                          height: AppSizes.size50,
                           errorBuilder: (context, error, stackTrace) =>
                               Container(
-                                height: 50,
+                                height: AppSizes.size50,
                                 color: Colors.grey[700],
                                 child: Icon(
                                   Icons.image_not_supported,
@@ -502,7 +514,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                 ),
                               ),
                         ),
-                        SizedBox(height: 12),
+                        const SizedBox(height: AppSpacing.space12),
                         Text(
                           widget.event.orgName ?? '',
                           style: TextStyle(
@@ -511,7 +523,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 12),
+                        const SizedBox(height: AppSpacing.space12),
                         Text(
                           widget.event.orgDescription ?? '',
                           style: TextStyle(fontSize: 14, color: Colors.black),
@@ -522,17 +534,17 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                 ),
                 Container(
                   color: Colors.black,
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space10),
                   child: Column(
                     children: [
-                      SizedBox(height: 25),
+                      SizedBox(height: AppSpacing.space25),
                       Center(
                         child: Text(
-                          'Có thể bạn cũng thích',
+                          AppStrings.youMayAlsoLike,
                           style: TextStyle(fontSize: 16, color: Colors.white),
                         ),
                       ),
-                      SizedBox(height: 25),
+                      SizedBox(height: AppSpacing.space25),
                       GridView.builder(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
@@ -546,8 +558,8 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                         itemBuilder: (context, index) {
                           final event = viewModel.events[index];
                           return EventCard(
-                            height: 100,
-                            width: 200,
+                            height: AppSizes.size100,
+                            width: AppSizes.size200,
                             imageUrl: event.bannerURL ?? AppImage.banner_1,
                             title: event.title,
                             price: event.minTicketPrice != null
@@ -560,16 +572,16 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                           );
                         },
                       ),
-                      SizedBox(height: 10),
+                      SizedBox(height: AppSpacing.space10),
                       Align(
                         alignment: Alignment.center,
                         child: AppElevatedButton(
-                          text: 'Xem thêm',
+                          text: AppStrings.seeMore,
                           onPressed: () {
                             context.push(RouterPath.search);
                           },
-                          height: 40,
-                          width: 120,
+                          height: AppSizes.size40,
+                          width: AppSizes.size120,
                           textColor: AppColors.white,
                           color: Color(0xFFf49415),
                           fontSize: 15.0,
@@ -578,7 +590,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                           highlightColor: AppColors.white,
                         ),
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: AppSpacing.space20),
                     ],
                   ),
                 ),

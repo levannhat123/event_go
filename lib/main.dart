@@ -17,53 +17,52 @@ import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() {
-  runZonedGuarded<Future<void>>(() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    await initializeDateFormatting('vi_VN', null);
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
+  runZonedGuarded<Future<void>>(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
+      await initializeDateFormatting('vi_VN', null);
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
 
-    await Supabase.initialize(
-      url: SupabaseConfig.url,
-      anonKey: SupabaseConfig.anonKey,
+      await Supabase.initialize(
+        url: SupabaseConfig.url,
+        anonKey: SupabaseConfig.anonKey,
+      );
+      final appRouter = AppRouter(AuthChangeNotifier());
 
-    );
-    final appRouter = AppRouter(AuthChangeNotifier());
-
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        statusBarColor: AppColors.background,
-        statusBarIconBrightness: Brightness.dark,
-      ),
-    );
-
-    setupDependencies(appRouter.router);
-
-    runApp(
-      MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (_) => AuthChangeNotifier()),
-          ChangeNotifierProvider(
-            create: (_) => getIt<AuthViewModel>(),
-          ),
-        ],
-        child: ScreenUtilInit(
-          designSize: const Size(428, 926),
-          minTextAdapt: true,
-          splitScreenMode: true,
-          builder: (context, child) {
-            return MyApp(router: appRouter.router);
-          },
+      SystemChrome.setSystemUIOverlayStyle(
+        const SystemUiOverlayStyle(
+          statusBarColor: AppColors.background,
+          statusBarIconBrightness: Brightness.dark,
         ),
-      ),
-    );
-  }, (error, stack) {
-    debugPrint('Error: $error');
-    debugPrint('Stack: $stack');
-  });
-}
+      );
 
+      setupDependencies(appRouter.router);
+
+      runApp(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (_) => AuthChangeNotifier()),
+            ChangeNotifierProvider(create: (_) => getIt<AuthViewModel>()),
+          ],
+          child: ScreenUtilInit(
+            designSize: const Size(428, 926),
+            minTextAdapt: true,
+            splitScreenMode: true,
+            builder: (context, child) {
+              return MyApp(router: appRouter.router);
+            },
+          ),
+        ),
+      );
+    },
+    (error, stack) {
+      debugPrint('Error: $error');
+      debugPrint('Stack: $stack');
+    },
+  );
+}
 
 class MyApp extends StatelessWidget {
   final GoRouter router;

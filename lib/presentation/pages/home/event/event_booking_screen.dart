@@ -1,5 +1,8 @@
 import 'package:event_go/core/base/base_view.dart';
 import 'package:event_go/core/constants/app_colors.dart';
+import 'package:event_go/core/constants/app_sizes.dart';
+import 'package:event_go/core/constants/app_spacing.dart';
+import 'package:event_go/core/constants/app_strings.dart';
 import 'package:event_go/core/utils/format_price.dart';
 import 'package:event_go/core/widgets/app_elevated_button.dart';
 import 'package:event_go/data/models/event/event_detail_model.dart';
@@ -39,14 +42,14 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
         return Scaffold(
           appBar: AppBar(
             title: SizedBox(
-              height: 50,
+              height: AppSizes.size50,
               child: Marquee(
-                text: 'Bấm vào khu vực để chọn vé   ',
+                text: AppStrings.clickToSelectTicket,
                 style: const TextStyle(fontSize: 18, color: Colors.white),
-                velocity: 50.0,
-                blankSpace: 30.0,
+                velocity: AppSizes.size50,
+                blankSpace: AppSizes.size30,
                 pauseAfterRound: const Duration(seconds: 1),
-                startPadding: 10.0,
+                startPadding: AppSpacing.space10,
               ),
             ),
             backgroundColor: const Color(0xFF1A1A1A),
@@ -54,27 +57,27 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
           ),
           body: SlidingUpPanel(
             controller: viewModel.panelController,
-            minHeight: 140,
+            minHeight: AppSizes.size140,
             maxHeight: MediaQuery.of(context).size.height * 0.8,
             parallaxEnabled: true,
             parallaxOffset: 0.5,
             color: Color(0xFF1A1A1A),
             borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(24.0),
-              topRight: Radius.circular(24.0),
+              topLeft: Radius.circular(AppSizes.size24),
+              topRight: Radius.circular(AppSizes.size24),
             ),
             body: ListView.builder(
               padding: const EdgeInsets.only(
-                left: 10,
-                right: 10,
-                top: 20,
-                bottom: 150,
+                left: AppSpacing.space10,
+                right: AppSpacing.space10,
+                top: AppSpacing.space20,
+                bottom: AppSpacing.space150,
               ),
               itemCount: widget.event.ticketType!.length,
               itemBuilder: (context, index) {
                 final ticket = widget.event.ticketType![index];
                 return Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
+                padding: const EdgeInsets.only(bottom: AppSpacing.space10),
                   child: ChangeNotifierProvider.value(
                     value: viewModel,
                     child: TicketExpansionItem(ticket: ticket, index: index),
@@ -97,8 +100,8 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
   ) {
     final bool hasTickets = vm.hasTickets;
     final String buttonText = hasTickets
-        ? 'Thanh toán ${vm.currencyFormat.format(vm.grandTotal)}'
-        : 'Vui lòng chọn vé';
+        ? AppStrings.paymentFormat.replaceAll('{amount}', vm.currencyFormat.format(vm.grandTotal))
+        : AppStrings.pleaseSelectTicket;
     final Color buttonColor = hasTickets
         ? AppColors.green
         : const Color(0xFFDEE0E4);
@@ -107,19 +110,19 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
     return GestureDetector(
       onTap: () => vm.panelController.open(),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space16),
         decoration: const BoxDecoration(
           color: Color(0xFF1A1A1A),
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(10.0),
-            topRight: Radius.circular(10.0),
+            topLeft: Radius.circular(AppSizes.size10),
+            topRight: Radius.circular(AppSizes.size10),
           ),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(Icons.keyboard_arrow_up, color: Colors.grey),
-            const SizedBox(height: 4),
+             SizedBox(height: AppSpacing.space4),
             Text(
               widget.event.title,
               style: TextStyle(
@@ -132,7 +135,7 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
               FormatPrice.formatDateTime(widget.event.startTime.toString()),
               style: TextStyle(color: Colors.grey, fontSize: 12),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.space8),
             AppElevatedButton(
               text: buttonText,
               onPressed: () async {
@@ -167,8 +170,8 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
                   }
                 }
               },
-              height: 40,
-              borderRadius: const BorderRadius.all(Radius.circular(4)),
+              height: AppSizes.size40,
+              borderRadius: const BorderRadius.all(Radius.circular(AppSizes.size4)),
               textColor: textColor,
               color: buttonColor,
               fontSize: 15.0,
@@ -189,29 +192,29 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
   ) {
     final bool hasTickets = vm.hasTickets;
     final String buttonText = hasTickets
-        ? 'Thanh toán ${vm.currencyFormat.format(vm.grandTotal)}'
-        : 'Vui lòng chọn vé';
+        ? AppStrings.paymentFormat.replaceAll('{amount}', vm.currencyFormat.format(vm.grandTotal))
+        : AppStrings.pleaseSelectTicket;
     final Color buttonColor = hasTickets
         ? AppColors.green
         : const Color(0xFFDEE0E4);
     final Color textColor = hasTickets ? Colors.white : AppColors.grey;
 
     return Container(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(AppSpacing.space16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Center(
             child: Container(
-              width: 40,
-              height: 5,
+              width: AppSizes.size40,
+              height: AppSizes.size4,
               decoration: BoxDecoration(
                 color: Colors.grey[700],
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppSizes.size12),
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.space16),
           Text(
             widget.event.title,
             maxLines: 1,
@@ -222,7 +225,7 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: AppSpacing.space10),
           const Divider(color: Color(0xFF27272E), thickness: 3),
           ListTile(
             leading: Icon(Icons.location_on, color: AppColors.green, size: 20),
@@ -270,7 +273,7 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
               },
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.space16),
           AppElevatedButton(
             text: buttonText,
             onPressed: () async {
@@ -301,8 +304,8 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
                 }
               }
             },
-            height: 40,
-            borderRadius: const BorderRadius.all(Radius.circular(4)),
+            height: AppSizes.size40,
+            borderRadius: const BorderRadius.all(Radius.circular(AppSizes.size4)),
             textColor: textColor,
             color: buttonColor,
             fontSize: 15.0,

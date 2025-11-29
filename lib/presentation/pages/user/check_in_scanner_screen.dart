@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:event_go/core/base/base_view.dart';
+import 'package:event_go/core/constants/app_strings.dart';
 import 'package:event_go/injection/injection.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import '../../view_models/home_view_model.dart';
@@ -34,7 +35,7 @@ class _CheckInScannerScreenState extends State<CheckInScannerScreen> {
       builder: (context, viewModel, child) {
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Quét mã Check-in'),
+            title: Text(AppStrings.scanCheckInCode),
             actions: [
               // Nút bật/tắt đèn flash
               IconButton(
@@ -105,7 +106,7 @@ class _CheckInScannerScreenState extends State<CheckInScannerScreen> {
     if (orderId != null && orderId.isNotEmpty) {
       setState(() {
         _isProcessing = true;
-        _scanResult = "Đang xử lý: $orderId...";
+        _scanResult = AppStrings.processingCheckIn.replaceAll('{orderId}', orderId);
       });
 
       _processCheckIn(context, viewModel, orderId);
@@ -115,7 +116,7 @@ class _CheckInScannerScreenState extends State<CheckInScannerScreen> {
   /// Hàm xử lý logic check-in
   Future<void> _processCheckIn(BuildContext context, HomeViewModel viewModel, String orderId) async {
     final String message = await viewModel.processCheckIn(orderId);
-    final bool isSuccess = message.startsWith("THÀNH CÔNG");
+    final bool isSuccess = message.startsWith(AppStrings.successPrefix);
 
     setState(() {
       _scanResult = message;

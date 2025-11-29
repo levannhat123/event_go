@@ -1,6 +1,9 @@
 import 'package:event_go/core/base/base_view.dart';
 import 'package:event_go/core/constants/app_colors.dart';
 import 'package:event_go/core/constants/app_image.dart';
+import 'package:event_go/core/constants/app_sizes.dart';
+import 'package:event_go/core/constants/app_spacing.dart';
+import 'package:event_go/core/constants/app_strings.dart';
 import 'package:event_go/core/utils/format_price.dart';
 import 'package:event_go/core/widgets/text_field.dart';
 import 'package:event_go/injection/injection.dart';
@@ -44,12 +47,12 @@ class _SearchScreenState extends State<SearchScreen> {
         final bool isDisplayingResults = viewModel.isFilterActive;
         return Scaffold(
           appBar: AppBar(
-            title: Text('Tìm Kiếm'),
+            title: Text(AppStrings.searchTitle),
             centerTitle: true,
             backgroundColor: Color(0xFF596DC3),
           ),
           body: Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.all(AppSpacing.space10),
             child: Column(
               // Layout chính là Column
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,7 +65,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   onFieldSubmitted: (query) {
                     viewModel.addRecentSearch(query);
                   },
-                  hintText: 'Nhập từ khóa',
+                  hintText: AppStrings.searchHint,
                   borderColor: AppColors.transparent,
                   fillColor: AppColors.transparent,
                   focusedBorderColor: AppColors.transparent,
@@ -78,7 +81,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   textColor: Colors.white,
                 ),
                 Divider(thickness: 1, color: AppColors.primary),
-                SizedBox(height: 10),
+                const SizedBox(height: AppSpacing.space10),
 
                 // --- CÁC NÚT LỌC ---
                 Row(
@@ -101,15 +104,15 @@ class _SearchScreenState extends State<SearchScreen> {
                         viewModel.updateDateFilter(result);
                       },
                       child: Container(
-                        height: 32,
+                        height: AppSizes.size32,
                         decoration: BoxDecoration(
                           color: viewModel.isDateFilterActive
                               ? AppColors.green // Màu xanh khi active
                               : Color(0xFF515158),
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(AppSizes.size16),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space12),
                           child: Row(
                             children: [
                               Icon(
@@ -117,7 +120,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 color: AppColors.white,
                                 size: 20,
                               ),
-                              SizedBox(width: 4),
+                              const SizedBox(width: AppSpacing.space4),
                               Center(
                                 child: Text(
                                   viewModel.selectedDateText,
@@ -127,7 +130,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 4),
+                              const SizedBox(width: AppSpacing.space4),
                               Icon(
                                 Icons.keyboard_arrow_down,
                                 color: AppColors.white,
@@ -138,7 +141,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: AppSpacing.space10),
                     InkWell(
                       onTap: () {
                         viewModel.initFilter();
@@ -155,15 +158,15 @@ class _SearchScreenState extends State<SearchScreen> {
                         );
                       },
                       child: Container(
-                        height: 32,
+                        height: AppSizes.size32,
                         decoration: BoxDecoration(
                           color: viewModel.isMainFilterActive
                               ? AppColors.green // Màu xanh khi active
                               : Color(0xFF515158),
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(AppSizes.size16),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space12),
                           child: Row(
                             children: [
                               Icon(
@@ -171,17 +174,17 @@ class _SearchScreenState extends State<SearchScreen> {
                                 color: AppColors.white,
                                 size: 20,
                               ),
-                              SizedBox(width: 4),
+                              const SizedBox(width: AppSpacing.space4),
                               Center(
                                 child: Text(
-                                  'Bộ lọc',
+                                  AppStrings.filterButton,
                                   style: TextStyle(
                                     color: AppColors.white,
                                     fontSize: 14,
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 4),
+                              const SizedBox(width: AppSpacing.space4),
                               Icon(
                                 Icons.keyboard_arrow_down,
                                 color: AppColors.white,
@@ -217,9 +220,9 @@ class _SearchScreenState extends State<SearchScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (viewModel.recentSearches.isNotEmpty) ...[
-            SizedBox(height: 10),
+            const SizedBox(height: AppSpacing.space10),
             Text(
-              'Tìm kiếm gần đây',
+              AppStrings.recentSearches,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 18,
@@ -252,9 +255,9 @@ class _SearchScreenState extends State<SearchScreen> {
               },
             ),
           ],
-          SizedBox(height: 10),
+          const SizedBox(height: AppSpacing.space10),
           Text(
-            'Xu hướng tìm kiếm',
+            AppStrings.trendingSearches,
             style: TextStyle(
               color: Colors.white,
               fontSize: 18,
@@ -280,46 +283,46 @@ class _SearchScreenState extends State<SearchScreen> {
               );
             },
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: AppSpacing.space20),
           Text(
-            'Khám phá theo thể loại',
+            AppStrings.exploreByCategory,
             style: TextStyle(
               color: Colors.white,
               fontSize: 24,
               fontWeight: FontWeight.w600,
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: AppSpacing.space10),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
                 CategoryCard(
-                  title: 'Nhạc sống',
+                  title: AppStrings.liveMusic,
                   imagePath: AppImage.music_category,
                   onTap: () {
                     print('Nhấn vào Nhạc sống');
                   },
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: AppSpacing.space10),
                 CategoryCard(
-                  title: 'Sân khấu & Nghệ thuật',
+                  title: AppStrings.theaterAndArts,
                   imagePath: AppImage.film_category,
                   onTap: () {
                     print('Nhấn vào Sân khấu');
                   },
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: AppSpacing.space10),
                 CategoryCard(
-                  title: 'Thể Thao',
+                  title: AppStrings.sports,
                   imagePath: AppImage.sport_category,
                   onTap: () {
                     print('Nhấn vào Thể Thao');
                   },
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: AppSpacing.space10),
                 CategoryCard(
-                  title: 'Khác',
+                  title: AppStrings.other,
                   imagePath: AppImage.other_category,
                   onTap: () {
                     print('Nhấn vào Khác');
@@ -328,46 +331,46 @@ class _SearchScreenState extends State<SearchScreen> {
               ],
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: AppSpacing.space10),
           Text(
-            'Khám phá theo thành phố',
+            AppStrings.exploreByCity,
             style: TextStyle(
               color: Colors.white,
               fontSize: 24,
               fontWeight: FontWeight.w600,
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: AppSpacing.space10),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
                 CategoryCard(
-                  title: 'Hà Nội',
+                  title: AppStrings.hanoi,
                   imagePath: AppImage.hn_location,
                   onTap: () {
                     print('Nhấn vào Hà Nội');
                   },
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: AppSpacing.space10),
                 CategoryCard(
-                  title: 'TP Hồ Chí Minh',
+                  title: AppStrings.hoChiMinh,
                   imagePath: AppImage.hcm_location,
                   onTap: () {
                     print('Nhấn vào TP HCM');
                   },
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: AppSpacing.space10),
                 CategoryCard(
-                  title: 'Đà Lạt',
+                  title: AppStrings.dalat,
                   imagePath: AppImage.dalat_location,
                   onTap: () {
                     print('Nhấn vào Đà Lạt');
                   },
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: AppSpacing.space10),
                 CategoryCard(
-                  title: ' Vị trí khác',
+                  title: AppStrings.otherLocation,
                   imagePath: AppImage.other_location,
                   onTap: () {
                     print('Nhấn vào Vị trí khác');
@@ -376,24 +379,24 @@ class _SearchScreenState extends State<SearchScreen> {
               ],
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: AppSpacing.space10),
           Text(
-            'Gợi ý dành cho bạn',
+            AppStrings.suggestionsForYou,
             style: TextStyle(
               color: Colors.white,
               fontSize: 24,
               fontWeight: FontWeight.w600,
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: AppSpacing.space10),
           GridView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
-            padding: EdgeInsets.only(top: 10),
+            padding: const EdgeInsets.only(top: AppSpacing.space10),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              mainAxisSpacing: 10,
-              crossAxisSpacing: 10,
+              mainAxisSpacing: AppSpacing.space10,
+              crossAxisSpacing: AppSpacing.space10,
               childAspectRatio: 0.8,
             ),
             itemCount: viewModel.events.length,
@@ -401,10 +404,10 @@ class _SearchScreenState extends State<SearchScreen> {
               final event = viewModel.events[index];
               final date = event.startTime != null
                   ? FormatPrice.formatDate(event.startTime.toString())
-                  : 'Sắp diễn ra';
+                  : AppStrings.comingSoon;
               return EventCard(
-                height: 100,
-                width: 200,
+                height: AppSizes.size100,
+                width: AppSizes.size200,
                 imageUrl: event.bannerURL ?? AppImage.banner_1,
                 title: event.title,
                 price: event.minTicketPrice.toString(),
@@ -416,7 +419,7 @@ class _SearchScreenState extends State<SearchScreen> {
               );
             },
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: AppSpacing.space20),
         ],
       ),
     );
@@ -426,18 +429,18 @@ class _SearchScreenState extends State<SearchScreen> {
     if (viewModel.searchResults.isEmpty) {
       return Center(
         child: Text(
-          'Không tìm thấy kết quả nào.',
+          AppStrings.noResultsFound,
           style: TextStyle(color: Colors.white70),
         ),
       );
     }
 
     return GridView.builder(
-      padding: EdgeInsets.only(top: 10), // Thêm padding cho lưới
+      padding: const EdgeInsets.only(top: AppSpacing.space10), // Thêm padding cho lưới
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        mainAxisSpacing: 10,
-        crossAxisSpacing: 10,
+        mainAxisSpacing: AppSpacing.space10,
+        crossAxisSpacing: AppSpacing.space10,
         childAspectRatio: 0.8, // Tỷ lệ này bạn có thể điều chỉnh
       ),
       itemCount: viewModel.searchResults.length,
@@ -445,10 +448,10 @@ class _SearchScreenState extends State<SearchScreen> {
         final event = viewModel.searchResults[index];
         final date = event.startTime != null
             ? FormatPrice.formatDate(event.startTime.toString())
-            : 'Sắp diễn ra';
+            : AppStrings.comingSoon;
         return EventCard(
-          height: 100,
-          width: 200,
+          height: AppSizes.size100,
+          width: AppSizes.size200,
           imageUrl: event.bannerURL ?? AppImage.banner_1,
           title: event.title,
           price: event.minTicketPrice.toString(),
@@ -466,10 +469,13 @@ class _SearchScreenState extends State<SearchScreen> {
       label: Text(label),
       onDeleted: onDeleted,
       backgroundColor: AppColors.green, // Màu giống nút "Bộ lọc"
-      labelStyle: TextStyle(color: Colors.white, fontSize: 14),
-      deleteIcon: Icon(Icons.close, color: Colors.white, size: 18),
-      padding: EdgeInsets.symmetric(horizontal: 4, vertical: 0),
-      shape: StadiumBorder(),
+      labelStyle: const TextStyle(color: Colors.white, fontSize: 14),
+      deleteIcon: const Icon(Icons.close, color: Colors.white, size: AppSizes.size18),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.space4,
+        vertical: AppSpacing.space0,
+      ),
+      shape: const StadiumBorder(),
     );
   }
   // [THÊM HÀM NÀY VÀO _SearchScreenState]
@@ -490,7 +496,7 @@ class _SearchScreenState extends State<SearchScreen> {
     if (viewModel.appliedIsFree) {
       chips.add(
         _buildFilterChip(
-          'Miễn phí',
+          AppStrings.free,
               () => viewModel.removePriceFilter(),
         ),
       );
@@ -512,10 +518,10 @@ class _SearchScreenState extends State<SearchScreen> {
 
     // Dùng Wrap để các chip tự động xuống dòng
     return Padding(
-      padding: const EdgeInsets.only(top: 10.0),
+      padding: const EdgeInsets.only(top: AppSpacing.space10),
       child: Wrap(
-        spacing: 8.0, // Khoảng cách ngang giữa các chip
-        runSpacing: 4.0, // Khoảng cách dọc nếu xuống dòng
+        spacing: AppSpacing.space8, // Khoảng cách ngang giữa các chip
+        runSpacing: AppSpacing.space4, // Khoảng cách dọc nếu xuống dòng
         children: chips,
       ),
     );

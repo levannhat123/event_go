@@ -1,5 +1,8 @@
 import 'package:event_go/core/base/base_view.dart';
 import 'package:event_go/core/constants/app_colors.dart';
+import 'package:event_go/core/constants/app_sizes.dart';
+import 'package:event_go/core/constants/app_spacing.dart';
+import 'package:event_go/core/constants/app_strings.dart';
 import 'package:event_go/core/constants/app_svg.dart';
 import 'package:event_go/core/utils/format_price.dart';
 import 'package:event_go/core/widgets/app_elevated_button.dart';
@@ -53,7 +56,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
           body: Column(
             children: [
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(AppSpacing.space12),
                 decoration: BoxDecoration(color: Colors.red),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -61,7 +64,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
                     const Icon(Icons.timer, color: Colors.white, size: 20),
                     const SizedBox(width: 8),
                     Text(
-                      "Thời gian giữ vé còn lại: ${viewModel.formattedTimeRemaining}",
+                      AppStrings.ticketHoldTimeRemaining.replaceAll('{time}', viewModel.formattedTimeRemaining),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
@@ -74,20 +77,20 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
               _buildEventInfoCard(widget.event),
               Expanded(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildSectionHeader("Thông tin nhận vé"),
-                      const SizedBox(height: 12),
+                      _buildSectionHeader(AppStrings.recipientInfoTitle),
+                      const SizedBox(height: AppSpacing.space12),
                       _buildRecipientInfoCard(cardColor, viewModel),
-                      const SizedBox(height: 24),
-                      _buildSectionHeader("Phương thức thanh toán"),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: AppSpacing.space24),
+                      _buildSectionHeader(AppStrings.paymentMethodTitle),
+                      const SizedBox(height: AppSpacing.space12),
                       _buildPaymentMethodCard(cardColor, viewModel, vmReader),
-                      const SizedBox(height: 24),
-                      _buildSectionHeader("Thông tin đặt vé"),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: AppSpacing.space24),
+                      _buildSectionHeader(AppStrings.bookingInfoTitle),
+                      const SizedBox(height: AppSpacing.space12),
                       _buildOrderInfoCard(Colors.white, vmReader),
                     ],
                   ),
@@ -105,14 +108,14 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
     return AppBar(
       backgroundColor: const Color(0xFF596DC3),
       elevation: 0,
-      title: Text("Thanh toán"),
+      title: Text(AppStrings.paymentTitle),
       centerTitle: true,
     );
   }
 
   Widget _buildEventInfoCard(EventDetailModel event) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.space16),
       decoration: BoxDecoration(color: const Color(0xFF1A1A1A)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,22 +128,22 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSpacing.space12),
           Row(
             children: [
               Icon(Icons.calendar_today, color: Colors.grey[300], size: 16),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSpacing.space8),
               Text(
                 FormatPrice.formatDate(widget.event.startTime.toString()),
                 style: TextStyle(color: Colors.grey[300], fontSize: 14),
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.space8),
           Row(
             children: [
               Icon(Icons.location_on, color: Colors.grey[300], size: 16),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSpacing.space8),
               Text(
                 widget.event.venue ?? '',
                 style: TextStyle(color: Colors.grey[300], fontSize: 14),
@@ -169,16 +172,19 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
 
   Widget _buildRecipientInfoCard(Color cardColor,HomeViewModel viewModel,) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.space16,
+        vertical: AppSpacing.space12,
+      ),
       decoration: BoxDecoration(
         color: cardColor,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppSizes.size12),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Vé điện tử sẽ được hiển thị trong mục \"Vé của tôi\" của tài khoản",
+            AppStrings.electronicTicketInfo,
             style: TextStyle(color: Colors.grey[400], fontSize: 14),
           ),
           const SizedBox(height: 8),
@@ -203,7 +209,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
     HomeViewModel vmReader,
   ) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.space8),
       decoration: BoxDecoration(
         color: cardColor,
         borderRadius: BorderRadius.circular(12),
@@ -212,7 +218,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
         children: [
           _buildPaymentOptionRow(
             value: 'zalopay',
-            title: 'Zalopay',
+            title: AppStrings.zalopay,
             icon: SvgPicture.asset(AppSvg.zalopay, width: 20, height: 20),
             viewModel: viewModel,
             vmReader: vmReader,
@@ -234,11 +240,14 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
         vmReader.selectPaymentMethod(value);
       },
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.space16,
+          vertical: AppSpacing.space10,
+        ),
         child: Row(
           children: [
             icon,
-            const SizedBox(width: 12),
+            const SizedBox(width: AppSpacing.space12),
             Expanded(
               child: Text(
                 title,
@@ -275,7 +284,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
           final price = ticket.price ?? 0;
           ticketWidgets.add(
             Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
+              padding: const EdgeInsets.only(bottom: AppSpacing.space8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -320,10 +329,10 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
     }
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.space16),
       decoration: BoxDecoration(
         color: cardColor,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppSizes.size12),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -332,7 +341,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Loại vé",
+                AppStrings.ticketType,
                 style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
@@ -340,7 +349,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
                 ),
               ),
               Text(
-                "Số lượng",
+                AppStrings.quantity,
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.black,
@@ -349,23 +358,23 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSpacing.space12),
           ...ticketWidgets,
-          const SizedBox(height: 10),
+          const SizedBox(height: AppSpacing.space10),
           const Divider(color: Colors.grey, height: 0),
-          const SizedBox(height: 14),
+          const SizedBox(height: AppSpacing.space14),
           _buildSectionHeader(
-            "Thông tin đơn hàng",
+            AppStrings.orderInfoTitle,
             bgColor: Colors.black,
             fontSize: 16,
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSpacing.space12),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Expanded(
+              Expanded(
                 flex: 3,
-                child: Text("Tạm tính", style: TextStyle(color: Colors.black)),
+                child: Text(AppStrings.subtotal, style: TextStyle(color: Colors.black)),
               ),
               Expanded(
                 flex: 1,
@@ -377,16 +386,16 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: AppSpacing.space10),
           const Divider(color: Colors.grey, height: 0),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.space16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Expanded(
+              Expanded(
                 flex: 3,
                 child: Text(
-                  "Tổng tiền",
+                  AppStrings.totalAmount,
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
@@ -415,8 +424,13 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
   Widget _buildStickyFooter(BuildContext context, HomeViewModel vmReader) {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
     return Container(
-      padding: EdgeInsets.fromLTRB(16, 16, 16, bottomPadding + 16),
-      margin: EdgeInsets.only(top: 10),
+      padding: EdgeInsets.fromLTRB(
+        AppSpacing.space16,
+        AppSpacing.space16,
+        AppSpacing.space16,
+        bottomPadding + AppSpacing.space16,
+      ),
+      margin: const EdgeInsets.only(top: AppSpacing.space10),
       decoration: const BoxDecoration(color: Color(0xFF1C1C1E)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -426,15 +440,15 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
-                "Tổng tiền",
+              Text(
+                AppStrings.totalAmount,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: AppSpacing.space4),
               Text(
                 FormatPrice.format(vmReader.grandTotal),
                 style: const TextStyle(
@@ -449,13 +463,13 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
             onPressed: () {
               vmReader.handlePayment();
             },
-            text: 'Thanh toán',
-            height: 40,
-            width: 125,
+            text: AppStrings.paymentButton,
+            height: AppSizes.size40,
+            width: AppSizes.size125,
             textColor: AppColors.white,
             color: AppColors.green,
             fontSize: 15.0,
-            borderRadius: const BorderRadius.all(Radius.circular(4)),
+            borderRadius: const BorderRadius.all(Radius.circular(AppSizes.size4)),
             borderColor: AppColors.green,
             splashColor: AppColors.transparent,
             highlightColor: AppColors.white,

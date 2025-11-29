@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:event_go/core/base/base_view.dart';
 import 'package:event_go/core/constants/app_colors.dart';
+import 'package:event_go/core/constants/app_strings.dart';
 import 'package:event_go/core/widgets/app_elevated_button.dart';
 import 'package:event_go/data/models/profile_model.dart';
 import 'package:event_go/injection/injection.dart';
@@ -36,8 +38,8 @@ class ProfileScreen extends StatelessWidget {
                 context.pop();
               },
             ),
-            title: const Text(
-              'Thông tin tài khoản',
+            title: Text(
+              AppStrings.accountInfo,
               style: TextStyle(
                 color: _lightTextColor,
                 fontWeight: FontWeight.bold,
@@ -53,7 +55,7 @@ class ProfileScreen extends StatelessWidget {
                     child: CircularProgressIndicator(color: Color(0xFFf49415)),
                   )
                 : AppElevatedButton(
-                    text: 'Hoàn thành',
+                    text: AppStrings.complete,
                     borderColor: Color(0xFFf49415),
                     color: Color(0xFFf49415),
                     splashColor: AppColors.transparent,
@@ -70,8 +72,8 @@ class ProfileScreen extends StatelessWidget {
                       await viewModel.updateUserProfile(updatedProfile);
                       if (ScaffoldMessenger.of(context).mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Cập nhật thông tin thành công!'),
+                          SnackBar(
+                            content: Text(AppStrings.updateProfileSuccess),
                           ),
                         );
                       }
@@ -145,19 +147,19 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  const Text(
-                    'Cung cấp thông tin chính xác sẽ hỗ trợ bạn trong quá trình mua vé, hoặc khi cần xác thực vé',
+                  Text(
+                    AppStrings.profileInfoDescription,
                     textAlign: TextAlign.center,
                     style: TextStyle(color: _dimTextColor, fontSize: 14),
                   ),
                   const SizedBox(height: 30),
-                  _buildLabel('Họ và tên'),
+                  _buildLabel(AppStrings.fullName),
                   _buildTextField(controller: viewModel.nameController),
                   const SizedBox(height: 20),
-                  _buildLabel('Số điện thoại'),
+                  _buildLabel(AppStrings.phoneNumber),
                   _buildPhoneField(viewModel.phoneController),
                   const SizedBox(height: 20),
-                  _buildLabel('Email'),
+                  _buildLabel(AppStrings.emailHint),
                   _buildTextField(
                     controller: viewModel.emailController,
                     readOnly: true,

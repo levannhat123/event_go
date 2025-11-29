@@ -1,6 +1,8 @@
 import 'package:event_go/core/base/base_view.dart';
 import 'package:event_go/core/constants/app_colors.dart';
 import 'package:event_go/core/constants/app_image.dart';
+import 'package:event_go/core/constants/app_sizes.dart';
+import 'package:event_go/core/constants/app_spacing.dart';
 import 'package:event_go/core/constants/app_strings.dart';
 import 'package:event_go/core/utils/validator.dart';
 import 'package:event_go/core/widgets/app_elevated_button.dart';
@@ -58,7 +60,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CircularProgressIndicator(),
-              SizedBox(height: 16),
+              SizedBox(height: AppSpacing.space16),
               Text(AppStrings.verifyingLink),
             ],
           ),
@@ -72,8 +74,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.error, size: 64, color: Colors.red),
-              SizedBox(height: 16),
+              Icon(Icons.error, size: AppSizes.size64, color: Colors.red),
+              SizedBox(height: AppSpacing.space16),
               Text(AppStrings.invalidLink),
               Text(AppStrings.tryAgainOrRequestNew),
             ],
@@ -95,19 +97,19 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   decoration: const BoxDecoration(
                     color: Color(0xFF4257b4),
                     borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(40),
-                      bottomRight: Radius.circular(40),
+                      bottomLeft: Radius.circular(AppSizes.size40),
+                      bottomRight: Radius.circular(AppSizes.size40),
                     ),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 60),
+                    padding: const EdgeInsets.only(top: AppSpacing.space60),
                     child: Column(
                       children: [
                         CircleAvatar(
                           backgroundImage: AssetImage(AppImage.logo),
-                          radius: 40,
+                          radius: AppSizes.size40,
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: AppSpacing.space10),
                         const Text(
                           AppStrings.resetPasswordTitle,
                           style: TextStyle(
@@ -116,7 +118,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: AppSpacing.space10),
                         Text(
                           AppStrings.resetPasswordDescription +
                               '\n' +
@@ -139,13 +141,13 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 left: 0,
                 right: 0,
                 child: Container(
-                  padding: const EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.all(AppSpacing.space20),
                   height: MediaQuery.of(context).size.height * 0.70,
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30),
+                      topLeft: Radius.circular(AppSizes.size30),
+                      topRight: Radius.circular(AppSizes.size30),
                     ),
                   ),
                   child: Form(
@@ -153,7 +155,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(height: 30),
+                        const SizedBox(height: AppSpacing.space30),
 
                         const Text(
                           AppStrings.newPasswordLabel,
@@ -163,7 +165,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                             color: Color(0xFF333333),
                           ),
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: AppSpacing.space10),
                         AppTextField(
                           controller: passwordController,
                           hintText: AppStrings.newPasswordHint,
@@ -185,7 +187,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           shadowColor: AppColors.transparent,
                         ),
 
-                        const SizedBox(height: 20),
+                        const SizedBox(height: AppSpacing.space20),
                         const Text(
                           AppStrings.confirmPasswordLabel,
                           style: TextStyle(
@@ -194,7 +196,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                             color: Color(0xFF333333),
                           ),
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: AppSpacing.space10),
                         AppTextField(
                           controller: confirmPasswordController,
                           hintText: AppStrings.confirmNewPasswordHint,
@@ -223,7 +225,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           shadowColor: AppColors.transparent,
                         ),
 
-                        const SizedBox(height: 30),
+                        const SizedBox(height: AppSpacing.space30),
 
                         AppElevatedButton(
                           text: viewModel.isLoading
@@ -240,7 +242,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                                 },
                         ),
 
-                        const SizedBox(height: 20),
+                        const SizedBox(height: AppSpacing.space20),
 
                         Center(
                           child: TextButton(

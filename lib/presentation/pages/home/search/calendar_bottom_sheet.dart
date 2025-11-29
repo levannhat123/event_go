@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_sizes.dart';
+import '../../../../core/constants/app_spacing.dart';
+import '../../../../core/constants/app_strings.dart';
 
 class CalendarBottomSheet extends StatelessWidget {
   const CalendarBottomSheet({super.key});
@@ -26,10 +29,10 @@ class CalendarBottomSheet extends StatelessWidget {
           viewModel.focusedDay.month,
         );
         return Container(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(AppSpacing.space16),
           decoration: const BoxDecoration(
             color: AppColors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(AppSizes.size20)),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -37,9 +40,9 @@ class CalendarBottomSheet extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Expanded(
+                  Expanded(
                     child: Text(
-                      'Chọn thời gian',
+                      AppStrings.selectTime,
                       style: TextStyle(
                         fontSize: 18,
                         color: AppColors.primary,
@@ -56,39 +59,39 @@ class CalendarBottomSheet extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.space16),
               Wrap(
-                spacing: 8.0,
-                runSpacing: 8.0,
+                spacing: AppSpacing.space8,
+                runSpacing: AppSpacing.space8,
                 children: [
                   _buildQuickSelectButton(
-                    'Tất cả các ngày',
+                    AppStrings.allDays,
                     viewModel.selectedQuickButtonIndex == 0,
                     () => viewModel.selectQuickButton(0),
                   ),
                   _buildQuickSelectButton(
-                    'Hôm nay',
+                    AppStrings.today,
                     viewModel.selectedQuickButtonIndex == 1,
                     () => viewModel.selectQuickButton(1),
                   ),
                   _buildQuickSelectButton(
-                    'Ngày mai',
+                    AppStrings.tomorrow,
                     viewModel.selectedQuickButtonIndex == 2,
                     () => viewModel.selectQuickButton(2),
                   ),
                   _buildQuickSelectButton(
-                    'Cuối tuần này',
+                    AppStrings.thisWeekend,
                     viewModel.selectedQuickButtonIndex == 3,
                     () => viewModel.selectQuickButton(3),
                   ),
                   _buildQuickSelectButton(
-                    'Tháng này',
+                    AppStrings.thisMonth,
                     viewModel.selectedQuickButtonIndex == 4,
                     () => viewModel.selectQuickButton(4),
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.space16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -97,7 +100,9 @@ class CalendarBottomSheet extends StatelessWidget {
                     onPressed: () => viewModel.previousMonth(),
                   ),
                   Text(
-                    'Tháng ${viewModel.focusedDay.month}, ${viewModel.focusedDay.year}',
+                    AppStrings.monthFormat
+                        .replaceAll('{month}', viewModel.focusedDay.month.toString())
+                        .replaceAll('{year}', viewModel.focusedDay.year.toString()),
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -110,7 +115,7 @@ class CalendarBottomSheet extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.space8),
               GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -194,15 +199,15 @@ class CalendarBottomSheet extends StatelessWidget {
                   );
                 },
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.space16),
               Row(
                 children: [
                   Expanded(
                     child: AppElevatedButton(
-                      text: 'Thiết lập lại',
+                      text: AppStrings.resetButton,
                       onPressed: () => viewModel.resetCalendar(),
-                      height: 45,
-                      borderRadius: const BorderRadius.all(Radius.circular(4)),
+                      height: AppSizes.size45,
+                      borderRadius: const BorderRadius.all(Radius.circular(AppSizes.size4)),
                       textColor: AppColors.primary,
                       color: AppColors.transparent,
                       fontSize: 15.0,
@@ -211,10 +216,10 @@ class CalendarBottomSheet extends StatelessWidget {
                       highlightColor: AppColors.white,
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: AppSpacing.space16),
                   Expanded(
                     child: AppElevatedButton(
-                      text: 'Áp dụng',
+                      text: AppStrings.applyButton,
                       onPressed:
                           (viewModel.selectedDay != null ||
                               viewModel.rangeStart != null ||
@@ -229,8 +234,8 @@ class CalendarBottomSheet extends StatelessWidget {
                               });
                             }
                           : null,
-                      height: 45,
-                      borderRadius: const BorderRadius.all(Radius.circular(4)),
+                      height: AppSizes.size45,
+                      borderRadius: const BorderRadius.all(Radius.circular(AppSizes.size4)),
                       textColor:
                           (viewModel.selectedDay != null ||
                               viewModel.rangeStart != null ||
@@ -266,10 +271,13 @@ class CalendarBottomSheet extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.space16,
+          vertical: AppSpacing.space8,
+        ),
         decoration: BoxDecoration(
           color: AppColors.white,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppSizes.size8),
           border: Border.all(
             color: isSelected
                 ? AppColors.primary
@@ -366,7 +374,7 @@ class CalendarBottomSheet extends StatelessWidget {
     }
 
     Border? border;
-    BorderRadius borderRadius = BorderRadius.circular(100);
+    BorderRadius borderRadius = BorderRadius.circular(AppSizes.size100);
     if (isToday && !isSelected) {
       border = Border.all(color: AppColors.primary, width: 1.5);
     }
@@ -374,11 +382,11 @@ class CalendarBottomSheet extends StatelessWidget {
         viewModel.selectedQuickButtonIndex == 4) {
       if (isSelectedStart) {
         borderRadius = const BorderRadius.horizontal(
-          left: Radius.circular(100),
+          left: Radius.circular(AppSizes.size100),
         );
       } else if (isSelectedEnd) {
         borderRadius = const BorderRadius.horizontal(
-          right: Radius.circular(100),
+          right: Radius.circular(AppSizes.size100),
         );
       } else if (isSelectedMiddle) {
         borderRadius = BorderRadius.zero;
@@ -387,7 +395,7 @@ class CalendarBottomSheet extends StatelessWidget {
 
     return Container(
       alignment: Alignment.center,
-      margin: const EdgeInsets.symmetric(vertical: 4.0),
+      margin: const EdgeInsets.symmetric(vertical: AppSpacing.space4),
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: borderRadius,

@@ -40,4 +40,5 @@ class AppSpacing {
   static const double space65 = 65.0;
   static const double space59 = 59.0;
   static const double space75 = 75.0;
+  static const double space150 = 150.0;
 }

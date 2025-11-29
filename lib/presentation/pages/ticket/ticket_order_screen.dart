@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_go/core/base/base_view.dart';
 import 'package:event_go/core/constants/app_colors.dart';
 import 'package:event_go/core/constants/app_image.dart';
+import 'package:event_go/core/constants/app_strings.dart';
 import 'package:event_go/core/widgets/app_elevated_button.dart';
 import 'package:event_go/core/widgets/event_card.dart';
 import 'package:event_go/core/widgets/order_history_card.dart';
@@ -27,13 +28,13 @@ class _TicketOrderScreenState extends State<TicketOrderScreen>
   Map<String, dynamic> _getStatusDisplay(String? status) {
     switch (status) {
       case 'completed':
-        return {'text': 'Thành công', 'color': Colors.green};
+        return {'text': AppStrings.success, 'color': Colors.green};
       case 'cancelled':
-        return {'text': 'Đã hủy', 'color': Colors.red};
+        return {'text': AppStrings.cancelled, 'color': Colors.red};
       case 'failed':
-        return {'text': 'Thất bại', 'color': Colors.orange};
+        return {'text': AppStrings.failed, 'color': Colors.orange};
       default:
-        return {'text': 'Không xác định', 'color': Colors.grey};
+        return {'text': AppStrings.unknown, 'color': Colors.grey};
     }
   }
 
@@ -51,7 +52,7 @@ class _TicketOrderScreenState extends State<TicketOrderScreen>
         final ordersStream = viewModel.ordersStream;
         if (ordersStream == null) {
           return _buildEmptyState(
-            "Vui lòng đăng nhập để xem vé của bạn.",
+            AppStrings.pleaseLoginToViewTickets,
             Icons.login,
           );
         }
@@ -67,13 +68,13 @@ class _TicketOrderScreenState extends State<TicketOrderScreen>
                   }
                   if (snapshot.hasError) {
                     return _buildEmptyState(
-                      "Lỗi khi tải đơn hàng: ${snapshot.error}",
+                      AppStrings.errorLoadingOrders.replaceAll('{error}', snapshot.error.toString()),
                       Icons.error,
                     );
                   }
                   if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                     return _buildEmptyState(
-                      "Bạn chưa có đơn hàng nào.",
+                      AppStrings.noOrdersYet,
                       Icons.receipt_long,
                     );
                   }
@@ -91,7 +92,7 @@ class _TicketOrderScreenState extends State<TicketOrderScreen>
                   }).toList();
                   if (filteredOrders.isEmpty) {
                     return _buildEmptyState(
-                      "Không có đơn hàng nào trong mục này.",
+                      AppStrings.noOrdersInThisCategory,
                       Icons.inventory_2,
                     );
                   }
@@ -121,7 +122,7 @@ class _TicketOrderScreenState extends State<TicketOrderScreen>
                             padding: const EdgeInsets.only(bottom: 10),
                             child: OrderHistoryCard(
                               title:
-                                  data['eventName'] as String? ?? 'Tên sự kiện',
+                                  data['eventName'] as String? ?? AppStrings.eventName,
                               statusText: statusInfo['text'],
                               statusColor: statusInfo['color'],
                               orderCode: orderId,
@@ -143,7 +144,7 @@ class _TicketOrderScreenState extends State<TicketOrderScreen>
               SizedBox(height: 25),
               Center(
                 child: Text(
-                  'Có thể bạn cũng thích',
+                  AppStrings.youMayAlsoLike,
                   style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
               ),
@@ -167,7 +168,7 @@ class _TicketOrderScreenState extends State<TicketOrderScreen>
                     title: event.title,
                     price: event.minTicketPrice != null
                         ? event.minTicketPrice.toString()
-                        : 'Miễn phí',
+                        : AppStrings.free,
                     date: event.startTime.toString(),
                     onTap: () {
                       context.push(RouterPath.event_detail, extra: event);
@@ -179,7 +180,7 @@ class _TicketOrderScreenState extends State<TicketOrderScreen>
               Align(
                 alignment: Alignment.center,
                 child: AppElevatedButton(
-                  text: 'Xem thêm',
+                  text: AppStrings.seeMore,
                   onPressed: () {},
                   height: 40,
                   width: 120,

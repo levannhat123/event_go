@@ -1,3 +1,4 @@
+import 'package:event_go/core/constants/app_strings.dart';
 import 'package:event_go/routers/router_name.dart'; // Đảm bảo bạn có RouterPath.home
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -26,13 +27,13 @@ class PaymentResultScreen extends StatelessWidget {
         decodedMessage = message!;
       }
     } else {
-      decodedMessage = isSuccess ? "Thanh toán thành công" : "Thanh toán thất bại";
+      decodedMessage = isSuccess ? AppStrings.paymentSuccess : AppStrings.paymentFailure;
     }
 
     return Scaffold(
       backgroundColor: const Color(0xFF121212),
       appBar: AppBar(
-        title: Text("Kết quả giao dịch"),
+        title: Text(AppStrings.transactionResultTitle),
         backgroundColor: const Color(0xFF596DC3),
         centerTitle: true,
         automaticallyImplyLeading: false,
@@ -50,7 +51,7 @@ class PaymentResultScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               Text(
-                isSuccess ? "Thanh toán thành công!" : "Thanh toán thất bại",
+                isSuccess ? AppStrings.paymentSuccessWithExclamation : AppStrings.paymentFailure,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 22,
@@ -69,7 +70,7 @@ class PaymentResultScreen extends StatelessWidget {
               if (appTransID != null) ...[
                 const SizedBox(height: 16),
                 Text(
-                  "Mã giao dịch: $appTransID",
+                  "${AppStrings.transactionCodeLabel}$appTransID",
                   style: TextStyle(
                     color: Colors.grey[400],
                     fontSize: 14,
@@ -88,8 +89,8 @@ class PaymentResultScreen extends StatelessWidget {
                 onPressed: () {
                    context.go(RouterPath.ticket);
                 },
-                child: const Text(
-                  "Về trang chủ",
+                child: Text(
+                  AppStrings.backToHomeButton,
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ),

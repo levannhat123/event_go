@@ -2,6 +2,7 @@ import 'package:event_go/core/base/base_view.dart';
 import 'package:event_go/core/constants/app_colors.dart';
 import 'package:event_go/core/constants/app_image.dart';
 import 'package:event_go/core/constants/app_sizes.dart';
+import 'package:event_go/core/constants/app_spacing.dart';
 import 'package:event_go/core/constants/app_strings.dart';
 import 'package:event_go/core/constants/app_svg.dart';
 import 'package:event_go/core/utils/validator.dart';
@@ -48,16 +49,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   decoration: const BoxDecoration(
                     color: Color(0xFF4257b4),
                     borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(40),
-                      bottomRight: Radius.circular(40),
+                      bottomLeft: Radius.circular(AppSizes.size40),
+                      bottomRight: Radius.circular(AppSizes.size40),
                     ),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 60),
+                    padding: const EdgeInsets.only(top: AppSpacing.space60),
                     child: Column(
                       children: [
-                        CircleAvatar(backgroundImage: AssetImage(AppImage.logo), radius: 40),
-                        const SizedBox(height: 10),
+                        CircleAvatar(backgroundImage: AssetImage(AppImage.logo), radius: AppSizes.size40),
+                        const SizedBox(height: AppSpacing.space10),
                         const Text(
                           AppStrings.forgotPasswordTitle,
                           style: TextStyle(
@@ -66,7 +67,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: AppSpacing.space10),
                         const Text(
                           AppStrings.forgotPasswordDescription,
                           style: TextStyle(color: Color(0xFFf49415), fontSize: 12),
@@ -84,13 +85,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 left: 0,
                 right: 0,
                 child: Container(
-                  padding: const EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.all(AppSpacing.space20),
                   height: MediaQuery.of(context).size.height * 0.70,
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30),
+                      topLeft: Radius.circular(AppSizes.size30),
+                      topRight: Radius.circular(AppSizes.size30),
                     ),
                   ),
                   child: Form(
@@ -99,7 +100,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       children: [
                         AppTextField(
                           controller: emailController,
-                          hintText: 'Email',
+                          hintText: AppStrings.emailHint,
                           borderColor: Colors.grey.shade300,
                           fillColor: Colors.grey.shade100,
                           validator: Validator.email,
@@ -109,8 +110,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             },
                             icon: SvgPicture.asset(
                               AppSvg.close,
-                              width: 24,
-                              height: 24,
+                              width: AppSizes.size24,
+                              height: AppSizes.size24,
                               color: Colors.grey,
                             ),
                           ),
@@ -119,9 +120,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           prefixIcon: const Icon(Icons.email),
                           shadowColor: AppColors.transparent,
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: AppSpacing.space20),
                         AppElevatedButton(
-                          text: 'Next',
+                          text: AppStrings.nextButton,
                           borderColor: const Color(0xFFf49415),
                           color: const Color(0xFFf49415),
                           splashColor: AppColors.transparent,

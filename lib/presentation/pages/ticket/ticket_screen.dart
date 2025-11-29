@@ -1,3 +1,4 @@
+import 'package:event_go/core/constants/app_strings.dart';
 import 'package:event_go/core/widgets/custom_tab_bar.dart';
 import 'package:event_go/presentation/pages/ticket/ticket_order_screen.dart';
 import 'package:flutter/material.dart';
@@ -12,10 +13,10 @@ class TicketScreen extends StatefulWidget {
 class _TicketScreenState extends State<TicketScreen> with TickerProviderStateMixin {
   late TabController _tabController;
   final List<Tab> tabs = [
-    const Tab(text: 'Tất cả'),
-    const Tab(text: 'Thành công'),
-    const Tab(text: 'Đang xử lý'),
-    const Tab(text: 'Đã hủy'),
+    const Tab(text: AppStrings.all),
+    const Tab(text: AppStrings.success),
+    const Tab(text: AppStrings.processing),
+    const Tab(text: AppStrings.cancelled),
   ];
 
   @override
@@ -34,7 +35,7 @@ class _TicketScreenState extends State<TicketScreen> with TickerProviderStateMix
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Vé của tôi', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        title: Text(AppStrings.myTickets, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
         backgroundColor: Color(0xFF596DC3),
         centerTitle: true,
       ),
