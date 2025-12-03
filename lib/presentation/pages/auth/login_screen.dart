@@ -67,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(height: AppSpacing.space10),
                         Text(
                           AppStrings.loginDescription,
-                          style: TextStyle(color: Color(0xFFf49415), fontSize: 12),
+                          style: TextStyle(color: Color(0xFFf49415), fontSize:AppSizes.size12),
                           textAlign: TextAlign.justify,
                         ),
                       ],
@@ -81,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 right: 0,
                 child: Container(
                   padding: const EdgeInsets.all(AppSpacing.space20),
-                  height: MediaQuery.of(context).size.height * 0.70,
+                  height: MediaQuery.of(context).size.height * AppSizes.size0_7,
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
@@ -191,7 +191,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         RichText(
                           text: TextSpan(
                             text: AppStrings.noAccount,
-                            style: TextStyle(color: Colors.grey, fontSize: 14),
+                            style: TextStyle(color: Colors.grey, fontSize: AppSizes.size14),
                             children: [
                               TextSpan(
                                 text: AppStrings.signUpButton,

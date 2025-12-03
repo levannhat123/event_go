@@ -63,14 +63,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           AppStrings.signUpTitle,
                           style: TextStyle(
                             color: Color(0xFFf49415),
-                            fontSize: 24,
+                            fontSize: AppSizes.size24,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         const SizedBox(height: AppSpacing.space10),
                         Text(
                           AppStrings.signUpDescription,
-                          style: TextStyle(color: Color(0xFFf49415), fontSize: 12),
+                          style: TextStyle(color: Color(0xFFf49415), fontSize: AppSizes.size12),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -86,7 +86,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 right: 0,
                 child: Container(
                   padding: const EdgeInsets.all(AppSpacing.space20),
-                  height: MediaQuery.of(context).size.height * 0.70,
+                  height: MediaQuery.of(context).size.height * AppSizes.size0_7,
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
@@ -161,7 +161,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 text: AppStrings.register,
                                 textColor: AppColors.textPrimary,
                                 color: Color(0xFFf49415),
-                                fontSize: 15.0,
+                                fontSize: AppSizes.size15,
                                 borderColor: Color(0xFFf49415),
                                 splashColor: AppColors.transparent,
                                 highlightColor: AppColors.white,
@@ -204,7 +204,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         RichText(
                           text: TextSpan(
                             text: AppStrings.hasAccount,
-                            style: TextStyle(color: Colors.grey, fontSize: 14),
+                            style: TextStyle(color: Colors.grey, fontSize: AppSizes.size14),
                             children: [
                               TextSpan(
                                 text: AppStrings.login,

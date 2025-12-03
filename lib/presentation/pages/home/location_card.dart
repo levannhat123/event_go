@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../../core/constants/app_sizes.dart';
+import '../../../core/constants/app_spacing.dart';
 class ImprovedLocationCard extends StatelessWidget {
   final String title;
   final String line1;
@@ -65,7 +68,7 @@ class ImprovedLocationCard extends StatelessWidget {
                   Positioned(
                     right: -30,
                     bottom: -40,
-                    child: Icon(Icons.map_rounded, size: 150, color: Colors.white.withOpacity(0.7)),
+                    child: Icon(Icons.map_rounded, size: AppSizes.size150, color: Colors.white.withOpacity(0.7)),
                   ),
                   // Nội dung chính
                   Row(
@@ -81,15 +84,15 @@ class ImprovedLocationCard extends StatelessWidget {
                                 title,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 18,
+                                  fontSize: AppSizes.size18,
                                   color: Color(0xFF1C2D56),
                                 ),
                               ),
-                              const SizedBox(height: 8.0),
+                              const SizedBox(height: AppSizes.size8),
                               Text(
                                 line1,
                                 style: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: AppSizes.size14,
                                   color: Colors.grey[600],
                                   height: 1.5,
                                 ),
@@ -97,7 +100,7 @@ class ImprovedLocationCard extends StatelessWidget {
                               Text(
                                 line2,
                                 style: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: AppSizes.size14,
                                   color: Colors.grey[600],
                                   height: 1.5,
                                 ),
@@ -108,9 +111,9 @@ class ImprovedLocationCard extends StatelessWidget {
                       ),
                       // Icon Pin
                       Container(
-                        padding: const EdgeInsets.only(right: 24.0),
+                        padding: const EdgeInsets.only(right: AppSpacing.space24),
                         child: Container(
-                          padding: const EdgeInsets.all(12.0),
+                          padding: const EdgeInsets.all(AppSpacing.space12),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             shape: BoxShape.circle,
@@ -122,7 +125,7 @@ class ImprovedLocationCard extends StatelessWidget {
                               ),
                             ],
                           ),
-                          child: Icon(Icons.location_on, color: Colors.blue[500], size: 30),
+                          child: Icon(Icons.location_on, color: Colors.blue[500], size: AppSizes.size30),
                         ),
                       ),
                     ],

@@ -118,7 +118,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               Icon(
                                 Icons.calendar_today,
                                 color: AppColors.white,
-                                size: 20,
+                                size: AppSizes.size20,
                               ),
                               const SizedBox(width: AppSpacing.space4),
                               Center(
@@ -126,7 +126,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                   viewModel.selectedDateText,
                                   style: TextStyle(
                                     color: AppColors.white,
-                                    fontSize: 14,
+                                    fontSize: AppSizes.size14,
                                   ),
                                 ),
                               ),
@@ -134,7 +134,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               Icon(
                                 Icons.keyboard_arrow_down,
                                 color: AppColors.white,
-                                size: 20,
+                                size: AppSizes.size20,
                               ),
                             ],
                           ),
@@ -172,7 +172,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               Icon(
                                 Icons.filter_alt_sharp,
                                 color: AppColors.white,
-                                size: 20,
+                                size: AppSizes.size20,
                               ),
                               const SizedBox(width: AppSpacing.space4),
                               Center(
@@ -180,7 +180,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                   AppStrings.filterButton,
                                   style: TextStyle(
                                     color: AppColors.white,
-                                    fontSize: 14,
+                                    fontSize: AppSizes.size14,
                                   ),
                                 ),
                               ),
@@ -188,7 +188,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               Icon(
                                 Icons.keyboard_arrow_down,
                                 color: AppColors.white,
-                                size: 20,
+                                size: AppSizes.size20,
                               ),
                             ],
                           ),
@@ -225,7 +225,7 @@ class _SearchScreenState extends State<SearchScreen> {
               AppStrings.recentSearches,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 18,
+                fontSize: AppSizes.size18,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -241,7 +241,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   leading: Icon(Icons.access_time, color: Colors.white70),
                   title: Text(item),
                   trailing: IconButton(
-                    icon: Icon(Icons.clear, size: 18, color: Colors.white38),
+                    icon: Icon(Icons.clear, size: AppSizes.size18, color: Colors.white38),
                     onPressed: () {
                       viewModel.removeRecentSearch(item);
                     },
@@ -260,7 +260,7 @@ class _SearchScreenState extends State<SearchScreen> {
             AppStrings.trendingSearches,
             style: TextStyle(
               color: Colors.white,
-              fontSize: 18,
+              fontSize: AppSizes.size18,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -288,7 +288,7 @@ class _SearchScreenState extends State<SearchScreen> {
             AppStrings.exploreByCategory,
             style: TextStyle(
               color: Colors.white,
-              fontSize: 24,
+              fontSize: AppSizes.size24,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -336,7 +336,7 @@ class _SearchScreenState extends State<SearchScreen> {
             AppStrings.exploreByCity,
             style: TextStyle(
               color: Colors.white,
-              fontSize: 24,
+              fontSize: AppSizes.size24,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -384,7 +384,7 @@ class _SearchScreenState extends State<SearchScreen> {
             AppStrings.suggestionsForYou,
             style: TextStyle(
               color: Colors.white,
-              fontSize: 24,
+              fontSize: AppSizes.size24,
               fontWeight: FontWeight.w600,
             ),
           ),

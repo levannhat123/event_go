@@ -179,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         SizedBox(width: AppSpacing.space4),
                                         Icon(
                                           Icons.arrow_forward_ios,
-                                          size: 14,
+                                          size: AppSizes.size14,
                                           color: AppColors.grey,
                                         ),
                                       ],
@@ -202,8 +202,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 itemBuilder: (context, index) {
                                   final event = events[index];
                                   return EventCard(
-                                    height: 100,
-                                    width: 200,
+                                    height: AppSizes.size100,
+                                    width: AppSizes.size200,
                                     imageUrl:
                                         event.bannerURL ?? AppImage.banner_1,
                                     title: event.title,

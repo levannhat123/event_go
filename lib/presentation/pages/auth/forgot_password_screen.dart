@@ -59,18 +59,18 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       children: [
                         CircleAvatar(backgroundImage: AssetImage(AppImage.logo), radius: AppSizes.size40),
                         const SizedBox(height: AppSpacing.space10),
-                        const Text(
+                         Text(
                           AppStrings.forgotPasswordTitle,
                           style: TextStyle(
                             color: Color(0xFFf49415),
-                            fontSize: 24,
+                            fontSize: AppSizes.size12,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         const SizedBox(height: AppSpacing.space10),
                         const Text(
                           AppStrings.forgotPasswordDescription,
-                          style: TextStyle(color: Color(0xFFf49415), fontSize: 12),
+                          style: TextStyle(color: Color(0xFFf49415), fontSize: AppSizes.size12),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -86,7 +86,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 right: 0,
                 child: Container(
                   padding: const EdgeInsets.all(AppSpacing.space20),
-                  height: MediaQuery.of(context).size.height * 0.70,
+                  height: MediaQuery.of(context).size.height * AppSizes.size0_7,
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
