@@ -197,7 +197,7 @@ class AuthViewModel extends BaseViewModel {
         } else {
           await logout();
           _setLoading(false);
-          _setError("Admin vui lòng đăng nhập ở trang quản trị.");
+          _setError(AppStrings.adminLoginOnWeb);
           return false;
         }
       } else {
@@ -371,7 +371,7 @@ class AuthViewModel extends BaseViewModel {
         notifyListeners();
       }
     } catch (e) {
-      print("Lỗi chọn ảnh: $e");
+      print(AppStrings.genericErrorWithDetails.replaceFirst('{error}', 'chọn ảnh: $e'));
     }
   }
 

@@ -45,7 +45,10 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
               height: AppSizes.size50,
               child: Marquee(
                 text: AppStrings.clickToSelectTicket,
-                style: const TextStyle(fontSize: AppSizes.size18, color: Colors.white),
+                style: const TextStyle(
+                  fontSize: AppSizes.size18,
+                  color: Colors.white,
+                ),
                 velocity: AppSizes.size50,
                 blankSpace: AppSizes.size30,
                 pauseAfterRound: const Duration(seconds: 1),
@@ -77,7 +80,7 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
               itemBuilder: (context, index) {
                 final ticket = widget.event.ticketType![index];
                 return Padding(
-                padding: const EdgeInsets.only(bottom: AppSpacing.space10),
+                  padding: const EdgeInsets.only(bottom: AppSpacing.space10),
                   child: ChangeNotifierProvider.value(
                     value: viewModel,
                     child: TicketExpansionItem(ticket: ticket, index: index),
@@ -100,7 +103,10 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
   ) {
     final bool hasTickets = vm.hasTickets;
     final String buttonText = hasTickets
-        ? AppStrings.paymentFormat.replaceAll('{amount}', vm.currencyFormat.format(vm.grandTotal))
+        ? AppStrings.paymentFormat.replaceAll(
+            '{amount}',
+            vm.currencyFormat.format(vm.grandTotal),
+          )
         : AppStrings.pleaseSelectTicket;
     final Color buttonColor = hasTickets
         ? AppColors.green
@@ -122,7 +128,7 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(Icons.keyboard_arrow_up, color: Colors.grey),
-             SizedBox(height: AppSpacing.space4),
+            SizedBox(height: AppSpacing.space4),
             Text(
               widget.event.title,
               style: TextStyle(
@@ -159,10 +165,10 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
                   context.pop();
 
                   if (token != null) {
-                    context.push(RouterPath.payment,  extra: {
-                      'token': token,
-                      'event': widget.event,
-                    },);
+                    context.push(
+                      RouterPath.payment,
+                      extra: {'token': token, 'event': widget.event},
+                    );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text(vmReader.zpTransToken)),
@@ -171,7 +177,9 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
                 }
               },
               height: AppSizes.size40,
-              borderRadius: const BorderRadius.all(Radius.circular(AppSizes.size4)),
+              borderRadius: const BorderRadius.all(
+                Radius.circular(AppSizes.size4),
+              ),
               textColor: textColor,
               color: buttonColor,
               fontSize: AppSizes.size15,
@@ -192,7 +200,10 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
   ) {
     final bool hasTickets = vm.hasTickets;
     final String buttonText = hasTickets
-        ? AppStrings.paymentFormat.replaceAll('{amount}', vm.currencyFormat.format(vm.grandTotal))
+        ? AppStrings.paymentFormat.replaceAll(
+            '{amount}',
+            vm.currencyFormat.format(vm.grandTotal),
+          )
         : AppStrings.pleaseSelectTicket;
     final Color buttonColor = hasTickets
         ? AppColors.green
@@ -228,7 +239,11 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
           const SizedBox(height: AppSpacing.space10),
           const Divider(color: Color(0xFF27272E), thickness: 3),
           ListTile(
-            leading: Icon(Icons.location_on, color: AppColors.green, size: AppSizes.size20),
+            leading: Icon(
+              Icons.location_on,
+              color: AppColors.green,
+              size: AppSizes.size20,
+            ),
             title: Text(
               widget.event.venue ?? '',
               style: TextStyle(
@@ -240,7 +255,11 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
             contentPadding: EdgeInsets.zero,
           ),
           ListTile(
-            leading: Icon(Icons.calendar_today, color: AppColors.green, size: AppSizes.size20),
+            leading: Icon(
+              Icons.calendar_today,
+              color: AppColors.green,
+              size: AppSizes.size20,
+            ),
             title: Text(
               FormatPrice.formatDateTime(widget.event.startTime.toString()),
               style: TextStyle(
@@ -305,7 +324,9 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
               }
             },
             height: AppSizes.size40,
-            borderRadius: const BorderRadius.all(Radius.circular(AppSizes.size4)),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(AppSizes.size4),
+            ),
             textColor: textColor,
             color: buttonColor,
             fontSize: AppSizes.size15,

@@ -7,6 +7,7 @@ import 'package:event_go/core/widgets/handle_bar.dart';
 import 'package:event_go/core/widgets/input_verification.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 class Verification2FAWidget extends StatefulWidget {
   final bool autoFocus;
   final Function(String code) onSubmit;
@@ -29,8 +30,10 @@ class Verification2FAWidget extends StatefulWidget {
 
 class _Verification2FAWidgetState extends State<Verification2FAWidget> {
   final List<FocusNode> _focusNodes = List.generate(6, (_) => FocusNode());
-  final List<TextEditingController> _controllers =
-  List.generate(6, (_) => TextEditingController());
+  final List<TextEditingController> _controllers = List.generate(
+    6,
+    (_) => TextEditingController(),
+  );
 
   final ValueNotifier<String?> _errorText = ValueNotifier(null);
   final ValueNotifier<int> _attempts = ValueNotifier(0);
@@ -72,11 +75,13 @@ class _Verification2FAWidgetState extends State<Verification2FAWidget> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(AppStrings.otpInputTitle,
-                    style: AppTextStyles.title2.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    )),
+                Text(
+                  AppStrings.otpInputTitle,
+                  style: AppTextStyles.title2.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 SizedBox(height: AppSizes.size20.h),
 
                 InputVerification(
@@ -110,7 +115,7 @@ class _Verification2FAWidgetState extends State<Verification2FAWidget> {
                   highlightColor: AppColors.white,
                   onPressed: () async {
                     if (code.length < 6) {
-                      _errorText.value = "Vui lòng nhập đủ 6 số OTP.";
+                      _errorText.value = AppStrings.enterFullOtp;
                       return;
                     }
                     final result = await widget.onSubmit(code);
@@ -119,8 +124,11 @@ class _Verification2FAWidgetState extends State<Verification2FAWidget> {
                       if (_attempts.value >= 4) {
                         Navigator.pop(context);
                       } else {
-                        _errorText.value =
-                        "Mã OTP không đúng. Còn ${4 - _attempts.value} lần thử.";
+                        _errorText.value = AppStrings.otpIncorrectAttempts
+                            .replaceFirst(
+                              '{remaining}',
+                              (4 - _attempts.value).toString(),
+                            );
                       }
                     }
                   },

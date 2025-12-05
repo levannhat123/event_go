@@ -3,6 +3,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/constants/app_sizes.dart';
 import '../../../core/constants/app_spacing.dart';
+import '../../../core/constants/app_strings.dart';
 class ImprovedLocationCard extends StatelessWidget {
   final String title;
   final String line1;
@@ -25,10 +26,22 @@ class ImprovedLocationCard extends StatelessWidget {
       } else {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Không thể mở bản đồ cho: $fullAddress')));
+        ).showSnackBar(
+          SnackBar(
+            content: Text(
+              AppStrings.mapOpenError.replaceFirst('{address}', fullAddress),
+            ),
+          ),
+        );
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Lỗi: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            AppStrings.genericErrorWithDetails.replaceFirst('{error}', '$e'),
+          ),
+        ),
+      );
     }
   }
 

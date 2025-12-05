@@ -301,7 +301,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     return Container(
                       height: AppSizes.size8,
                       margin: EdgeInsets.only(right: AppSpacing.space5),
-                      width: viewModel.currentIndex == i ? AppSizes.size20 : AppSizes.size8,
+                      width: viewModel.currentIndex == i
+                          ? AppSizes.size20
+                          : AppSizes.size8,
                       decoration: BoxDecoration(
                         color: viewModel.currentIndex == i
                             ? AppColors.primary

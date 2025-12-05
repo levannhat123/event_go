@@ -1,8 +1,8 @@
 import 'package:event_go/core/constants/app_colors.dart';
+import 'package:event_go/core/constants/app_strings.dart';
 import 'package:event_go/core/utils/format_price.dart';
 import 'package:flutter/material.dart';
 
-// Widget Card có thể tái sử dụng
 class EventCard extends StatelessWidget {
   final String imageUrl;
   final String title;
@@ -11,7 +11,6 @@ class EventCard extends StatelessWidget {
   final VoidCallback? onTap;
   final double width;
   final double height;
-
 
   const EventCard({
     Key? key,
@@ -49,12 +48,15 @@ class EventCard extends StatelessWidget {
                   return Container(
                     height: 160,
                     color: Colors.grey[800],
-                    child: const Icon(Icons.broken_image, color: Colors.white54, size: 48),
+                    child: const Icon(
+                      Icons.broken_image,
+                      color: Colors.white54,
+                      size: 48,
+                    ),
                   );
                 },
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: Column(
@@ -77,10 +79,8 @@ class EventCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-
-                  // Giá vé
                   Text(
-                    "Từ ${FormatPrice.format(double.tryParse(price) ?? 0)}",
+                    "${AppStrings.fromPrice}${FormatPrice.format(double.tryParse(price) ?? 0)}",
                     style: const TextStyle(
                       color: Color(0xFF23D288),
                       fontSize: 14,
@@ -90,9 +90,19 @@ class EventCard extends StatelessWidget {
                   const SizedBox(height: 12),
                   Row(
                     children: [
-                      const Icon(Icons.calendar_today_outlined, color: Colors.white70, size: 14),
+                      const Icon(
+                        Icons.calendar_today_outlined,
+                        color: Colors.white70,
+                        size: 14,
+                      ),
                       const SizedBox(width: 6),
-                      Text(FormatPrice.formatDate(date), style: const TextStyle(color: Colors.white70, fontSize: 12)),
+                      Text(
+                        FormatPrice.formatDate(date),
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 12,
+                        ),
+                      ),
                     ],
                   ),
                 ],

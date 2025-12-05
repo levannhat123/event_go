@@ -23,7 +23,7 @@ enum CaptchaResult { success, fail, lockedOut }
 
 class HomeViewModel extends BaseViewModel {
   final WatchAllEventsUsecase watchAllEventsUsecase;
-  HomeViewModel(this.watchAllEventsUsecase){
+  HomeViewModel(this.watchAllEventsUsecase) {
     loadRecentSearches();
     fetchCategories();
   }
@@ -68,7 +68,6 @@ class HomeViewModel extends BaseViewModel {
     });
   }
 
-
   final List<String> trendingTopics = [
     'soobin',
     'gdragon',
@@ -78,8 +77,6 @@ class HomeViewModel extends BaseViewModel {
 
   String _selectedDateText = 'Tất cả các ngày';
   String get selectedDateText => _selectedDateText;
-
-
 
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
@@ -248,6 +245,7 @@ class HomeViewModel extends BaseViewModel {
     _applyFilters();
     notifyListeners();
   }
+
   void applyFilterSheet() {
     _appliedLocation = _selectedLocation;
     _appliedIsFree = _isFree;
@@ -255,6 +253,7 @@ class HomeViewModel extends BaseViewModel {
     _appliedCategories.addAll(_selectedCategories);
     _applyFilters();
   }
+
   int _captchaFailCount = 0;
   DateTime? _lockoutEndTime;
   bool _isExpanded = false;
@@ -319,7 +318,7 @@ class HomeViewModel extends BaseViewModel {
         return CaptchaResult.lockedOut;
       } else {
         _captchaErrorText =
-        'Xác minh không đúng! (Thử lại: $_captchaFailCount/5)';
+            'Xác minh không đúng! (Thử lại: $_captchaFailCount/5)';
         notifyListeners();
         return CaptchaResult.fail;
       }
@@ -427,8 +426,11 @@ class HomeViewModel extends BaseViewModel {
 
   String get selectedPaymentMethod => _selectedPaymentMethod;
 
-  void initPaymentScreen(String token, BuildContext context,
-      {VoidCallback? onTimerExpired}) {
+  void initPaymentScreen(
+    String token,
+    BuildContext context, {
+    VoidCallback? onTimerExpired,
+  }) {
     _paymentToken = token;
     _timeRemaining = const Duration(minutes: 1, seconds: 38);
     _paymentTimer?.cancel();
@@ -471,12 +473,11 @@ class HomeViewModel extends BaseViewModel {
       if (orderId != null) {
         final email = userEmail;
         if (event != null && email != null && email.contains('@')) {
-          sendOrderEmailWithQR(orderId, email, event!.title)
-              .catchError((e) {
-          });
+          sendOrderEmailWithQR(orderId, email, event!.title).catchError((e) {});
         } else {
           print(
-              'Không gửi email: Email không hợp lệ hoặc người dùng không đăng nhập ($email)');
+            'Không gửi email: Email không hợp lệ hoặc người dùng không đăng nhập ($email)',
+          );
         }
         initBooking();
         notifyListeners();
@@ -510,12 +511,12 @@ class HomeViewModel extends BaseViewModel {
     clearError();
     try {
       _subscription = watchAllEventsUsecase.call().listen(
-            (list) {
+        (list) {
           _events = list;
           _hotEvents = list.where((event) => event.isHot == true).toList();
           final allCategories = groupBy(
             list,
-                (EventDetailModel e) => e.categories?.name ?? 'Khác',
+            (EventDetailModel e) => e.categories?.name ?? 'Khác',
           );
           const desiredCategories = [
             'Nhạc sống',
@@ -525,7 +526,7 @@ class HomeViewModel extends BaseViewModel {
           ];
           _eventsByCategory = Map.fromEntries(
             allCategories.entries.where(
-                  (entry) => desiredCategories.contains(entry.key),
+              (entry) => desiredCategories.contains(entry.key),
             ),
           );
           setBusy(false);
@@ -596,7 +597,6 @@ class HomeViewModel extends BaseViewModel {
       'checkinStatus': 'pending',
       'checkinTimestamp': null,
       "checkedIn": 0,
-
     };
     try {
       final docRef = await _db
@@ -614,34 +614,24 @@ class HomeViewModel extends BaseViewModel {
       return null;
     }
   }
+
   Future<String> processCheckIn(String orderId) async {
-    // Tham chiếu đến vé trong collection 'tickets'
     final ticketRef = _db.collection('tickets').doc(orderId);
 
     try {
-      // Chạy một transaction để đảm bảo an toàn dữ liệu
       final String message = await _db.runTransaction((transaction) async {
-        // 1. Đọc dữ liệu vé
         final ticketDoc = await transaction.get(ticketRef);
-
-        // 2. Kiểm tra vé có tồn tại không
         if (!ticketDoc.exists) {
           return "LỖI: Vé không hợp lệ hoặc không tồn tại.";
         }
-
         final data = ticketDoc.data();
         if (data == null) {
           return "LỖI: Không thể đọc dữ liệu vé.";
         }
-
-        // 3. Kiểm tra trạng thái thanh toán
         if (data['paymentStatus'] != 'completed') {
           return "LỖI: Vé này chưa hoàn tất thanh toán.";
         }
-
-        // 4. Kiểm tra trạng thái check-in
         final checkinStatus = data['checkinStatus'];
-
         if (checkinStatus == 'completed') {
           final timestamp = data['checkinTimestamp'] as Timestamp?;
           final timeStr = timestamp != null
@@ -649,23 +639,20 @@ class HomeViewModel extends BaseViewModel {
               : 'không rõ';
           return "LỖI: Vé này ĐÃ ĐƯỢC CHECK-IN lúc $timeStr.";
         }
-
-        // 5. [THÀNH CÔNG] Cập nhật trạng thái
         transaction.update(ticketRef, {
           'checkinStatus': 'completed',
           'checkinTimestamp': FieldValue.serverTimestamp(),
         });
-
         final email = data['userEmail'] ?? 'Khách';
         return "THÀNH CÔNG: Check-in cho [$email] thành công!";
       });
-
-      return message; // Trả về thông báo từ transaction
+      return message;
     } catch (e) {
       print("Lỗi transaction check-in: $e");
       return "LỖI HỆ THỐNG: Đã xảy ra lỗi. Vui lòng thử lại.";
     }
   }
+
   Stream<QuerySnapshot<Map<String, dynamic>>>? get ordersStream {
     if (_userId == null) {
       print("Không thể lấy order stream: UserID is null.");
@@ -685,7 +672,10 @@ class HomeViewModel extends BaseViewModel {
   }
 
   Future<void> sendOrderEmailWithQR(
-      String orderId, String userEmail, String eventName) async {
+    String orderId,
+    String userEmail,
+    String eventName,
+  ) async {
     final dio = Dio();
     try {
       final String qrCodeData = orderId;
@@ -711,7 +701,7 @@ class HomeViewModel extends BaseViewModel {
         options: Options(
           headers: {
             'Content-Type': 'application/json',
-            'origin': 'http://localhost'
+            'origin': 'http://localhost',
           },
         ),
       );
@@ -720,22 +710,22 @@ class HomeViewModel extends BaseViewModel {
         print('Gửi email xác nhận đơn hàng thành công.');
       } else {
         print(
-            'Gửi email thất bại. Status: ${response.statusCode}, Body: ${response.data}');
+          'Gửi email thất bại. Status: ${response.statusCode}, Body: ${response.data}',
+        );
       }
     } on DioException catch (e) {
-      print('Lỗi khi gửi email (DioException): ${e.response?.data ?? e.message}');
+      print(
+        'Lỗi khi gửi email (DioException): ${e.response?.data ?? e.message}',
+      );
     } catch (e) {
       print('Lỗi khi gửi email (unknown): $e');
     }
   }
-  final TextEditingController searchController = TextEditingController();
 
+  final TextEditingController searchController = TextEditingController();
 
   List<EventDetailModel> _searchResults = [];
   List<EventDetailModel> get searchResults => _searchResults;
-
-
-
 
   static const String _recentSearchesKey = 'recent_searches';
 
@@ -771,8 +761,11 @@ class HomeViewModel extends BaseViewModel {
     }
     notifyListeners();
   }
+
   Future<void> removeRecentSearch(String query) async {
-    recentSearches.removeWhere((item) => item.toLowerCase() == query.toLowerCase());
+    recentSearches.removeWhere(
+      (item) => item.toLowerCase() == query.toLowerCase(),
+    );
 
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -782,26 +775,23 @@ class HomeViewModel extends BaseViewModel {
     }
     notifyListeners();
   }
+
   String _appliedSearchQuery = '';
   DateTime? _appliedSelectedDay;
   DateTime? _appliedRangeStart;
   DateTime? _appliedRangeEnd;
   bool _appliedIsAllDays = true; // Mặc định là 'Tất cả các ngày'
 
-  // Biến này sẽ quyết định UI hiển thị "Khám phá" hay "Kết quả"
   bool get isFilterActive {
     return _appliedSearchQuery.isNotEmpty ||
-        !_appliedIsAllDays || // Có lọc ngày
-        _appliedLocation != 'Toàn quốc' || // <-- Thêm dòng này
-        _appliedIsFree || // <-- Thêm dòng này
-        _appliedCategories.isNotEmpty; // <-- Thêm dòng này
+        !_appliedIsAllDays ||
+        _appliedLocation != 'Toàn quốc' ||
+        _appliedIsFree ||
+        _appliedCategories.isNotEmpty;
   }
-  // [THÊM MỚI] Hàm lọc trung tâm
-  void _applyFilters() {
-    // 1. Bắt đầu với danh sách đầy đủ
-    List<EventDetailModel> filteredEvents = List.from(_events);
 
-    // 2. Lọc theo Text Query (nếu có)
+  void _applyFilters() {
+    List<EventDetailModel> filteredEvents = List.from(_events);
     if (_appliedSearchQuery.isNotEmpty) {
       filteredEvents = filteredEvents.where((event) {
         final title = event.title.toLowerCase();
@@ -810,23 +800,17 @@ class HomeViewModel extends BaseViewModel {
         return title.contains(query) || venue.contains(query);
       }).toList();
     }
-
-    // 3. Lọc theo Ngày (nếu có)
     if (!_appliedIsAllDays) {
       if (_appliedSelectedDay != null) {
-        // Lọc theo ngày cụ thể
         filteredEvents = filteredEvents.where((event) {
           if (event.startTime == null) return false;
-          // Chỉ so sánh Năm-Tháng-Ngày
           final eventDate = event.startTime!;
           return eventDate.year == _appliedSelectedDay!.year &&
               eventDate.month == _appliedSelectedDay!.month &&
               eventDate.day == _appliedSelectedDay!.day;
         }).toList();
       } else if (_appliedRangeStart != null && _appliedRangeEnd != null) {
-        // Lọc theo khoảng ngày
         final rangeEndMidnight = _appliedRangeEnd!.add(const Duration(days: 1));
-
         filteredEvents = filteredEvents.where((event) {
           if (event.startTime == null) return false;
           final eventDate = event.startTime!;
@@ -835,9 +819,6 @@ class HomeViewModel extends BaseViewModel {
         }).toList();
       }
     }
-
-    // 4. [THÊM LOGIC LỌC MỚI]
-    // Lọc địa điểm
     if (_appliedLocation != 'Toàn quốc') {
       if (_appliedLocation == 'Vị trí khác') {
         final mainLocations = ['hà nội', 'hồ chí minh', 'đà lạt'];
@@ -852,60 +833,50 @@ class HomeViewModel extends BaseViewModel {
         }).toList();
       }
     }
-
-    // Lọc miễn phí
     if (_appliedIsFree) {
       filteredEvents = filteredEvents
           .where((event) => (event.isFree ?? false) == true)
           .toList();
     }
-
-    // Lọc thể loại
     if (_appliedCategories.isNotEmpty) {
       filteredEvents = filteredEvents.where((event) {
         final eventCategory = event.categories?.name;
         if (eventCategory == null) return false;
-        // Kiểm tra xem category của event có nằm trong danh sách đã chọn không
         return _appliedCategories.contains(eventCategory);
       }).toList();
     }
-
-    // 5. Cập nhật kết quả cuối cùng
     _searchResults = filteredEvents;
     notifyListeners();
   }
+
   void searchEvents(String query) {
     _appliedSearchQuery = query.trim();
-    _applyFilters(); // Gọi hàm lọc trung tâm
+    _applyFilters();
   }
 
-  // [THAY THẾ] Hàm này
   void clearSearch() {
     searchController.clear();
     _appliedSearchQuery = '';
-    _applyFilters(); // Gọi hàm lọc trung tâm
+    _applyFilters();
   }
 
-  // [THAY THẾ] Hàm này
   void updateDateFilter(Map<String, dynamic>? result) {
     if (result != null) {
-      // Cập nhật trạng thái bộ lọc ĐÃ ÁP DỤNG
       _appliedIsAllDays = result['isAllDays'] as bool;
       _appliedSelectedDay = result['selectedDay'] as DateTime?;
       _appliedRangeStart = result['rangeStart'] as DateTime?;
       _appliedRangeEnd = result['rangeEnd'] as DateTime?;
-
-      // Cập nhật văn bản hiển thị
       if (_appliedIsAllDays) {
         _selectedDateText = 'Tất cả các ngày';
       } else if (_appliedSelectedDay != null) {
-        _selectedDateText = DateFormat('dd/MM/yyyy').format(_appliedSelectedDay!);
+        _selectedDateText = DateFormat(
+          'dd/MM/yyyy',
+        ).format(_appliedSelectedDay!);
       } else if (_appliedRangeStart != null && _appliedRangeEnd != null) {
         _selectedDateText =
-        '${DateFormat('dd/MM').format(_appliedRangeStart!)} - ${DateFormat('dd/MM').format(_appliedRangeEnd!)}';
+            '${DateFormat('dd/MM').format(_appliedRangeStart!)} - ${DateFormat('dd/MM').format(_appliedRangeEnd!)}';
       }
     } else {
-      // Nếu người dùng đóng sheet (result == null), reset về mặc định
       _appliedIsAllDays = true;
       _appliedSelectedDay = null;
       _appliedRangeStart = null;
@@ -913,19 +884,20 @@ class HomeViewModel extends BaseViewModel {
       _selectedDateText = 'Tất cả các ngày';
     }
 
-    _applyFilters(); // Gọi hàm lọc trung tâm
+    _applyFilters();
   }
+
   List<CategoryModel> _fetchedCategories = [];
   List<CategoryModel> get fetchedCategories => _fetchedCategories;
   Future<void> fetchCategories() async {
     _fetchedCategories = await getAllCategories();
     notifyListeners();
   }
+
   Future<List<CategoryModel>> getAllCategories() async {
     try {
       final snapshot = await _db.collection('categories').get();
       final categories = snapshot.docs.map((doc) {
-
         return CategoryModel.fromJson(doc.data());
       }).toList();
 
@@ -935,6 +907,7 @@ class HomeViewModel extends BaseViewModel {
       return [];
     }
   }
+
   String _appliedLocation = 'Toàn quốc';
   bool _appliedIsFree = false;
   final Set<String> _appliedCategories = {};
@@ -947,29 +920,26 @@ class HomeViewModel extends BaseViewModel {
     _appliedSelectedDay = null;
     _appliedRangeStart = null;
     _appliedRangeEnd = null;
-    // Cập nhật lại text của nút
     _selectedDateText = 'Tất cả các ngày';
     _applyFilters();
-    notifyListeners(); // Cần notify để cập nhật text trên nút
+    notifyListeners();
   }
 
-  /// Gỡ bỏ bộ lọc địa điểm
   void removeLocationFilter() {
     _appliedLocation = 'Toàn quốc';
     _applyFilters();
   }
 
-  /// Gỡ bỏ bộ lọc giá (miễn phí)
   void removePriceFilter() {
     _appliedIsFree = false;
     _applyFilters();
   }
 
-  /// Gỡ bỏ một thể loại cụ thể
   void removeCategoryFilter(String categoryName) {
     _appliedCategories.remove(categoryName);
     _applyFilters();
   }
+
   bool get isDateFilterActive {
     return !_appliedIsAllDays;
   }
@@ -979,29 +949,22 @@ class HomeViewModel extends BaseViewModel {
         _appliedIsFree ||
         _appliedCategories.isNotEmpty;
   }
-  void resetAllFiltersAndSearch() {
-    // 1. Reset text search
-    searchController.clear(); // Xóa chữ trong ô text
-    _appliedSearchQuery = '';
 
-    // 2. Reset bộ lọc ngày
+  void resetAllFiltersAndSearch() {
+    searchController.clear();
+    _appliedSearchQuery = '';
     _appliedIsAllDays = true;
     _appliedSelectedDay = null;
     _appliedRangeStart = null;
     _appliedRangeEnd = null;
-    _selectedDateText = 'Tất cả các ngày'; // Reset text của nút
-
-    // 3. Reset các bộ lọc chính
+    _selectedDateText = 'Tất cả các ngày';
     _appliedLocation = 'Toàn quốc';
     _appliedIsFree = false;
     _appliedCategories.clear();
-
-    // 4. Áp dụng bộ lọc (rỗng) để xóa kết quả tìm kiếm
     _applyFilters();
-
-    // 5. Thông báo cho UI (SearchScreen) cập nhật lại (ví dụ: màu nút)
     notifyListeners();
   }
+
   @override
   void dispose() {
     _timer?.cancel();
@@ -1009,4 +972,3 @@ class HomeViewModel extends BaseViewModel {
     super.dispose();
   }
 }
-

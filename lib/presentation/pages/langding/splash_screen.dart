@@ -1,3 +1,5 @@
+import 'package:event_go/core/constants/app_image.dart';
+import 'package:event_go/core/constants/app_strings.dart';
 import 'package:event_go/presentation/view_models/auth_view_model.dart';
 import 'package:event_go/routers/router_name.dart';
 import 'package:flutter/material.dart';
@@ -45,16 +47,11 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFF011836),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            FlutterLogo(size: 100),
-            SizedBox(height: 20),
-            CircularProgressIndicator(),
-            SizedBox(height: 20),
-            Text('Đang tải...'),
-          ],
+          children: [Image.asset(AppImage.logo, width: 200, height: 200)],
         ),
       ),
     );

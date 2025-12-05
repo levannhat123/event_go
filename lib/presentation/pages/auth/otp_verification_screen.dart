@@ -104,8 +104,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       await showCustomDialog(
         context: context,
         title: AppStrings.verificationFailedTitle,
-        message:
-            viewModel.errorMessage ?? AppStrings.invalidOtpMessage,
+        message: viewModel.errorMessage ?? AppStrings.invalidOtpMessage,
         buttonText: AppStrings.tryAgainButton,
         icon: Icons.error,
         iconColor: Colors.red,
@@ -170,8 +169,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                   ),
                 ),
               ),
-
-              // Form content
               Positioned(
                 bottom: 0,
                 left: 0,
@@ -201,8 +198,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                           ),
                         ),
                         const SizedBox(height: AppSpacing.space30),
-
-                        // OTP Input Fields
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: List.generate(6, (index) {
@@ -225,20 +220,26 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                   filled: true,
                                   fillColor: Colors.grey.shade100,
                                   border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(AppSizes.size10),
+                                    borderRadius: BorderRadius.circular(
+                                      AppSizes.size10,
+                                    ),
                                     borderSide: BorderSide(
                                       color: Colors.grey.shade300,
                                     ),
                                   ),
                                   focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(AppSizes.size10),
+                                    borderRadius: BorderRadius.circular(
+                                      AppSizes.size10,
+                                    ),
                                     borderSide: const BorderSide(
                                       color: Color(0xFF4257b4),
                                       width: AppSizes.size2,
                                     ),
                                   ),
                                   enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(AppSizes.size10),
+                                    borderRadius: BorderRadius.circular(
+                                      AppSizes.size10,
+                                    ),
                                     borderSide: BorderSide(
                                       color: Colors.grey.shade300,
                                     ),
@@ -282,7 +283,9 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                 if (success) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
-                                      content: Text(AppStrings.otpResentSuccess),
+                                      content: Text(
+                                        AppStrings.otpResentSuccess,
+                                      ),
                                       backgroundColor: Colors.green,
                                     ),
                                   );

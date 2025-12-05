@@ -3,8 +3,6 @@ import 'package:event_go/presentation/pages/auth/forgot_password_screen.dart';
 import 'package:event_go/presentation/pages/auth/login_screen.dart';
 import 'package:event_go/presentation/pages/auth/new_password_screen.dart';
 import 'package:event_go/presentation/pages/auth/sign_up_screen.dart';
-import 'package:event_go/presentation/pages/auth/reset_password_screen.dart';
-import 'package:event_go/presentation/pages/auth/otp_verification_screen.dart';
 import 'package:event_go/presentation/pages/home/event/event_booking_screen.dart';
 import 'package:event_go/presentation/pages/home/event/event_detail_screen.dart';
 import 'package:event_go/presentation/pages/home/event/event_payment_screen.dart';
@@ -14,7 +12,6 @@ import 'package:event_go/presentation/pages/home/search/search_screen.dart';
 import 'package:event_go/presentation/pages/langding/langding_screen.dart';
 import 'package:event_go/presentation/pages/main/main_screen.dart';
 import 'package:event_go/presentation/pages/ticket/ticket_screen.dart';
-import 'package:event_go/presentation/pages/user/check_in_scanner_screen.dart';
 import 'package:event_go/presentation/pages/user/profile_screen.dart';
 import 'package:event_go/presentation/pages/user/user_screen.dart';
 import 'package:event_go/presentation/view_models/auth_change_notifier.dart';
@@ -42,10 +39,7 @@ class AppRouter {
             path: RouterPath.login,
             builder: (context, state) => LoginScreen(),
           ),
-          GoRoute(
-            path: RouterPath.check_in,
-            builder: (context, state) => CheckInScannerScreen(),
-          ),
+
           GoRoute(
             path: '/',
             name: 'payment-callback',
@@ -85,7 +79,7 @@ class AppRouter {
             builder: (context, state) {
               final event = state.extra as EventDetailModel;
               return EventBookingScreen(event: event);
-  },
+            },
           ),
           GoRoute(
             path: RouterPath.payment,
@@ -113,7 +107,7 @@ class AppRouter {
             builder: (context, state) {
               final event = state.extra as EventDetailModel;
               return EventDetailScreen(event: event);
-  } ,
+            },
           ),
           ShellRoute(
             routes: [

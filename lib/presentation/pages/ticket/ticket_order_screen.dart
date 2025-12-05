@@ -68,7 +68,10 @@ class _TicketOrderScreenState extends State<TicketOrderScreen>
                   }
                   if (snapshot.hasError) {
                     return _buildEmptyState(
-                      AppStrings.errorLoadingOrders.replaceAll('{error}', snapshot.error.toString()),
+                      AppStrings.errorLoadingOrders.replaceAll(
+                        '{error}',
+                        snapshot.error.toString(),
+                      ),
                       Icons.error,
                     );
                   }
@@ -122,7 +125,8 @@ class _TicketOrderScreenState extends State<TicketOrderScreen>
                             padding: const EdgeInsets.only(bottom: 10),
                             child: OrderHistoryCard(
                               title:
-                                  data['eventName'] as String? ?? AppStrings.eventName,
+                                  data['eventName'] as String? ??
+                                  AppStrings.eventName,
                               statusText: statusInfo['text'],
                               statusColor: statusInfo['color'],
                               orderCode: orderId,

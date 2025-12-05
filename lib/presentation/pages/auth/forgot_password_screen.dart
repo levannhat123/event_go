@@ -43,7 +43,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           resizeToAvoidBottomInset: false,
           body: Stack(
             children: [
-              // Header UI
               Positioned.fill(
                 child: Container(
                   decoration: const BoxDecoration(
@@ -78,8 +77,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   ),
                 ),
               ),
-
-              // Form UI
               Positioned(
                 bottom: 0,
                 left: 0,

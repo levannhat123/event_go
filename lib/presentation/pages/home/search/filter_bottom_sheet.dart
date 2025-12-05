@@ -171,7 +171,9 @@ class FilterBottomSheet extends StatelessWidget {
       // Sửa: Dùng 'fetchedCategories' (List<CategoryModel>)
       children: viewModel.fetchedCategories.map((category) {
         // Sửa: Lấy tên từ 'category.name'
-        final bool isSelected = viewModel.selectedCategories.contains(category.name);
+        final bool isSelected = viewModel.selectedCategories.contains(
+          category.name,
+        );
         return FilterChip(
           label: Text(category.name),
           selected: isSelected,
@@ -205,7 +207,9 @@ class FilterBottomSheet extends StatelessWidget {
               viewModel.resetFilter();
             },
             height: AppSizes.size45,
-            borderRadius: const BorderRadius.all(Radius.circular(AppSizes.size4)),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(AppSizes.size4),
+            ),
             textColor: AppColors.primary,
             color: AppColors.transparent,
             fontSize: AppSizes.size15,
@@ -223,7 +227,9 @@ class FilterBottomSheet extends StatelessWidget {
               context.pop();
             },
             height: AppSizes.size45,
-            borderRadius: const BorderRadius.all(Radius.circular(AppSizes.size4)),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(AppSizes.size4),
+            ),
             textColor: AppColors.white,
             color: AppColors.primary,
             fontSize: AppSizes.size15,

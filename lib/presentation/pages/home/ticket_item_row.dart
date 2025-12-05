@@ -25,8 +25,12 @@ class TicketItemRow extends StatelessWidget {
         Expanded(
           child: Row(
             children: [
-              Icon(Icons.chevron_right, color: Colors.grey[600], size:AppSizes.size20 ),
-              SizedBox(width:AppSizes.size8),
+              Icon(
+                Icons.chevron_right,
+                color: Colors.grey[600],
+                size: AppSizes.size20,
+              ),
+              SizedBox(width: AppSizes.size8),
               Flexible(
                 child: Text(
                   ticketName,
@@ -44,43 +48,45 @@ class TicketItemRow extends StatelessWidget {
         ),
         isSoldOut
             ? Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Text(
-              FormatPrice.format(double.tryParse(price) ?? 0),
-              style: TextStyle(
-                color: Colors.grey[600],
-                fontWeight: FontWeight.w600,
-                fontSize: AppSizes.size12,
-              ),
-            ),
-            SizedBox(height: AppSizes.size4),
-            Container(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 10, vertical: 2),
-              decoration: BoxDecoration(
-                color: Color(0xFFFFCDD2),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(
-                'Hết vé',
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    FormatPrice.format(double.tryParse(price) ?? 0),
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                      fontWeight: FontWeight.w600,
+                      fontSize: AppSizes.size12,
+                    ),
+                  ),
+                  SizedBox(height: AppSizes.size4),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Color(0xFFFFCDD2),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      'Hết vé',
+                      style: TextStyle(
+                        color: Color(0xFFD32F2F),
+                        fontWeight: FontWeight.w600,
+                        fontSize: AppSizes.size12,
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            : Text(
+                FormatPrice.format(double.tryParse(price) ?? 0),
                 style: TextStyle(
-                  color: Color(0xFFD32F2F),
-                  fontWeight: FontWeight.w600,
+                  color: AppColors.green,
+                  fontWeight: FontWeight.bold,
                   fontSize: AppSizes.size12,
                 ),
               ),
-            ),
-          ],
-        )
-            : Text(
-          FormatPrice.format(double.tryParse(price) ?? 0),
-          style: TextStyle(
-            color: AppColors.green,
-            fontWeight: FontWeight.bold,
-            fontSize: AppSizes.size12,
-          ),
-        ),
       ],
     );
   }

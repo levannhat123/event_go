@@ -29,7 +29,8 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController configpasswordController = TextEditingController();
+  final TextEditingController configpasswordController =
+      TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -45,7 +46,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
             children: [
               Positioned.fill(
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space30),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.space30,
+                  ),
                   decoration: const BoxDecoration(
                     color: Color(0xFF4257b4),
                     borderRadius: BorderRadius.only(
@@ -57,7 +60,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     padding: const EdgeInsets.only(top: AppSpacing.space60),
                     child: Column(
                       children: [
-                        CircleAvatar(backgroundImage: AssetImage(AppImage.logo), radius: AppSizes.size40),
+                        CircleAvatar(
+                          backgroundImage: AssetImage(AppImage.logo),
+                          radius: AppSizes.size40,
+                        ),
                         const SizedBox(height: AppSpacing.space10),
                         Text(
                           AppStrings.signUpTitle,
@@ -70,7 +76,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         const SizedBox(height: AppSpacing.space10),
                         Text(
                           AppStrings.signUpDescription,
-                          style: TextStyle(color: Color(0xFFf49415), fontSize: AppSizes.size12),
+                          style: TextStyle(
+                            color: Color(0xFFf49415),
+                            fontSize: AppSizes.size12,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -176,7 +185,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       await showCustomDialog(
                                         context: context,
                                         title: AppStrings.signUpSuccessTitle,
-                                        message: AppStrings.signUpSuccessMessage,
+                                        message:
+                                            AppStrings.signUpSuccessMessage,
                                         buttonText: AppStrings.okayButton,
                                         icon: Icons.check_circle,
                                         iconColor: Colors.green,
@@ -204,7 +214,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         RichText(
                           text: TextSpan(
                             text: AppStrings.hasAccount,
-                            style: TextStyle(color: Colors.grey, fontSize: AppSizes.size14),
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: AppSizes.size14,
+                            ),
                             children: [
                               TextSpan(
                                 text: AppStrings.login,

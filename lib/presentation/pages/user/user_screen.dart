@@ -20,8 +20,6 @@ class UserScreen extends StatefulWidget {
 }
 
 class _UserScreenState extends State<UserScreen> {
-
-
   bool isDarkMode = false;
   @override
   Widget build(BuildContext context) {
@@ -41,10 +39,9 @@ class _UserScreenState extends State<UserScreen> {
             child: Column(
               children: [
                 _buildHeader(viewModel),
-                 SizedBox(height: AppSizes.size100),
+                SizedBox(height: AppSizes.size100),
                 Padding(
-                  padding:  EdgeInsets.symmetric(horizontal: AppSpacing.space16
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.space16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -56,13 +53,14 @@ class _UserScreenState extends State<UserScreen> {
                           _buildSettingsItem(
                             showDivider: false,
                             title: AppStrings.accountInfo,
-                            onTap: ()async {
-                              final didUpdate = await context.push<bool>(RouterPath.profile);
+                            onTap: () async {
+                              final didUpdate = await context.push<bool>(
+                                RouterPath.profile,
+                              );
                               if (didUpdate == true && mounted) {
                                 viewModel.refreshUserProfile();
                               }
                               // context.push(RouterPath.check_in);
-
                             },
                           ),
                         ],
@@ -288,7 +286,9 @@ class _UserScreenState extends State<UserScreen> {
               indicatorSize: const Size(30, 30),
               borderWidth: 1.0,
               customIconBuilder: (context, local, global) => Text(
-                local.value ? AppStrings.languageVietnamese : AppStrings.languageEnglish,
+                local.value
+                    ? AppStrings.languageVietnamese
+                    : AppStrings.languageEnglish,
                 style: TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.bold,

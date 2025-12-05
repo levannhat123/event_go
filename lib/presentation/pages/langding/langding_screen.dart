@@ -25,7 +25,11 @@ class _LangdingScreenState extends State<LangdingScreen> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: const EdgeInsets.only(left: 37.0, right: 37.0, bottom: 64.0),
+              padding: const EdgeInsets.only(
+                left: 37.0,
+                right: 37.0,
+                bottom: 64.0,
+              ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,

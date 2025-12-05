@@ -25,7 +25,8 @@ class NewPasswordScreen extends StatefulWidget {
 
 class _NewPasswordScreenState extends State<NewPasswordScreen> {
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -74,7 +75,10 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                     padding: const EdgeInsets.only(top: AppSpacing.space60),
                     child: Column(
                       children: [
-                        CircleAvatar(backgroundImage: AssetImage(AppImage.logo), radius: AppSizes.size40),
+                        CircleAvatar(
+                          backgroundImage: AssetImage(AppImage.logo),
+                          radius: AppSizes.size40,
+                        ),
                         const SizedBox(height: AppSpacing.space10),
                         const Text(
                           AppStrings.newPasswordTitle,
@@ -87,7 +91,10 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                         const SizedBox(height: AppSpacing.space10),
                         Text(
                           AppStrings.newPasswordDescription,
-                          style: const TextStyle(color: Color(0xFFf49415), fontSize: AppSizes.size12),
+                          style: const TextStyle(
+                            color: Color(0xFFf49415),
+                            fontSize: AppSizes.size12,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -95,8 +102,6 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                   ),
                 ),
               ),
-
-              // Form content
               Positioned(
                 bottom: 0,
                 left: 0,
@@ -140,7 +145,9 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                           shadowColor: AppColors.transparent,
                           suffixIcon: IconButton(
                             icon: Icon(
-                              viewModel.obscurePassword ? Icons.visibility : Icons.visibility_off,
+                              viewModel.obscurePassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
                               color: Colors.grey,
                             ),
                             onPressed: () {
@@ -148,10 +155,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                             },
                           ),
                         ),
-
                         const SizedBox(height: AppSpacing.space20),
-
-                        // Confirm password field
                         const Text(
                           AppStrings.confirmPasswordLabel,
                           style: TextStyle(
@@ -173,7 +177,9 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                           shadowColor: AppColors.transparent,
                           suffixIcon: IconButton(
                             icon: Icon(
-                              viewModel.obscureConfirmPassword ? Icons.visibility : Icons.visibility_off,
+                              viewModel.obscureConfirmPassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
                               color: Colors.grey,
                             ),
                             onPressed: () {
@@ -184,52 +190,60 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                         const SizedBox(height: AppSpacing.space30),
                         viewModel.isLoading
                             ? Center(
-                          child: LoadingAnimationWidget.hexagonDots(
-                            color:Color(0xFFf49415),
-                            size: AppSizes.size50,
-                          ),
-                        )
-                            :    AppElevatedButton(
-                          text: viewModel.isLoading ? AppStrings.updating : AppStrings.resetPasswordButton,
-                          borderColor: const Color(0xFFf49415),
-                          color: const Color(0xFFf49415),
-                          splashColor: AppColors.transparent,
-                          highlightColor: AppColors.white,
-                          onPressed: viewModel.isLoading
-                              ? null
-                              : () async {
-                                  if (_formKey.currentState!.validate()) {
-                                    final success = await viewModel.updatePassword(
-                                      passwordController.text,
-                                    );
-                                    if (success) {
-                                      await showCustomDialog(
-                                        context: context,
-                                        title: AppStrings.resetPasswordSuccessTitle,
-                                        message: AppStrings.passwordUpdatedMessage,
-                                        buttonText: AppStrings.loginButton,
-                                        icon: Icons.check_circle,
-                                        iconColor: Colors.green,
-                                        onPressed: () {
-                                          context.push(RouterPath.login);
-                                        },
-                                      );
-                                    } else {
-                                      await showCustomDialog(
-                                        context: context,
-                                        title: AppStrings.resetPasswordFailedTitle,
-                                        message: viewModel.errorMessage ?? AppStrings.errorOccurredTryAgain,
-                                        buttonText: AppStrings.okayButton,
-                                        icon: Icons.error,
-                                        iconColor: Colors.red,
-                                        onPressed: () {
-                                        },
-                                      );
-                                    }
-
-                                  }
-                                },
-                        ),
+                                child: LoadingAnimationWidget.hexagonDots(
+                                  color: Color(0xFFf49415),
+                                  size: AppSizes.size50,
+                                ),
+                              )
+                            : AppElevatedButton(
+                                text: viewModel.isLoading
+                                    ? AppStrings.updating
+                                    : AppStrings.resetPasswordButton,
+                                borderColor: const Color(0xFFf49415),
+                                color: const Color(0xFFf49415),
+                                splashColor: AppColors.transparent,
+                                highlightColor: AppColors.white,
+                                onPressed: viewModel.isLoading
+                                    ? null
+                                    : () async {
+                                        if (_formKey.currentState!.validate()) {
+                                          final success = await viewModel
+                                              .updatePassword(
+                                                passwordController.text,
+                                              );
+                                          if (success) {
+                                            await showCustomDialog(
+                                              context: context,
+                                              title: AppStrings
+                                                  .resetPasswordSuccessTitle,
+                                              message: AppStrings
+                                                  .passwordUpdatedMessage,
+                                              buttonText:
+                                                  AppStrings.loginButton,
+                                              icon: Icons.check_circle,
+                                              iconColor: Colors.green,
+                                              onPressed: () {
+                                                context.push(RouterPath.login);
+                                              },
+                                            );
+                                          } else {
+                                            await showCustomDialog(
+                                              context: context,
+                                              title: AppStrings
+                                                  .resetPasswordFailedTitle,
+                                              message:
+                                                  viewModel.errorMessage ??
+                                                  AppStrings
+                                                      .errorOccurredTryAgain,
+                                              buttonText: AppStrings.okayButton,
+                                              icon: Icons.error,
+                                              iconColor: Colors.red,
+                                              onPressed: () {},
+                                            );
+                                          }
+                                        }
+                                      },
+                              ),
                       ],
                     ),
                   ),

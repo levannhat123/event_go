@@ -33,9 +33,6 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
     super.dispose();
   }
 
-
-
-
   @override
   Widget build(BuildContext context) {
     const Color cardColor = Color(0xFF2C2C2E);
@@ -61,10 +58,17 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.timer, color: Colors.white, size: AppSizes.size20),
+                    const Icon(
+                      Icons.timer,
+                      color: Colors.white,
+                      size: AppSizes.size20,
+                    ),
                     const SizedBox(width: AppSizes.size8),
                     Text(
-                      AppStrings.ticketHoldTimeRemaining.replaceAll('{time}', viewModel.formattedTimeRemaining),
+                      AppStrings.ticketHoldTimeRemaining.replaceAll(
+                        '{time}',
+                        viewModel.formattedTimeRemaining,
+                      ),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: AppSizes.size14,
@@ -77,7 +81,9 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
               _buildEventInfoCard(widget.event),
               Expanded(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.space10,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -131,22 +137,36 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
           const SizedBox(height: AppSpacing.space12),
           Row(
             children: [
-              Icon(Icons.calendar_today, color: Colors.grey[300], size: AppSizes.size16),
+              Icon(
+                Icons.calendar_today,
+                color: Colors.grey[300],
+                size: AppSizes.size16,
+              ),
               const SizedBox(width: AppSpacing.space8),
               Text(
                 FormatPrice.formatDate(widget.event.startTime.toString()),
-                style: TextStyle(color: Colors.grey[300], fontSize: AppSizes.size14),
+                style: TextStyle(
+                  color: Colors.grey[300],
+                  fontSize: AppSizes.size14,
+                ),
               ),
             ],
           ),
           const SizedBox(height: AppSpacing.space8),
           Row(
             children: [
-              Icon(Icons.location_on, color: Colors.grey[300], size: AppSizes.size16),
+              Icon(
+                Icons.location_on,
+                color: Colors.grey[300],
+                size: AppSizes.size16,
+              ),
               const SizedBox(width: AppSpacing.space8),
               Text(
                 widget.event.venue ?? '',
-                style: TextStyle(color: Colors.grey[300], fontSize: AppSizes.size14),
+                style: TextStyle(
+                  color: Colors.grey[300],
+                  fontSize: AppSizes.size14,
+                ),
               ),
             ],
           ),
@@ -170,7 +190,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
     );
   }
 
-  Widget _buildRecipientInfoCard(Color cardColor,HomeViewModel viewModel,) {
+  Widget _buildRecipientInfoCard(Color cardColor, HomeViewModel viewModel) {
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.space16,
@@ -185,16 +205,26 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
         children: [
           Text(
             AppStrings.electronicTicketInfo,
-            style: TextStyle(color: Colors.grey[400], fontSize: AppSizes.size14),
+            style: TextStyle(
+              color: Colors.grey[400],
+              fontSize: AppSizes.size14,
+            ),
           ),
           const SizedBox(height: AppSpacing.space8),
           Row(
             children: [
-              Icon(Icons.email_outlined, color: Colors.grey[400], size: AppSizes.size20),
+              Icon(
+                Icons.email_outlined,
+                color: Colors.grey[400],
+                size: AppSizes.size20,
+              ),
               const SizedBox(width: 12),
               Text(
-                viewModel.userEmail??'',
-                style: const TextStyle(color: Colors.white, fontSize: AppSizes.size14),
+                viewModel.userEmail ?? '',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: AppSizes.size14,
+                ),
               ),
             ],
           ),
@@ -219,7 +249,11 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
           _buildPaymentOptionRow(
             value: 'zalopay',
             title: AppStrings.zalopay,
-            icon: SvgPicture.asset(AppSvg.zalopay, width: 20, height: AppSpacing.space20),
+            icon: SvgPicture.asset(
+              AppSvg.zalopay,
+              width: 20,
+              height: AppSpacing.space20,
+            ),
             viewModel: viewModel,
             vmReader: vmReader,
           ),
@@ -303,7 +337,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
                         Text(
                           FormatPrice.format(
                             double.tryParse(price.toString()) ?? 0,
-                          ), // Lấy giá vé động
+                          ),
                           style: const TextStyle(
                             color: Colors.black,
                             fontSize: AppSizes.size12,
@@ -374,7 +408,10 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
             children: [
               Expanded(
                 flex: 3,
-                child: Text(AppStrings.subtotal, style: TextStyle(color: Colors.black)),
+                child: Text(
+                  AppStrings.subtotal,
+                  style: TextStyle(color: Colors.black),
+                ),
               ),
               Expanded(
                 flex: 1,
@@ -469,7 +506,9 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
             textColor: AppColors.white,
             color: AppColors.green,
             fontSize: AppSizes.size15,
-            borderRadius: const BorderRadius.all(Radius.circular(AppSizes.size4)),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(AppSizes.size4),
+            ),
             borderColor: AppColors.green,
             splashColor: AppColors.transparent,
             highlightColor: AppColors.white,

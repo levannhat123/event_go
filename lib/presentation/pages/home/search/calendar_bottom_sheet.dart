@@ -32,7 +32,9 @@ class CalendarBottomSheet extends StatelessWidget {
           padding: const EdgeInsets.all(AppSpacing.space16),
           decoration: const BoxDecoration(
             color: AppColors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(AppSizes.size20)),
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(AppSizes.size20),
+            ),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -101,8 +103,14 @@ class CalendarBottomSheet extends StatelessWidget {
                   ),
                   Text(
                     AppStrings.monthFormat
-                        .replaceAll('{month}', viewModel.focusedDay.month.toString())
-                        .replaceAll('{year}', viewModel.focusedDay.year.toString()),
+                        .replaceAll(
+                          '{month}',
+                          viewModel.focusedDay.month.toString(),
+                        )
+                        .replaceAll(
+                          '{year}',
+                          viewModel.focusedDay.year.toString(),
+                        ),
                     style: const TextStyle(
                       fontSize: AppSizes.size16,
                       fontWeight: FontWeight.bold,
@@ -207,7 +215,9 @@ class CalendarBottomSheet extends StatelessWidget {
                       text: AppStrings.resetButton,
                       onPressed: () => viewModel.resetCalendar(),
                       height: AppSizes.size45,
-                      borderRadius: const BorderRadius.all(Radius.circular(AppSizes.size4)),
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(AppSizes.size4),
+                      ),
                       textColor: AppColors.primary,
                       color: AppColors.transparent,
                       fontSize: AppSizes.size15,
@@ -235,7 +245,9 @@ class CalendarBottomSheet extends StatelessWidget {
                             }
                           : null,
                       height: AppSizes.size45,
-                      borderRadius: const BorderRadius.all(Radius.circular(AppSizes.size4)),
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(AppSizes.size4),
+                      ),
                       textColor:
                           (viewModel.selectedDay != null ||
                               viewModel.rangeStart != null ||

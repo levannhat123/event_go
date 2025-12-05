@@ -5,6 +5,7 @@ class AppStrings {
   static const String getStarted = "Bắt Đầu";
   static const String login = "Đăng Nhập";
   static const String register = "Đăng Ký";
+  static const String loading = "Đang tải...";
 
   // Auth related strings
   static const String signUpTitle = "Đăng Ký ";
@@ -42,6 +43,7 @@ class AppStrings {
   static const String nextButton = "Next";
   static const String okayButton = "Okay";
   static const String tryAgainButton = "Thử lại";
+  static const String adminLoginOnWeb = "Admin vui lòng đăng nhập ở trang quản trị.";
 
   // Loading states
   static const String signingUp = "Đang đăng ký...";
@@ -99,6 +101,7 @@ class AppStrings {
   static const String otpSentTo = "Nhập mã 6 chữ số được gửi đến\n";
   static const String enterVerificationCode = "Nhập mã xác thực";
   static const String resendOtpAfter = "Gửi lại mã sau ";
+  static const String otpIncorrectAttempts = "Mã OTP không đúng. Còn {remaining} lần thử.";
   static const String seconds = " giây";
 
   // Password requirements
@@ -153,17 +156,22 @@ class AppStrings {
   static const String liveMusic = "Nhạc sống";
   static const String theaterAndArts = "Sân khấu & Nghệ thuật";
   static const String sports = "Thể Thao";
+  static const String sportsCategory = "Thể thao";
+  static const String theaterAndArtsSimple = "Sân khấu nghệ thuật";
   static const String other = "Khác";
 
   // Location names
+  static const String nationwide = "Toàn quốc";
   static const String hanoi = "Hà Nội";
   static const String hoChiMinh = "TP Hồ Chí Minh";
   static const String dalat = "Đà Lạt";
   static const String otherLocation = "Vị trí khác";
+  static const String unknownTime = "không rõ";
 
   // Event detail related strings
   static const String eventDetailTitle = "Chi tiết sự kiện";
   static const String priceFrom = "Giá từ ";
+  static const String fromPrice = "Từ ";
   static const String buyTicketNow = "Mua vé ngay";
   static const String introduction = "Giới thiệu";
   static const String ticketInfo = "Thông tin vé";
@@ -228,11 +236,16 @@ class AppStrings {
   static const String scanCheckInCode = "Quét mã Check-in";
   static const String processingCheckIn = "Đang xử lý: {orderId}...";
   static const String successPrefix = "THÀNH CÔNG";
+  static const String guest = "Khách";
+  static const String noEmail = "Không có email";
 
   // Home screen strings
   static const String trendingEventsTitle = "🔥 Sự kiện xu hướng";
   static const String recommendedForYouTitle = "Dành cho bạn";
   static const String chooseLocationTitle = "Chọn địa điểm";
+  static const String captchaInvalid = "Xác minh không đúng! (Thử lại: {count}/5)";
+  static const String mapOpenError = "Không thể mở bản đồ cho: {address}";
+  static const String genericErrorWithDetails = "Lỗi: {error}";
 
   // Payment result strings
   static const String transactionResultTitle = "Kết quả giao dịch";
@@ -241,4 +254,27 @@ class AppStrings {
   static const String paymentFailure = "Thanh toán thất bại";
   static const String transactionCodeLabel = "Mã giao dịch: ";
   static const String backToHomeButton = "Về trang chủ";
+  static const String invalidAmount = "Invalid Amount";
+  static const String paymentErrorWithDetails = "Error: {error}";
+
+  // Order and check-in strings
+  static const String eventNotFound = "Sự kiện không tồn tại.";
+  static const String userNotFound = "Người dùng không tồn tại.";
+  static const String ticketTypeNotFound = "Loại vé không tồn tại.";
+  static const String noTicketsSelected = "Không có vé nào được chọn.";
+  static const String orderSaveError = "Lỗi lưu đơn hàng: {error}. Vui lòng liên hệ hỗ trợ.";
+  static const String invalidTicket = "LỖI: Vé không hợp lệ hoặc không tồn tại.";
+  static const String ticketDataError = "LỖI: Không thể đọc dữ liệu vé.";
+  static const String unpaidTicket = "LỖI: Vé này chưa hoàn tất thanh toán.";
+  static const String ticketAlreadyCheckedIn = "LỖI: Vé này ĐÃ ĐƯỢC CHECK-IN lúc {time}.";
+  static const String checkInSuccessMessage = "THÀNH CÔNG: Check-in cho [{email}] thành công!";
+  static const String systemErrorTryAgain = "LỖI HỆ THỐNG: Đã xảy ra lỗi. Vui lòng thử lại.";
+  static const String orderStreamUserIdMissing = "Không thể lấy order stream: UserID is null.";
+  static const String orderStreamError = "Lỗi khi lấy orders stream: {error}";
+  static const String searchHistoryLoadError = "Lỗi khi tải lịch sử tìm kiếm: {error}";
+  static const String searchHistorySaveError = "Lỗi khi lưu lịch sử tìm kiếm: {error}";
+  static const String searchHistoryDeleteError = "Lỗi khi xóa 1 mục lịch sử tìm kiếm: {error}";
+  static const String categoriesFetchError = "Lỗi khi lấy categories: {error}";
+  static const String failedToWatchEvents = "Failed to watch events: {error}";
+  static const String failedToStartWatchingEvents = "Failed to start watching events: {error}";
 }

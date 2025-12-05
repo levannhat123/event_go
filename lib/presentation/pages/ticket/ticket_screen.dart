@@ -10,7 +10,8 @@ class TicketScreen extends StatefulWidget {
   State<TicketScreen> createState() => _TicketScreenState();
 }
 
-class _TicketScreenState extends State<TicketScreen> with TickerProviderStateMixin {
+class _TicketScreenState extends State<TicketScreen>
+    with TickerProviderStateMixin {
   late TabController _tabController;
   final List<Tab> tabs = [
     const Tab(text: AppStrings.all),
@@ -35,7 +36,10 @@ class _TicketScreenState extends State<TicketScreen> with TickerProviderStateMix
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppStrings.myTickets, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        title: Text(
+          AppStrings.myTickets,
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
         backgroundColor: Color(0xFF596DC3),
         centerTitle: true,
       ),
@@ -58,4 +62,3 @@ class _TicketScreenState extends State<TicketScreen> with TickerProviderStateMix
     );
   }
 }
-

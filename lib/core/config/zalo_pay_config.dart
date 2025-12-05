@@ -1,5 +1,5 @@
-import 'dart:convert';
-import 'package:dio/dio.dart'; // THÊM MỚI
+
+import 'package:dio/dio.dart';
 import 'package:event_go/data/models/payment/endpoints.dart';
 import 'package:sprintf/sprintf.dart';
 
@@ -46,29 +46,20 @@ Future<CreateOrderResponse?> createOrder(int price) async {
   try {
     Response response = await dio.post(
       Endpoints.createOrderUrl,
-      data: body, // Dio dùng 'data' thay vì 'body'
+      data: body,
       options: Options(
-        // Dio tự động mã hóa body thành form-urlencoded khi bạn set contentType
         contentType: Headers.formUrlEncodedContentType,
       ),
     );
-
-    // 4. Dio tự động giải mã JSON, không cần jsonDecode
-    // response.data đã là một Map<String, dynamic>
     var data = response.data;
-    print("data_response: $data}");
-
     return CreateOrderResponse.fromJson(data);
   } on DioException catch (e) {
-    // 5. Dio ném lỗi cho các mã trạng thái không phải 2xx
-    // Thay thế cho việc kiểm tra 'response.statusCode != 200'
     print("DioError: ${e.message}");
     if (e.response != null) {
       print("DioError response: ${e.response?.data}");
     }
     return null;
   } catch (e) {
-    // Bắt các lỗi khác
     print("Unexpected error: $e");
     return null;
   }

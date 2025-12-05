@@ -16,6 +16,8 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'core/utils/lang/language.dart';
+
 void main() {
   runZonedGuarded<Future<void>>(
     () async {
@@ -72,6 +74,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
+      supportedLocales: Language.all,
+      // locale: context.watch<LocaleNotifier>().locale,
+      // localizationsDelegates: const [
+      //   AppLocalizations.delegate,
+      //   GlobalMaterialLocalizations.delegate,
+      //   GlobalWidgetsLocalizations.delegate,
+      //   GlobalCupertinoLocalizations.delegate,
+      // ],
       theme: ThemeData(
         scaffoldBackgroundColor: AppColors.background,
         fontFamily: 'IBMPlexSans',

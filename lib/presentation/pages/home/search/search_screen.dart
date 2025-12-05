@@ -300,33 +300,25 @@ class _SearchScreenState extends State<SearchScreen> {
                 CategoryCard(
                   title: AppStrings.liveMusic,
                   imagePath: AppImage.music_category,
-                  onTap: () {
-                    print('Nhấn vào Nhạc sống');
-                  },
+                  onTap: () {},
                 ),
                 const SizedBox(width: AppSpacing.space10),
                 CategoryCard(
                   title: AppStrings.theaterAndArts,
                   imagePath: AppImage.film_category,
-                  onTap: () {
-                    print('Nhấn vào Sân khấu');
-                  },
+                  onTap: () {},
                 ),
                 const SizedBox(width: AppSpacing.space10),
                 CategoryCard(
                   title: AppStrings.sports,
                   imagePath: AppImage.sport_category,
-                  onTap: () {
-                    print('Nhấn vào Thể Thao');
-                  },
+                  onTap: () {},
                 ),
                 const SizedBox(width: AppSpacing.space10),
                 CategoryCard(
                   title: AppStrings.other,
                   imagePath: AppImage.other_category,
-                  onTap: () {
-                    print('Nhấn vào Khác');
-                  },
+                  onTap: () {},
                 ),
               ],
             ),
@@ -348,33 +340,25 @@ class _SearchScreenState extends State<SearchScreen> {
                 CategoryCard(
                   title: AppStrings.hanoi,
                   imagePath: AppImage.hn_location,
-                  onTap: () {
-                    print('Nhấn vào Hà Nội');
-                  },
+                  onTap: () {},
                 ),
                 const SizedBox(width: AppSpacing.space10),
                 CategoryCard(
                   title: AppStrings.hoChiMinh,
                   imagePath: AppImage.hcm_location,
-                  onTap: () {
-                    print('Nhấn vào TP HCM');
-                  },
+                  onTap: () {},
                 ),
                 const SizedBox(width: AppSpacing.space10),
                 CategoryCard(
                   title: AppStrings.dalat,
                   imagePath: AppImage.dalat_location,
-                  onTap: () {
-                    print('Nhấn vào Đà Lạt');
-                  },
+                  onTap: () {},
                 ),
                 const SizedBox(width: AppSpacing.space10),
                 CategoryCard(
                   title: AppStrings.otherLocation,
                   imagePath: AppImage.other_location,
-                  onTap: () {
-                    print('Nhấn vào Vị trí khác');
-                  },
+                  onTap: () {},
                 ),
               ],
             ),
@@ -483,7 +467,7 @@ class _SearchScreenState extends State<SearchScreen> {
     final List<Widget> chips = [];
 
     // 2. Chip Lọc Địa điểm
-    if (viewModel.appliedLocation != 'Toàn quốc') {
+    if (viewModel.appliedLocation != AppStrings.nationwide) {
       chips.add(
         _buildFilterChip(
           viewModel.appliedLocation,

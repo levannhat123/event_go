@@ -215,7 +215,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           enabledBorderColor: Colors.grey.shade300,
                           prefixIcon: const Icon(Icons.lock),
                           suffixIcon: IconButton(
-                            icon: Icon(viewModel.obscureConfirmPassword
+                            icon: Icon(
+                              viewModel.obscureConfirmPassword
                                   ? Icons.visibility
                                   : Icons.visibility_off,
                             ),

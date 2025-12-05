@@ -36,7 +36,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
     return BaseView<HomeViewModel>(
       viewModelBuilder: () => getIt<HomeViewModel>(),
       padding: false,
-      autoDispose: false, // Vì là Singleton
+      autoDispose: false,
       onModelReady: (viewModel) {
         viewModel.initEventDetail();
         viewModel.watchAll();
@@ -163,13 +163,12 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                       SliderCaptcha(
                                         controller: controller,
                                         image: Image.asset(
-                                          vm.currentCaptchaImage, // 7. Dùng ảnh đã lưu
+                                          vm.currentCaptchaImage,
                                           fit: BoxFit.cover,
                                         ),
                                         colorBar: Colors.blue,
                                         colorCaptChar: Colors.blue,
                                         onConfirm: (success) async {
-                                          // 8. Gọi logic VM
                                           final result = vm.onCaptchaConfirm(
                                             success,
                                           );
@@ -191,15 +190,12 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                               ),
                                             );
                                           } else {
-                                            // Fail
-                                            // VM đã set lỗi, Consumer tự rebuild
                                             await Future.delayed(
                                               const Duration(milliseconds: 500),
                                             );
                                             controller.create();
-                                            // Lấy ảnh mới cho lần thử sau
                                             vm.refreshCaptchaImage();
-                                            vm.clearCaptchaError(); // Xóa lỗi
+                                            vm.clearCaptchaError();
                                           }
                                         },
                                       ),
@@ -209,7 +205,6 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                           InkWell(
                                             onTap: () {
                                               controller.create();
-                                              // Lấy ảnh mới
                                               vm.refreshCaptchaImage();
                                               vm.clearCaptchaError();
                                             },
@@ -228,7 +223,6 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                           ),
                                         ],
                                       ),
-                                      // 9. Hiển thị lỗi từ VM
                                       if (vm.captchaErrorText != null)
                                         Padding(
                                           padding: const EdgeInsets.only(

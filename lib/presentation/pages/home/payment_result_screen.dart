@@ -30,7 +30,9 @@ class PaymentResultScreen extends StatelessWidget {
         decodedMessage = message!;
       }
     } else {
-      decodedMessage = isSuccess ? AppStrings.paymentSuccess : AppStrings.paymentFailure;
+      decodedMessage = isSuccess
+          ? AppStrings.paymentSuccess
+          : AppStrings.paymentFailure;
     }
 
     return Scaffold(
@@ -54,7 +56,9 @@ class PaymentResultScreen extends StatelessWidget {
               ),
               const SizedBox(height: AppSpacing.space24),
               Text(
-                isSuccess ? AppStrings.paymentSuccessWithExclamation : AppStrings.paymentFailure,
+                isSuccess
+                    ? AppStrings.paymentSuccessWithExclamation
+                    : AppStrings.paymentFailure,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: AppSizes.size22,
@@ -84,17 +88,23 @@ class PaymentResultScreen extends StatelessWidget {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF596DC3),
-                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 50,
+                    vertical: 15,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
                 onPressed: () {
-                   context.go(RouterPath.ticket);
+                  context.go(RouterPath.ticket);
                 },
                 child: Text(
                   AppStrings.backToHomeButton,
-                  style: TextStyle(color: Colors.white, fontSize: AppSizes.size16),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: AppSizes.size16,
+                  ),
                 ),
               ),
             ],
