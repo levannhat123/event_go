@@ -595,6 +595,8 @@ class HomeViewModel extends BaseViewModel {
       'createdAt': FieldValue.serverTimestamp(),
       'checkinStatus': 'pending',
       'checkinTimestamp': null,
+      "checkedIn": 0,
+
     };
     try {
       final docRef = await _db

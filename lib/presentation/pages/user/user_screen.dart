@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:event_go/core/base/base_view.dart';
 import 'package:event_go/core/constants/app_colors.dart';
+import 'package:event_go/core/constants/app_sizes.dart';
+import 'package:event_go/core/constants/app_spacing.dart';
 import 'package:event_go/core/constants/app_strings.dart';
 import 'package:event_go/injection/injection.dart';
 import 'package:event_go/presentation/view_models/auth_view_model.dart';
@@ -39,9 +41,10 @@ class _UserScreenState extends State<UserScreen> {
             child: Column(
               children: [
                 _buildHeader(viewModel),
-                const SizedBox(height: 100),
+                 SizedBox(height: AppSizes.size100),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  padding:  EdgeInsets.symmetric(horizontal: AppSpacing.space16
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -54,11 +57,11 @@ class _UserScreenState extends State<UserScreen> {
                             showDivider: false,
                             title: AppStrings.accountInfo,
                             onTap: ()async {
-                              // final didUpdate = await context.push<bool>(RouterPath.profile);
-                              // if (didUpdate == true && mounted) {
-                              //   viewModel.refreshUserProfile();
-                              // }
-                              context.push(RouterPath.check_in);
+                              final didUpdate = await context.push<bool>(RouterPath.profile);
+                              if (didUpdate == true && mounted) {
+                                viewModel.refreshUserProfile();
+                              }
+                              // context.push(RouterPath.check_in);
 
                             },
                           ),
