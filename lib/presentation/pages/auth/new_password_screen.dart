@@ -80,14 +80,14 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                           AppStrings.newPasswordTitle,
                           style: TextStyle(
                             color: Color(0xFFf49415),
-                            fontSize: 24,
+                            fontSize: AppSizes.size24,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         const SizedBox(height: AppSpacing.space10),
                         Text(
                           AppStrings.newPasswordDescription,
-                          style: const TextStyle(color: Color(0xFFf49415), fontSize: 12),
+                          style: const TextStyle(color: Color(0xFFf49415), fontSize: AppSizes.size12),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -103,7 +103,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                 right: 0,
                 child: Container(
                   padding: const EdgeInsets.all(AppSpacing.space20),
-                  height: MediaQuery.of(context).size.height * 0.70,
+                  height: MediaQuery.of(context).size.height * AppSizes.size0_7,
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
@@ -122,7 +122,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                         const Text(
                           AppStrings.newPasswordLabel,
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: AppSizes.size16,
                             fontWeight: FontWeight.w500,
                             color: Color(0xFF333333),
                           ),
@@ -155,7 +155,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                         const Text(
                           AppStrings.confirmPasswordLabel,
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: AppSizes.size16,
                             fontWeight: FontWeight.w500,
                             color: Color(0xFF333333),
                           ),

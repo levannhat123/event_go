@@ -57,7 +57,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
           appBar: AppBar(
             title: const Text(
               AppStrings.eventDetailTitle,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: AppSizes.size20, fontWeight: FontWeight.bold),
             ),
             backgroundColor: const Color(0xFF596DC3),
             centerTitle: true,
@@ -74,7 +74,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
               children: [
                 RichText(
                   text:  TextSpan(
-                    style: TextStyle(color: Colors.white, fontSize: 16),
+                    style: TextStyle(color: Colors.white, fontSize: AppSizes.size16),
                     children: [
                       TextSpan(text: AppStrings.priceFrom),
                       TextSpan(
@@ -143,7 +143,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                             },
                                             child: Icon(
                                               Icons.close,
-                                              size: 20,
+                                              size: AppSizes.size20,
                                               color: Colors.black,
                                             ),
                                           ),
@@ -215,7 +215,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                             },
                                             child: Icon(
                                               Icons.refresh,
-                                              size: 16,
+                                              size: AppSizes.size16,
                                               color: Colors.grey,
                                             ),
                                           ),
@@ -255,7 +255,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                   width: AppSizes.size125,
                   textColor: AppColors.white,
                   color: AppColors.green,
-                  fontSize: 15.0,
+                  fontSize: AppSizes.size15,
                   borderRadius: const BorderRadius.all(Radius.circular(AppSizes.size4)),
                   borderColor: AppColors.green,
                   splashColor: AppColors.transparent,
@@ -268,7 +268,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
             child: Column(
               children: [
                 Container(
-                  height: MediaQuery.of(context).size.height * 0.6,
+                  height: MediaQuery.of(context).size.height * AppSizes.size0_6,
                   width: double.infinity,
                   decoration: BoxDecoration(
                     image:  DecorationImage(
@@ -327,7 +327,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                         const Text(
                           AppStrings.introduction,
                           style: TextStyle(
-                            fontSize: 17,
+                            fontSize: AppSizes.size17,
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
                           ),
@@ -340,7 +340,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                             maxLines: 3,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
-                              fontSize: 15,
+                              fontSize: AppSizes.size15,
                               height: 1.4,
                               color: Colors.black,
                             ),
@@ -348,7 +348,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                           secondChild: Text(
                             widget.event.description??'',
                             style: const TextStyle(
-                              fontSize: 15,
+                              fontSize: AppSizes.size15,
                               height: 1.4,
                               color: Colors.black,
                             ),
@@ -401,7 +401,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                         child: Text(
                           AppStrings.ticketInfo,
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: AppSizes.size16,
                             fontWeight: FontWeight.w600,
                             color: Colors.white,
                           ),
@@ -424,7 +424,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                    FormatPrice.formatDate(widget.event.startTime.toString()),
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 12,
+                                    fontSize: AppSizes.size12,
                                     color: Colors.white,
                                   ),
                                 ),
@@ -441,7 +441,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                               ),
                               textColor: AppColors.white,
                               color: AppColors.green,
-                              fontSize: 15.0,
+                              fontSize: AppSizes.size15,
                               borderColor: AppColors.green,
                               splashColor: AppColors.transparent,
                               highlightColor: AppColors.white,
@@ -494,7 +494,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                         const Text(
                           AppStrings.organizer,
                           style: TextStyle(
-                            fontSize: 17,
+                            fontSize: AppSizes.size16,
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
                           ),
@@ -518,7 +518,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                         Text(
                           widget.event.orgName ?? '',
                           style: TextStyle(
-                            fontSize: 15,
+                            fontSize: AppSizes.size15,
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
                           ),
@@ -526,7 +526,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                         const SizedBox(height: AppSpacing.space12),
                         Text(
                           widget.event.orgDescription ?? '',
-                          style: TextStyle(fontSize: 14, color: Colors.black),
+                          style: TextStyle(fontSize: AppSizes.size14, color: Colors.black),
                         ),
                       ],
                     ),
@@ -541,7 +541,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                       Center(
                         child: Text(
                           AppStrings.youMayAlsoLike,
-                          style: TextStyle(fontSize: 16, color: Colors.white),
+                          style: TextStyle(fontSize: AppSizes.size16, color: Colors.white),
                         ),
                       ),
                       SizedBox(height: AppSpacing.space25),
@@ -584,7 +584,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                           width: AppSizes.size120,
                           textColor: AppColors.white,
                           color: Color(0xFFf49415),
-                          fontSize: 15.0,
+                          fontSize: AppSizes.size15,
                           borderColor: Color(0xFFf49415),
                           splashColor: AppColors.transparent,
                           highlightColor: AppColors.white,

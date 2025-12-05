@@ -49,7 +49,7 @@ class TicketExpansionItem extends StatelessWidget {
                       ticket.name,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 12,
+                        fontSize: AppSizes.size12,
                         color: AppColors.green,
                       ),
                     ),
@@ -57,7 +57,7 @@ class TicketExpansionItem extends StatelessWidget {
                       FormatPrice.format(double.tryParse(ticket.price.toString()) ?? 0),
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 12,
+                        fontSize: AppSizes.size12,
                         color: Colors.white,
                       ),
                     ),
@@ -74,7 +74,7 @@ class TicketExpansionItem extends StatelessWidget {
             children: [
               Text(
                 ticket.description??'',
-                style: TextStyle(color: Colors.grey[400], fontSize: 12),
+                style: TextStyle(color: Colors.grey[400], fontSize: AppSizes.size12),
               ),
             ],
           ),
@@ -111,7 +111,7 @@ class TicketExpansionItem extends StatelessWidget {
             child: Text(
               '$quantity',
               style: const TextStyle(
-                fontSize: 16,
+                fontSize: AppSizes.size16,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
               ),

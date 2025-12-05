@@ -45,7 +45,7 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
               height: AppSizes.size50,
               child: Marquee(
                 text: AppStrings.clickToSelectTicket,
-                style: const TextStyle(fontSize: 18, color: Colors.white),
+                style: const TextStyle(fontSize: AppSizes.size18, color: Colors.white),
                 velocity: AppSizes.size50,
                 blankSpace: AppSizes.size30,
                 pauseAfterRound: const Duration(seconds: 1),
@@ -58,7 +58,7 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
           body: SlidingUpPanel(
             controller: viewModel.panelController,
             minHeight: AppSizes.size140,
-            maxHeight: MediaQuery.of(context).size.height * 0.8,
+            maxHeight: MediaQuery.of(context).size.height * AppSizes.size0_8,
             parallaxEnabled: true,
             parallaxOffset: 0.5,
             color: Color(0xFF1A1A1A),
@@ -128,12 +128,12 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
-                fontSize: 14,
+                fontSize: AppSizes.size14,
               ),
             ),
             Text(
               FormatPrice.formatDateTime(widget.event.startTime.toString()),
-              style: TextStyle(color: Colors.grey, fontSize: 12),
+              style: TextStyle(color: Colors.grey, fontSize: AppSizes.size12),
             ),
             const SizedBox(height: AppSpacing.space8),
             AppElevatedButton(
@@ -174,7 +174,7 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
               borderRadius: const BorderRadius.all(Radius.circular(AppSizes.size4)),
               textColor: textColor,
               color: buttonColor,
-              fontSize: 15.0,
+              fontSize: AppSizes.size15,
               borderColor: AppColors.transparent,
               splashColor: AppColors.transparent,
               highlightColor: AppColors.white,
@@ -221,31 +221,31 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
               color: Colors.white,
-              fontSize: 16,
+              fontSize: AppSizes.size16,
               fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: AppSpacing.space10),
           const Divider(color: Color(0xFF27272E), thickness: 3),
           ListTile(
-            leading: Icon(Icons.location_on, color: AppColors.green, size: 20),
+            leading: Icon(Icons.location_on, color: AppColors.green, size: AppSizes.size20),
             title: Text(
               widget.event.venue ?? '',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 12,
+                fontSize: AppSizes.size12,
                 fontWeight: FontWeight.w600,
               ),
             ),
             contentPadding: EdgeInsets.zero,
           ),
           ListTile(
-            leading: Icon(Icons.calendar_today, color: AppColors.green, size: 20),
+            leading: Icon(Icons.calendar_today, color: AppColors.green, size: AppSizes.size20),
             title: Text(
               FormatPrice.formatDateTime(widget.event.startTime.toString()),
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 12,
+                fontSize: AppSizes.size12,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -308,7 +308,7 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
             borderRadius: const BorderRadius.all(Radius.circular(AppSizes.size4)),
             textColor: textColor,
             color: buttonColor,
-            fontSize: 15.0,
+            fontSize: AppSizes.size15,
             borderColor: AppColors.transparent,
             splashColor: AppColors.transparent,
             highlightColor: AppColors.white,

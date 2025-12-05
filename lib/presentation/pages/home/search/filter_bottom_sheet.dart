@@ -63,7 +63,7 @@ class FilterBottomSheet extends StatelessWidget {
         Text(
           AppStrings.filterButton,
           style: TextStyle(
-            fontSize: 18,
+            fontSize: AppSizes.size18,
             fontWeight: FontWeight.bold,
             color: Colors.black,
           ),
@@ -82,7 +82,7 @@ class FilterBottomSheet extends StatelessWidget {
       child: Text(
         title,
         style: TextStyle(
-          fontSize: 16,
+          fontSize: AppSizes.size16,
           fontWeight: FontWeight.bold,
           color: Colors.black,
         ),
@@ -144,7 +144,7 @@ class FilterBottomSheet extends StatelessWidget {
           children: [
             Text(
               AppStrings.free,
-              style: TextStyle(fontSize: 16, color: Colors.black),
+              style: TextStyle(fontSize: AppSizes.size16, color: Colors.black),
             ),
             const SizedBox(width: AppSpacing.space8),
             Switch(
@@ -208,7 +208,7 @@ class FilterBottomSheet extends StatelessWidget {
             borderRadius: const BorderRadius.all(Radius.circular(AppSizes.size4)),
             textColor: AppColors.primary,
             color: AppColors.transparent,
-            fontSize: 15.0,
+            fontSize: AppSizes.size15,
             borderColor: AppColors.primary,
             splashColor: AppColors.transparent,
             highlightColor: AppColors.white,
@@ -226,7 +226,7 @@ class FilterBottomSheet extends StatelessWidget {
             borderRadius: const BorderRadius.all(Radius.circular(AppSizes.size4)),
             textColor: AppColors.white,
             color: AppColors.primary,
-            fontSize: 15.0,
+            fontSize: AppSizes.size15,
             borderColor: AppColors.transparent,
             splashColor: AppColors.transparent,
             highlightColor: AppColors.white,

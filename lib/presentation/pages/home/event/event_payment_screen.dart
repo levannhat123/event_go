@@ -61,13 +61,13 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.timer, color: Colors.white, size: 20),
-                    const SizedBox(width: 8),
+                    const Icon(Icons.timer, color: Colors.white, size: AppSizes.size20),
+                    const SizedBox(width: AppSizes.size8),
                     Text(
                       AppStrings.ticketHoldTimeRemaining.replaceAll('{time}', viewModel.formattedTimeRemaining),
                       style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 14,
+                        fontSize: AppSizes.size14,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -124,29 +124,29 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
             widget.event.title,
             style: TextStyle(
               color: Colors.white,
-              fontSize: 16,
+              fontSize: AppSizes.size16,
               fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: AppSpacing.space12),
           Row(
             children: [
-              Icon(Icons.calendar_today, color: Colors.grey[300], size: 16),
+              Icon(Icons.calendar_today, color: Colors.grey[300], size: AppSizes.size16),
               const SizedBox(width: AppSpacing.space8),
               Text(
                 FormatPrice.formatDate(widget.event.startTime.toString()),
-                style: TextStyle(color: Colors.grey[300], fontSize: 14),
+                style: TextStyle(color: Colors.grey[300], fontSize: AppSizes.size14),
               ),
             ],
           ),
           const SizedBox(height: AppSpacing.space8),
           Row(
             children: [
-              Icon(Icons.location_on, color: Colors.grey[300], size: 16),
+              Icon(Icons.location_on, color: Colors.grey[300], size: AppSizes.size16),
               const SizedBox(width: AppSpacing.space8),
               Text(
                 widget.event.venue ?? '',
-                style: TextStyle(color: Colors.grey[300], fontSize: 14),
+                style: TextStyle(color: Colors.grey[300], fontSize: AppSizes.size14),
               ),
             ],
           ),
@@ -158,7 +158,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
   Widget _buildSectionHeader(
     String title, {
     Color? bgColor = Colors.white,
-    double fontSize = 18,
+    double fontSize = AppSizes.size18,
   }) {
     return Text(
       title,
@@ -185,16 +185,16 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
         children: [
           Text(
             AppStrings.electronicTicketInfo,
-            style: TextStyle(color: Colors.grey[400], fontSize: 14),
+            style: TextStyle(color: Colors.grey[400], fontSize: AppSizes.size14),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.space8),
           Row(
             children: [
-              Icon(Icons.email_outlined, color: Colors.grey[400], size: 20),
+              Icon(Icons.email_outlined, color: Colors.grey[400], size: AppSizes.size20),
               const SizedBox(width: 12),
               Text(
                 viewModel.userEmail??'',
-                style: const TextStyle(color: Colors.white, fontSize: 14),
+                style: const TextStyle(color: Colors.white, fontSize: AppSizes.size14),
               ),
             ],
           ),
@@ -219,7 +219,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
           _buildPaymentOptionRow(
             value: 'zalopay',
             title: AppStrings.zalopay,
-            icon: SvgPicture.asset(AppSvg.zalopay, width: 20, height: 20),
+            icon: SvgPicture.asset(AppSvg.zalopay, width: 20, height: AppSpacing.space20),
             viewModel: viewModel,
             vmReader: vmReader,
           ),
@@ -253,7 +253,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
                 title,
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 14,
+                  fontSize: AppSizes.size14,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -306,7 +306,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
                           ), // Lấy giá vé động
                           style: const TextStyle(
                             color: Colors.black,
-                            fontSize: 12,
+                            fontSize: AppSizes.size12,
                           ),
                         ),
                       ],
@@ -345,13 +345,13 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
                 style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                  fontSize: AppSizes.size16,
                 ),
               ),
               Text(
                 AppStrings.quantity,
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: AppSizes.size16,
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
                 ),
@@ -366,7 +366,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
           _buildSectionHeader(
             AppStrings.orderInfoTitle,
             bgColor: Colors.black,
-            fontSize: 16,
+            fontSize: AppSizes.size16,
           ),
           const SizedBox(height: AppSpacing.space12),
           Row(
@@ -410,7 +410,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
                   style: const TextStyle(
                     color: AppColors.green,
                     fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                    fontSize: AppSizes.size16,
                   ),
                 ),
               ),
@@ -444,7 +444,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
                 AppStrings.totalAmount,
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 14,
+                  fontSize: AppSizes.size14,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -453,7 +453,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
                 FormatPrice.format(vmReader.grandTotal),
                 style: const TextStyle(
                   color: AppColors.green,
-                  fontSize: 18,
+                  fontSize: AppSizes.size18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -468,7 +468,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
             width: AppSizes.size125,
             textColor: AppColors.white,
             color: AppColors.green,
-            fontSize: 15.0,
+            fontSize: AppSizes.size15,
             borderRadius: const BorderRadius.all(Radius.circular(AppSizes.size4)),
             borderColor: AppColors.green,
             splashColor: AppColors.transparent,

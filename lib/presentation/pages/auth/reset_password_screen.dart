@@ -114,7 +114,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           AppStrings.resetPasswordTitle,
                           style: TextStyle(
                             color: Color(0xFFf49415),
-                            fontSize: 24,
+                            fontSize: AppSizes.size24,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -125,7 +125,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                               _verifiedEmail!,
                           style: const TextStyle(
                             color: Color(0xFFf49415),
-                            fontSize: 12,
+                            fontSize: AppSizes.size12,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -142,7 +142,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 right: 0,
                 child: Container(
                   padding: const EdgeInsets.all(AppSpacing.space20),
-                  height: MediaQuery.of(context).size.height * 0.70,
+                  height: MediaQuery.of(context).size.height * AppSizes.size0_7,
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
@@ -160,7 +160,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         const Text(
                           AppStrings.newPasswordLabel,
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: AppSizes.size16,
                             fontWeight: FontWeight.w500,
                             color: Color(0xFF333333),
                           ),
@@ -191,7 +191,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         const Text(
                           AppStrings.confirmPasswordLabel,
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: AppSizes.size16,
                             fontWeight: FontWeight.w500,
                             color: Color(0xFF333333),
                           ),
@@ -251,7 +251,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                               AppStrings.backToLoginButton2,
                               style: TextStyle(
                                 color: Color(0xFF4257b4),
-                                fontSize: 14,
+                                fontSize: AppSizes.size14,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),

@@ -3,6 +3,9 @@ import 'package:event_go/routers/router_name.dart'; // Đảm bảo bạn có Ro
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/constants/app_sizes.dart';
+import '../../../core/constants/app_spacing.dart';
+
 class PaymentResultScreen extends StatelessWidget {
   final String? code;
   final String? appTransID;
@@ -40,44 +43,44 @@ class PaymentResultScreen extends StatelessWidget {
       ),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.all(AppSpacing.space24),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
                 isSuccess ? Icons.check_circle_outline : Icons.highlight_off,
                 color: isSuccess ? Colors.green : Colors.red,
-                size: 100,
+                size: AppSizes.size100,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.space24),
               Text(
                 isSuccess ? AppStrings.paymentSuccessWithExclamation : AppStrings.paymentFailure,
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 22,
+                  fontSize: AppSizes.size22,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.space12),
               Text(
                 decodedMessage,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.grey[300],
-                  fontSize: 16,
+                  fontSize: AppSizes.size16,
                 ),
               ),
               if (appTransID != null) ...[
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.space16),
                 Text(
                   "${AppStrings.transactionCodeLabel}$appTransID",
                   style: TextStyle(
                     color: Colors.grey[400],
-                    fontSize: 14,
+                    fontSize: AppSizes.size14,
                   ),
                 ),
               ],
-              const SizedBox(height: 40),
+              const SizedBox(height: AppSpacing.space40),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF596DC3),
@@ -91,7 +94,7 @@ class PaymentResultScreen extends StatelessWidget {
                 },
                 child: Text(
                   AppStrings.backToHomeButton,
-                  style: TextStyle(color: Colors.white, fontSize: 16),
+                  style: TextStyle(color: Colors.white, fontSize: AppSizes.size16),
                 ),
               ),
             ],

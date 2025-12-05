@@ -76,7 +76,7 @@ class EventTicketCard extends StatelessWidget {
         children: [
           Text(
             title,
-            style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700),
+            style: TextStyle(color: Colors.white, fontSize: AppSizes.size16, fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: AppSpacing.space20),
           _buildInfoRow(
@@ -115,13 +115,13 @@ class EventTicketCard extends StatelessWidget {
             children: [
               Text(
                 FormatPrice.formatDate(primaryText),
-                style: TextStyle(color: iconColor, fontSize: 12, fontWeight: FontWeight.bold),
+                style: TextStyle(color: iconColor, fontSize: AppSizes.size12, fontWeight: FontWeight.bold),
               ),
               if (secondaryText != null) ...[
                 const SizedBox(height: AppSpacing.space4),
                 Text(
                   secondaryText,
-                  style: TextStyle(color: Colors.grey[300], fontSize: 14, height: 1.4),
+                  style: TextStyle(color: Colors.grey[300], fontSize: AppSizes.size14, height: 1.4),
                 ),
               ],
             ],

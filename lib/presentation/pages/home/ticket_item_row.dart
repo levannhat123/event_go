@@ -2,6 +2,8 @@ import 'package:event_go/core/constants/app_colors.dart';
 import 'package:event_go/core/utils/format_price.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/constants/app_sizes.dart';
+
 class TicketItemRow extends StatelessWidget {
   final String ticketName;
   final String price;
@@ -23,15 +25,15 @@ class TicketItemRow extends StatelessWidget {
         Expanded(
           child: Row(
             children: [
-              Icon(Icons.chevron_right, color: Colors.grey[600], size: 20),
-              SizedBox(width: 8),
+              Icon(Icons.chevron_right, color: Colors.grey[600], size:AppSizes.size20 ),
+              SizedBox(width:AppSizes.size8),
               Flexible(
                 child: Text(
                   ticketName,
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
-                    fontSize: 12,
+                    fontSize: AppSizes.size12,
                   ),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
@@ -49,10 +51,10 @@ class TicketItemRow extends StatelessWidget {
               style: TextStyle(
                 color: Colors.grey[600],
                 fontWeight: FontWeight.w600,
-                fontSize: 12,
+                fontSize: AppSizes.size12,
               ),
             ),
-            SizedBox(height: 4),
+            SizedBox(height: AppSizes.size4),
             Container(
               padding: const EdgeInsets.symmetric(
                   horizontal: 10, vertical: 2),
@@ -65,7 +67,7 @@ class TicketItemRow extends StatelessWidget {
                 style: TextStyle(
                   color: Color(0xFFD32F2F),
                   fontWeight: FontWeight.w600,
-                  fontSize: 12,
+                  fontSize: AppSizes.size12,
                 ),
               ),
             ),
@@ -76,7 +78,7 @@ class TicketItemRow extends StatelessWidget {
           style: TextStyle(
             color: AppColors.green,
             fontWeight: FontWeight.bold,
-            fontSize: 12,
+            fontSize: AppSizes.size12,
           ),
         ),
       ],

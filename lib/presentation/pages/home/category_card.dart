@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/constants/app_sizes.dart';
+
 class CategoryCard extends StatelessWidget {
   final String title;
   final String imagePath;
@@ -11,8 +13,8 @@ class CategoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 180.0,
-      height: 100.0,
+      width: AppSizes.size180,
+      height: AppSizes.size100,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(16.0),
@@ -39,7 +41,7 @@ class CategoryCard extends StatelessWidget {
                   title,
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 14,
+                    fontSize: AppSizes.size14,
                     fontWeight: FontWeight.w700,
                     shadows: [
                       Shadow(blurRadius: 4.0, color: Colors.black54, offset: Offset(2.0, 2.0)),

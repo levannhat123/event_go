@@ -152,7 +152,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                           AppStrings.otpVerificationTitle,
                           style: TextStyle(
                             color: Color(0xFFf49415),
-                            fontSize: 24,
+                            fontSize: AppSizes.size24,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -161,7 +161,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                           AppStrings.otpSentTo + widget.email,
                           style: const TextStyle(
                             color: Color(0xFFf49415),
-                            fontSize: 12,
+                            fontSize: AppSizes.size12,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -195,7 +195,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                         const Text(
                           AppStrings.enterVerificationCode,
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: AppSizes.size18,
                             fontWeight: FontWeight.w600,
                             color: Color(0xFF333333),
                           ),
@@ -216,7 +216,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                 keyboardType: TextInputType.number,
                                 maxLength: 1,
                                 style: const TextStyle(
-                                  fontSize: 20,
+                                  fontSize: AppSizes.size20,
                                   fontWeight: FontWeight.bold,
                                   color: Color(0xFF4257b4),
                                 ),
@@ -303,7 +303,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                               AppStrings.resendOtpButton,
                               style: TextStyle(
                                 color: Color(0xFF4257b4),
-                                fontSize: 14,
+                                fontSize: AppSizes.size14,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -315,7 +315,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                 AppStrings.seconds,
                             style: TextStyle(
                               color: Colors.grey.shade600,
-                              fontSize: 14,
+                              fontSize: AppSizes.size14,
                             ),
                           ),
 
@@ -327,7 +327,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                             AppStrings.backToLoginButton,
                             style: TextStyle(
                               color: Color(0xFF4257b4),
-                              fontSize: 14,
+                              fontSize: AppSizes.size14,
                               fontWeight: FontWeight.w500,
                             ),
                           ),

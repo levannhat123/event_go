@@ -44,7 +44,7 @@ class CalendarBottomSheet extends StatelessWidget {
                     child: Text(
                       AppStrings.selectTime,
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: AppSizes.size18,
                         color: AppColors.primary,
                         fontWeight: FontWeight.bold,
                       ),
@@ -104,7 +104,7 @@ class CalendarBottomSheet extends StatelessWidget {
                         .replaceAll('{month}', viewModel.focusedDay.month.toString())
                         .replaceAll('{year}', viewModel.focusedDay.year.toString()),
                     style: const TextStyle(
-                      fontSize: 16,
+                      fontSize: AppSizes.size16,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
@@ -210,7 +210,7 @@ class CalendarBottomSheet extends StatelessWidget {
                       borderRadius: const BorderRadius.all(Radius.circular(AppSizes.size4)),
                       textColor: AppColors.primary,
                       color: AppColors.transparent,
-                      fontSize: 15.0,
+                      fontSize: AppSizes.size15,
                       borderColor: AppColors.primary,
                       splashColor: AppColors.transparent,
                       highlightColor: AppColors.white,
@@ -248,7 +248,7 @@ class CalendarBottomSheet extends StatelessWidget {
                               viewModel.selectedQuickButtonIndex == 0)
                           ? AppColors.primary
                           : Color(0xFFDDDDE3),
-                      fontSize: 15.0,
+                      fontSize: AppSizes.size15,
                       borderColor: AppColors.transparent,
                       splashColor: AppColors.transparent,
                       highlightColor: AppColors.white,
