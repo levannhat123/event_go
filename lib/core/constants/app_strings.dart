@@ -133,7 +133,7 @@ class AppStrings {
   static const String other = "Khác";
   static const String nationwide = "Toàn quốc";
   static const String hanoi = "Hà Nội";
-  static const String hoChiMinh = "TP Hồ Chí Minh";
+  static const String hoChiMinh = "Hồ Chí Minh";
   static const String dalat = "Đà Lạt";
   static const String otherLocation = "Vị trí khác";
   static const String unknownTime = "không rõ";
@@ -171,7 +171,7 @@ class AppStrings {
   static const String myTickets = "Vé của tôi";
   static const String all = "Tất cả";
   static const String success = "Thành công";
-  static const String processing = "Đang xử lý";
+  static const String processing = "Thất bại";
   static const String cancelled = "Đã hủy";
   static const String failed = "Thất bại";
   static const String unknown = "Không xác định";

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:event_go/data/models/category/category_model.dart';
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_go/core/base/base_view_model.dart';
@@ -266,9 +267,11 @@ class HomeViewModel extends BaseViewModel {
   }
 
   final List<String> _captchaImages = [
-    AppImage.logo,
-    AppImage.banner_1,
-    AppImage.banner_2,
+    AppImage.catcha_1,
+    AppImage.catcha_2,
+    AppImage.catcha_3,
+    AppImage.catcha_4,
+    AppImage.catcha_5,
   ];
   bool get isExpanded => _isExpanded;
   String? get captchaErrorText => _captchaErrorText;
@@ -386,7 +389,7 @@ class HomeViewModel extends BaseViewModel {
   Future<String?> createPaymentOrder() async {
     setLoading(true);
     int amount = grandTotal.toInt();
-    if (amount < 1000 || amount > 1000000) {
+    if (amount < 1000 || amount > 10000000) {
       _zpTransToken = "Invalid Amount";
       setLoading(false);
       return null;
@@ -414,7 +417,7 @@ class HomeViewModel extends BaseViewModel {
   }
 
   Timer? _paymentTimer;
-  Duration _timeRemaining = const Duration(minutes: 1, seconds: 38);
+  Duration _timeRemaining = const Duration(minutes: 10, seconds: 00);
   String _selectedPaymentMethod = 'zalopay';
   String _paymentToken = "";
   String get formattedTimeRemaining {
@@ -432,7 +435,7 @@ class HomeViewModel extends BaseViewModel {
     VoidCallback? onTimerExpired,
   }) {
     _paymentToken = token;
-    _timeRemaining = const Duration(minutes: 1, seconds: 38);
+    _timeRemaining = const Duration(minutes: 10, seconds: 00);
     _paymentTimer?.cancel();
     _paymentTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_timeRemaining.inSeconds == 0) {
@@ -440,6 +443,9 @@ class HomeViewModel extends BaseViewModel {
         initBooking();
         notifyListeners();
         onTimerExpired?.call();
+        if (context.mounted) {
+          context.pop();
+        }
       } else {
         _timeRemaining = _timeRemaining - const Duration(seconds: 1);
         notifyListeners();
@@ -961,6 +967,24 @@ class HomeViewModel extends BaseViewModel {
     _appliedLocation = 'Toàn quốc';
     _appliedIsFree = false;
     _appliedCategories.clear();
+    _applyFilters();
+    notifyListeners();
+  }
+
+  void selectCategoryAndSearch(String categoryName) {
+    resetAllFiltersAndSearch();
+    if (!appliedCategories.contains(categoryName)) {
+      appliedCategories.add(categoryName);
+    }
+    searchController.clear();
+    _applyFilters();
+    notifyListeners();
+  }
+
+  void selectLocationAndSearch(String locationName) {
+    resetAllFiltersAndSearch();
+    _appliedLocation = locationName;
+    searchController.clear();
     _applyFilters();
     notifyListeners();
   }

@@ -198,12 +198,10 @@ class _SearchScreenState extends State<SearchScreen> {
                   ],
                 ),
                 _buildAppliedFilters(viewModel),
-                // --- NỘI DUNG THAY ĐỔI (KHÁM PHÁ / KẾT QUẢ) ---
                 Expanded(
-                  // Dùng Expanded để lấp đầy phần còn lại
                   child: isDisplayingResults
-                      ? _buildSearchResults(viewModel) // Hiển thị kết quả
-                      : _buildDiscoveryContent(viewModel), // Hiển thị khám phá
+                      ? _buildSearchResults(viewModel)
+                      : _buildDiscoveryContent(viewModel),
                 ),
               ],
             ),
@@ -213,8 +211,21 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  // --- Widget cho nội dung khám phá (khi không tìm kiếm) ---
   Widget _buildDiscoveryContent(HomeViewModel viewModel) {
+    final List<Map<String, String>> categories = [
+      {'name': AppStrings.liveMusic, 'image': AppImage.music_category},
+      {'name': AppStrings.theaterAndArtsSimple, 'image': AppImage.film_category},
+      {'name': AppStrings.sportsCategory, 'image': AppImage.sport_category},
+      {'name': AppStrings.other, 'image': AppImage.other_category},
+    ];
+
+    final List<Map<String, String>> cities = [
+      {'name': AppStrings.hanoi, 'image': AppImage.hn_location},
+      {'name': AppStrings.hoChiMinh, 'image': AppImage.hcm_location},
+      {'name': AppStrings.dalat, 'image': AppImage.dalat_location},
+      {'name': AppStrings.otherLocation, 'image': AppImage.other_location},
+    ];
+
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -242,9 +253,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   title: Text(item),
                   trailing: IconButton(
                     icon: Icon(Icons.clear, size: AppSizes.size18, color: Colors.white38),
-                    onPressed: () {
-                      viewModel.removeRecentSearch(item);
-                    },
+                    onPressed: () => viewModel.removeRecentSearch(item),
                   ),
                   onTap: () {
                     viewModel.searchController.text = item;
@@ -255,6 +264,7 @@ class _SearchScreenState extends State<SearchScreen> {
               },
             ),
           ],
+
           const SizedBox(height: AppSpacing.space10),
           Text(
             AppStrings.trendingSearches,
@@ -296,33 +306,21 @@ class _SearchScreenState extends State<SearchScreen> {
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
-              children: [
-                CategoryCard(
-                  title: AppStrings.liveMusic,
-                  imagePath: AppImage.music_category,
-                  onTap: () {},
-                ),
-                const SizedBox(width: AppSpacing.space10),
-                CategoryCard(
-                  title: AppStrings.theaterAndArts,
-                  imagePath: AppImage.film_category,
-                  onTap: () {},
-                ),
-                const SizedBox(width: AppSpacing.space10),
-                CategoryCard(
-                  title: AppStrings.sports,
-                  imagePath: AppImage.sport_category,
-                  onTap: () {},
-                ),
-                const SizedBox(width: AppSpacing.space10),
-                CategoryCard(
-                  title: AppStrings.other,
-                  imagePath: AppImage.other_category,
-                  onTap: () {},
-                ),
-              ],
+              children: categories.map((cat) {
+                return Padding(
+                  padding: const EdgeInsets.only(right: AppSpacing.space10),
+                  child: CategoryCard(
+                    title: cat['name']!,
+                    imagePath: cat['image']!,
+                    onTap: () {
+                      viewModel.selectCategoryAndSearch(cat['name']!);
+                    },
+                  ),
+                );
+              }).toList(),
             ),
           ),
+
           const SizedBox(height: AppSpacing.space10),
           Text(
             AppStrings.exploreByCity,
@@ -336,34 +334,25 @@ class _SearchScreenState extends State<SearchScreen> {
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
-              children: [
-                CategoryCard(
-                  title: AppStrings.hanoi,
-                  imagePath: AppImage.hn_location,
-                  onTap: () {},
-                ),
-                const SizedBox(width: AppSpacing.space10),
-                CategoryCard(
-                  title: AppStrings.hoChiMinh,
-                  imagePath: AppImage.hcm_location,
-                  onTap: () {},
-                ),
-                const SizedBox(width: AppSpacing.space10),
-                CategoryCard(
-                  title: AppStrings.dalat,
-                  imagePath: AppImage.dalat_location,
-                  onTap: () {},
-                ),
-                const SizedBox(width: AppSpacing.space10),
-                CategoryCard(
-                  title: AppStrings.otherLocation,
-                  imagePath: AppImage.other_location,
-                  onTap: () {},
-                ),
-              ],
+              children: cities.map((city) {
+                return Padding(
+                  padding: const EdgeInsets.only(right: AppSpacing.space10),
+                  child: CategoryCard( // Trong code SearchScreen cũ bạn dùng CategoryCard cho cả City
+                    title: city['name']!,
+                    imagePath: city['image']!,
+                    onTap: () {
+                      // Gọi hàm lọc Location trong ViewModel
+                      viewModel.selectLocationAndSearch(city['name']!);
+                    },
+                  ),
+                );
+              }).toList(),
             ),
           ),
+
           const SizedBox(height: AppSpacing.space10),
+
+          // ... (Phần Suggestions For You giữ nguyên) ...
           Text(
             AppStrings.suggestionsForYou,
             style: TextStyle(

@@ -40,6 +40,12 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
+  final List<Map<String, String>> locations = [
+    {'name': AppStrings.hanoi, 'image': AppImage.location_hn},
+    {'name': AppStrings.hoChiMinh, 'image': AppImage.location_hcm},
+    {'name': AppStrings.dalat, 'image': AppImage.location_dalat},
+    {'name': AppStrings.otherLocation, 'image': AppImage.location_other},
+  ];
   @override
   Widget build(BuildContext context) {
     return BaseView<HomeViewModel>(
@@ -70,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: EdgeInsets.only(bottom: AppSpacing.space30),
               child: Column(
                 children: [
-                  silde_Show(viewModel),
+                  recentEventsShow(viewModel),
                   SizedBox(height: AppSizes.size20),
                   Padding(
                     padding: EdgeInsets.symmetric(
@@ -167,7 +173,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                   GestureDetector(
-                                    onTap: () {},
+                                    onTap: () {
+                                      viewModel.selectCategoryAndSearch(
+                                        categoryName,
+                                      );
+                                      context.push(RouterPath.search);
+                                    },
                                     child: Row(
                                       children: [
                                         Text(
@@ -235,27 +246,26 @@ class _HomeScreenState extends State<HomeScreen> {
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Row(
-                            children: [
-                              LocationCard(
-                                imageUrl: AppImage.location_hn,
-                                locationName: AppStrings.hanoi,
-                              ),
-                              SizedBox(width: AppSpacing.space10),
-                              LocationCard(
-                                imageUrl: AppImage.location_hcm,
-                                locationName: AppStrings.hoChiMinh,
-                              ),
-                              SizedBox(width: AppSpacing.space10),
-                              LocationCard(
-                                imageUrl: AppImage.location_dalat,
-                                locationName: AppStrings.dalat,
-                              ),
-                              SizedBox(width: AppSpacing.space10),
-                              LocationCard(
-                                imageUrl: AppImage.location_other,
-                                locationName: AppStrings.otherLocation,
-                              ),
-                            ],
+                            children: locations.map((location) {
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                  right: AppSpacing.space10,
+                                ),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    // Lấy dữ liệu từ item trong list
+                                    viewModel.selectLocationAndSearch(
+                                      location['name']!,
+                                    );
+                                    context.push(RouterPath.search);
+                                  },
+                                  child: LocationCard(
+                                    imageUrl: location['image']!,
+                                    locationName: location['name']!,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
                           ),
                         ),
                       ],
@@ -270,51 +280,88 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget silde_Show(HomeViewModel viewModel) {
+  Widget recentEventsShow(HomeViewModel viewModel) {
+    final allEvents =
+        viewModel.events.where((event) => event.startTime != null).toList()
+          ..sort((a, b) => a.startTime!.compareTo(b.startTime!));
+    final recentEvents = allEvents.take(5).toList();
+    if (recentEvents.isEmpty) {
+      return Container(
+        height: AppSizes.size300,
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
     return Container(
-      height: AppSizes.size400,
+      height: AppSizes.size300,
       child: PageView.builder(
         controller: _pageController,
-        itemCount: viewModel.boadingData.length,
+        itemCount: recentEvents.length,
         onPageChanged: (value) {
           viewModel.onPageChanged(value);
         },
         itemBuilder: (context, index) {
-          return Stack(
-            children: [
-              Positioned.fill(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(AppSizes.size8.r),
-                  child: Image.asset(
-                    viewModel.boadingData[index]['image']!,
-                    fit: BoxFit.cover,
+          final event = recentEvents[index];
+          return GestureDetector(
+            onTap: () {
+              context.push(RouterPath.event_detail, extra: event);
+            },
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(AppSizes.size8.r),
+                    child: Image.network(
+                      event.bannerURL ?? AppImage.banner_1,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.asset(
+                          AppImage.banner_1,
+                          fit: BoxFit.cover,
+                        );
+                      },
+                    ),
                   ),
                 ),
-              ),
-              Positioned(
-                bottom: 10,
-                left: 0,
-                right: 0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(viewModel.boadingData.length, (i) {
-                    return Container(
-                      height: AppSizes.size8,
-                      margin: EdgeInsets.only(right: AppSpacing.space5),
-                      width: viewModel.currentIndex == i
-                          ? AppSizes.size20
-                          : AppSizes.size8,
-                      decoration: BoxDecoration(
-                        color: viewModel.currentIndex == i
-                            ? AppColors.primary
-                            : AppColors.grey,
-                        borderRadius: BorderRadius.circular(AppSizes.size4.r),
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(AppSizes.size8.r),
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          Colors.black.withOpacity(0.6),
+                        ],
                       ),
-                    );
-                  }),
+                    ),
+                  ),
                 ),
-              ),
-            ],
+                Positioned(
+                  bottom: 10,
+                  left: 0,
+                  right: 0,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(recentEvents.length, (i) {
+                      return Container(
+                        height: AppSizes.size8,
+                        margin: EdgeInsets.only(right: AppSpacing.space5),
+                        width: viewModel.currentIndex == i
+                            ? AppSizes.size20
+                            : AppSizes.size8,
+                        decoration: BoxDecoration(
+                          color: viewModel.currentIndex == i
+                              ? AppColors.primary
+                              : AppColors.grey,
+                          borderRadius: BorderRadius.circular(AppSizes.size4.r),
+                        ),
+                      );
+                    }),
+                  ),
+                ),
+              ],
+            ),
           );
         },
       ),

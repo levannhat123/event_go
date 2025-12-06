@@ -21,5 +21,10 @@ class AppImage {
   static const String dalat_location = '${baseUrl}dalat_location$typePng';
   static const String hn_location = '${baseUrl}hn_location$typePng';
   static const String hcm_location = '${baseUrl}hcm_location$typePng';
+  static const String catcha_1 = '${baseUrl}catcha_1$typeJpg';
+  static const String catcha_2 = '${baseUrl}catcha_2$typeJpg';
+  static const String catcha_3 = '${baseUrl}catcha_3$typeJpg';
+  static const String catcha_4 = '${baseUrl}catcha_4$typeJpg';
+  static const String catcha_5 = '${baseUrl}catcha_5$typeJpg';
 
 }
