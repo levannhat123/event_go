@@ -125,7 +125,6 @@
   "thisMonth": "Tháng này",
   "monthFormat": "Tháng {month}, {year}",
   "liveMusic": "Nhạc sống",
-  "theaterAndArts": "Sân khấu & Nghệ thuật",
   "sports": "Thể Thao",
   "sportsCategory": "Thể thao",
   "theaterAndArtsSimple": "Sân khấu nghệ thuật",
@@ -229,5 +228,10 @@
   "searchHistoryDeleteError": "Lỗi khi xóa 1 mục lịch sử tìm kiếm: {error}",
   "categoriesFetchError": "Lỗi khi lấy categories: {error}",
   "failedToWatchEvents": "Không thể theo dõi sự kiện: {error}",
-  "failedToStartWatchingEvents": "Không thể bắt đầu theo dõi sự kiện: {error}"
+  "failedToStartWatchingEvents": "Không thể bắt đầu theo dõi sự kiện: {error}",
+  "homeTabLabel": "Trang chủ",
+  "myTicketsTabLabel": "Vé của tôi",
+  "accountTabLabel": "Tài khoản",
+  "theaterAndArts": "Sân khấu Nghệ thuật",
+  "conference": "Hội thảo"
 }

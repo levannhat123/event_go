@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:event_go/core/base/base_view.dart';
 import 'package:event_go/core/constants/app_sizes.dart';
+import 'package:event_go/core/utils/extension.dart';
 import 'package:event_go/data/models/event/event_detail_model.dart';
 import 'package:event_go/injection/injection.dart'; // Import getIt
 import 'package:event_go/core/constants/app_colors.dart';
@@ -40,12 +41,60 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  final List<Map<String, String>> locations = [
-    {'name': AppStrings.hanoi, 'image': AppImage.location_hn},
-    {'name': AppStrings.hoChiMinh, 'image': AppImage.location_hcm},
-    {'name': AppStrings.dalat, 'image': AppImage.location_dalat},
-    {'name': AppStrings.otherLocation, 'image': AppImage.location_other},
+  List<Map<String, String>> get locations => [
+    {
+      'display': context.appLocaleLanguage.hanoi,
+      'filterValue': AppStrings.hanoi,
+      'image': AppImage.location_hn
+    },
+    {
+      'display': context.appLocaleLanguage.hoChiMinh,
+      'filterValue': AppStrings.hoChiMinh,
+      'image': AppImage.location_hcm
+    },
+    {
+      'display': context.appLocaleLanguage.dalat,
+      'filterValue': AppStrings.dalat,
+      'image': AppImage.location_dalat
+    },
+    {
+      'display': context.appLocaleLanguage.otherLocation,
+      'filterValue': AppStrings.otherLocation,
+      'image': AppImage.location_other
+    },
   ];
+
+  Map<String, String> getCategoryInfo(String dbKey) {
+    if (dbKey == AppStrings.liveMusic) {
+      return {
+        'display': context.appLocaleLanguage.liveMusic,
+        'image': AppImage.music_category
+      };
+    }
+    else if (dbKey == AppStrings.theaterAndArtsSimple) {
+      return {
+        'display': context.appLocaleLanguage.theaterAndArtsSimple,
+        'image': AppImage.film_category
+      };
+    }
+    else if (dbKey == AppStrings.sportsCategory) {
+      return {
+        'display': context.appLocaleLanguage.sports,
+        'image': AppImage.sport_category
+      };
+    }
+    else if (dbKey == AppStrings.other) {
+      return {
+        'display': context.appLocaleLanguage.other,
+        'image': AppImage.other_category
+      };
+    }
+
+    return {
+      'display': dbKey,
+      'image': AppImage.other_category
+    };
+  }
   @override
   Widget build(BuildContext context) {
     return BaseView<HomeViewModel>(
@@ -60,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
         return Scaffold(
           backgroundColor: AppColors.background,
           appBar: AppBar(
-            title: Text(AppStrings.appName),
+            title: Text(context.appLocaleLanguage.appName),
             backgroundColor: Color(0xFF596DC3),
             actions: [
               IconButton(
@@ -86,7 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          AppStrings.trendingEventsTitle,
+                          context.appLocaleLanguage.trendingEventsTitle,
                           style: AppTextStyles.title2.copyWith(
                             fontWeight: FontWeight.w700,
                           ),
@@ -122,7 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         SizedBox(height: AppSpacing.space20),
                         Text(
-                          AppStrings.recommendedForYouTitle,
+                          context.appLocaleLanguage.recommendedForYouTitle,
                           style: AppTextStyles.title2.copyWith(
                             fontWeight: FontWeight.w700,
                           ),
@@ -158,7 +207,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         ...viewModel.eventsByCategory.entries.map((entry) {
                           final categoryName = entry.key;
                           final events = entry.value;
-
+                          final categoryInfo = getCategoryInfo(categoryName);
+                          final displayName = categoryInfo['display']!;
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -167,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    categoryName,
+                                    displayName,
                                     style: AppTextStyles.title2.copyWith(
                                       fontWeight: FontWeight.w700,
                                     ),
@@ -182,7 +232,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: Row(
                                       children: [
                                         Text(
-                                          AppStrings.seeMore,
+                                          context.appLocaleLanguage.seeMore,
                                           style: TextStyle(
                                             color: AppColors.grey,
                                           ),
@@ -220,7 +270,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     title: event.title,
                                     price: event.minTicketPrice != null
                                         ? event.minTicketPrice.toString()
-                                        : AppStrings.free,
+                                        : context.appLocaleLanguage.free,
                                     date: event.startTime.toString(),
                                     onTap: () {
                                       context.push(
@@ -237,7 +287,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         }).toList(),
                         SizedBox(height: AppSpacing.space20),
                         Text(
-                          AppStrings.chooseLocationTitle,
+                          context.appLocaleLanguage.chooseLocationTitle,
                           style: AppTextStyles.title2.copyWith(
                             fontWeight: FontWeight.w700,
                           ),
@@ -253,15 +303,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 child: GestureDetector(
                                   onTap: () {
-                                    // Lấy dữ liệu từ item trong list
                                     viewModel.selectLocationAndSearch(
-                                      location['name']!,
+                                      location['filterValue']!,
                                     );
                                     context.push(RouterPath.search);
                                   },
                                   child: LocationCard(
                                     imageUrl: location['image']!,
-                                    locationName: location['name']!,
+                                    locationName: location['display']!,
                                   ),
                                 ),
                               );

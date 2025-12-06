@@ -3,6 +3,7 @@ import 'package:event_go/core/constants/app_colors.dart';
 import 'package:event_go/core/constants/app_image.dart';
 import 'package:event_go/core/constants/app_sizes.dart';
 import 'package:event_go/core/constants/app_spacing.dart';
+import 'package:event_go/core/utils/extension.dart';
 import 'package:event_go/core/widgets/app_elevated_button.dart';
 import 'package:event_go/core/widgets/showdialog.dart';
 import 'package:event_go/injection/injection.dart';
@@ -83,8 +84,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   void _verifyOtp(AuthViewModel viewModel) async {
     if (_otpCode.length != 6) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(AppStrings.enterFullOtp),
+         SnackBar(
+          content: Text(context.appLocaleLanguage.enterFullOtp),
           backgroundColor: Colors.red,
         ),
       );
@@ -103,9 +104,9 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     } else {
       await showCustomDialog(
         context: context,
-        title: AppStrings.verificationFailedTitle,
-        message: viewModel.errorMessage ?? AppStrings.invalidOtpMessage,
-        buttonText: AppStrings.tryAgainButton,
+        title: context.appLocaleLanguage.verificationFailedTitle,
+        message: viewModel.errorMessage ?? context.appLocaleLanguage.invalidOtpMessage,
+        buttonText: context.appLocaleLanguage.tryAgainButton,
         icon: Icons.error,
         iconColor: Colors.red,
         onPressed: () {
@@ -147,8 +148,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                           radius: AppSizes.size40,
                         ),
                         const SizedBox(height: AppSpacing.space10),
-                        const Text(
-                          AppStrings.otpVerificationTitle,
+                         Text(
+                          context.appLocaleLanguage.otpVerificationTitle,
                           style: TextStyle(
                             color: Color(0xFFf49415),
                             fontSize: AppSizes.size24,
@@ -157,7 +158,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                         ),
                         const SizedBox(height: AppSpacing.space10),
                         Text(
-                          AppStrings.otpSentTo + widget.email,
+                          context.appLocaleLanguage.otpSentTo + widget.email,
                           style: const TextStyle(
                             color: Color(0xFFf49415),
                             fontSize: AppSizes.size12,
@@ -189,8 +190,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         const SizedBox(height: AppSpacing.space30),
-                        const Text(
-                          AppStrings.enterVerificationCode,
+                         Text(
+                          context.appLocaleLanguage.enterVerificationCode,
                           style: TextStyle(
                             fontSize: AppSizes.size18,
                             fontWeight: FontWeight.w600,
@@ -259,8 +260,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
 
                         AppElevatedButton(
                           text: viewModel.isLoading
-                              ? AppStrings.verifying
-                              : AppStrings.verifyButton,
+                              ? context.appLocaleLanguage.verifying
+                              : context.appLocaleLanguage.verifyButton,
                           borderColor: const Color(0xFFf49415),
                           color: const Color(0xFFf49415),
                           splashColor: AppColors.transparent,
@@ -282,9 +283,9 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                               if (mounted) {
                                 if (success) {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
+                                     SnackBar(
                                       content: Text(
-                                        AppStrings.otpResentSuccess,
+                                        context.appLocaleLanguage.otpResentSuccess,
                                       ),
                                       backgroundColor: Colors.green,
                                     ),
@@ -294,7 +295,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                     SnackBar(
                                       content: Text(
                                         viewModel.errorMessage ??
-                                            AppStrings.resendFailed,
+                                            context.appLocaleLanguage.resendFailed,
                                       ),
                                       backgroundColor: Colors.red,
                                     ),
@@ -302,8 +303,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                 }
                               }
                             },
-                            child: const Text(
-                              AppStrings.resendOtpButton,
+                            child:  Text(
+                              context.appLocaleLanguage.resendOtpButton,
                               style: TextStyle(
                                 color: Color(0xFF4257b4),
                                 fontSize: AppSizes.size14,
@@ -313,9 +314,9 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                           )
                         else
                           Text(
-                            AppStrings.resendOtpAfter +
+                            context.appLocaleLanguage.resendOtpAfter +
                                 viewModel.countdown.toString() +
-                                AppStrings.seconds,
+                                context.appLocaleLanguage.seconds,
                             style: TextStyle(
                               color: Colors.grey.shade600,
                               fontSize: AppSizes.size14,
@@ -326,8 +327,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
 
                         TextButton(
                           onPressed: () => context.go(RouterPath.login),
-                          child: const Text(
-                            AppStrings.backToLoginButton,
+                          child:  Text(
+                            context.appLocaleLanguage.backToLoginButton,
                             style: TextStyle(
                               color: Color(0xFF4257b4),
                               fontSize: AppSizes.size14,

@@ -2,6 +2,7 @@ import 'package:event_go/core/constants/app_colors.dart';
 import 'package:event_go/core/constants/app_sizes.dart';
 import 'package:event_go/core/constants/app_spacing.dart';
 import 'package:event_go/core/constants/app_strings.dart';
+import 'package:event_go/core/utils/extension.dart';
 import 'package:event_go/core/widgets/app_elevated_button.dart';
 import 'package:event_go/presentation/view_models/home_view_model.dart';
 import 'package:flutter/material.dart';
@@ -32,18 +33,18 @@ class FilterBottomSheet extends StatelessWidget {
                 _buildHeader(context),
                 _buildDivider(),
                 const SizedBox(height: AppSpacing.space24),
-                _buildSectionTitle(AppStrings.location),
+                _buildSectionTitle(context.appLocaleLanguage.location),
                 ...viewModel.filterLocations
                     .map((location) => _buildRadioListItem(location, viewModel))
                     .toList(),
                 const SizedBox(height: AppSpacing.space12),
                 _buildDivider(),
                 const SizedBox(height: AppSpacing.space12),
-                _buildPriceSection(viewModel),
+                _buildPriceSection(viewModel,context),
                 const SizedBox(height: AppSpacing.space12),
                 _buildDivider(),
                 const SizedBox(height: AppSpacing.space12),
-                _buildSectionTitle(AppStrings.category),
+                _buildSectionTitle(context.appLocaleLanguage.category),
                 _buildCategoryChips(viewModel),
                 const SizedBox(height: AppSpacing.space32),
                 _buildFooterButtons(context, viewModel),
@@ -61,7 +62,7 @@ class FilterBottomSheet extends StatelessWidget {
       children: [
         const SizedBox(width: AppSpacing.space40),
         Text(
-          AppStrings.filterButton,
+          context.appLocaleLanguage.filterButton,
           style: TextStyle(
             fontSize: AppSizes.size18,
             fontWeight: FontWeight.bold,
@@ -135,15 +136,15 @@ class FilterBottomSheet extends StatelessWidget {
     return const Divider(color: Color(0xFFDDDDE3), height: AppSpacing.space1);
   }
 
-  Widget _buildPriceSection(HomeViewModel viewModel) {
+  Widget _buildPriceSection(HomeViewModel viewModel,BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _buildSectionTitle(AppStrings.price),
+        _buildSectionTitle(context.appLocaleLanguage.price),
         Row(
           children: [
             Text(
-              AppStrings.free,
+              context.appLocaleLanguage.free,
               style: TextStyle(fontSize: AppSizes.size16, color: Colors.black),
             ),
             const SizedBox(width: AppSpacing.space8),
@@ -202,7 +203,7 @@ class FilterBottomSheet extends StatelessWidget {
       children: [
         Expanded(
           child: AppElevatedButton(
-            text: AppStrings.resetButton,
+            text: context.appLocaleLanguage.resetButton,
             onPressed: () {
               viewModel.resetFilter();
             },
@@ -221,7 +222,7 @@ class FilterBottomSheet extends StatelessWidget {
         const SizedBox(width: AppSpacing.space16),
         Expanded(
           child: AppElevatedButton(
-            text: AppStrings.applyButton,
+            text: context.appLocaleLanguage.applyButton,
             onPressed: () {
               viewModel.applyFilterSheet();
               context.pop();

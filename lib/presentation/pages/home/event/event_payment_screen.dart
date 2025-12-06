@@ -4,6 +4,7 @@ import 'package:event_go/core/constants/app_sizes.dart';
 import 'package:event_go/core/constants/app_spacing.dart';
 import 'package:event_go/core/constants/app_strings.dart';
 import 'package:event_go/core/constants/app_svg.dart';
+import 'package:event_go/core/utils/extension.dart';
 import 'package:event_go/core/utils/format_price.dart';
 import 'package:event_go/core/widgets/app_elevated_button.dart';
 import 'package:event_go/data/models/event/event_detail_model.dart';
@@ -65,8 +66,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
                     ),
                     const SizedBox(width: AppSizes.size8),
                     Text(
-                      AppStrings.ticketHoldTimeRemaining.replaceAll(
-                        '{time}',
+                      context.appLocaleLanguage.ticketHoldTimeRemaining(
                         viewModel.formattedTimeRemaining,
                       ),
                       style: const TextStyle(
@@ -87,15 +87,15 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildSectionHeader(AppStrings.recipientInfoTitle),
+                      _buildSectionHeader(context.appLocaleLanguage.recipientInfoTitle),
                       const SizedBox(height: AppSpacing.space12),
                       _buildRecipientInfoCard(cardColor, viewModel),
                       const SizedBox(height: AppSpacing.space24),
-                      _buildSectionHeader(AppStrings.paymentMethodTitle),
+                      _buildSectionHeader(context.appLocaleLanguage.paymentMethodTitle),
                       const SizedBox(height: AppSpacing.space12),
                       _buildPaymentMethodCard(cardColor, viewModel, vmReader),
                       const SizedBox(height: AppSpacing.space24),
-                      _buildSectionHeader(AppStrings.bookingInfoTitle),
+                      _buildSectionHeader(context.appLocaleLanguage.bookingInfoTitle),
                       const SizedBox(height: AppSpacing.space12),
                       _buildOrderInfoCard(Colors.white, vmReader),
                     ],
@@ -114,7 +114,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
     return AppBar(
       backgroundColor: const Color(0xFF596DC3),
       elevation: 0,
-      title: Text(AppStrings.paymentTitle),
+      title: Text(context.appLocaleLanguage.paymentTitle),
       centerTitle: true,
     );
   }
@@ -204,7 +204,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            AppStrings.electronicTicketInfo,
+            context.appLocaleLanguage.electronicTicketInfo,
             style: TextStyle(
               color: Colors.grey[400],
               fontSize: AppSizes.size14,
@@ -248,7 +248,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
         children: [
           _buildPaymentOptionRow(
             value: 'zalopay',
-            title: AppStrings.zalopay,
+            title: context.appLocaleLanguage.zalopay,
             icon: SvgPicture.asset(
               AppSvg.zalopay,
               width: 20,
@@ -375,7 +375,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                AppStrings.ticketType,
+                context.appLocaleLanguage.ticketType,
                 style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
@@ -383,7 +383,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
                 ),
               ),
               Text(
-                AppStrings.quantity,
+                context.appLocaleLanguage.quantity,
                 style: TextStyle(
                   fontSize: AppSizes.size16,
                   color: Colors.black,
@@ -398,7 +398,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
           const Divider(color: Colors.grey, height: 0),
           const SizedBox(height: AppSpacing.space14),
           _buildSectionHeader(
-            AppStrings.orderInfoTitle,
+            context.appLocaleLanguage.orderInfoTitle,
             bgColor: Colors.black,
             fontSize: AppSizes.size16,
           ),
@@ -409,7 +409,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
               Expanded(
                 flex: 3,
                 child: Text(
-                  AppStrings.subtotal,
+                  context.appLocaleLanguage.subtotal,
                   style: TextStyle(color: Colors.black),
                 ),
               ),
@@ -432,7 +432,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
               Expanded(
                 flex: 3,
                 child: Text(
-                  AppStrings.totalAmount,
+                  context.appLocaleLanguage.totalAmount,
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
@@ -478,7 +478,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                AppStrings.totalAmount,
+                context.appLocaleLanguage.totalAmount,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: AppSizes.size14,
@@ -500,7 +500,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
             onPressed: () {
               vmReader.handlePayment();
             },
-            text: AppStrings.paymentButton,
+            text: context.appLocaleLanguage.paymentButton,
             height: AppSizes.size40,
             width: AppSizes.size125,
             textColor: AppColors.white,

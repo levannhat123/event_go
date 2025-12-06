@@ -1,4 +1,5 @@
 import 'package:event_go/core/constants/app_strings.dart';
+import 'package:event_go/core/utils/extension.dart';
 import 'package:event_go/core/widgets/custom_tab_bar.dart';
 import 'package:event_go/presentation/pages/ticket/ticket_order_screen.dart';
 import 'package:flutter/material.dart';
@@ -13,17 +14,21 @@ class TicketScreen extends StatefulWidget {
 class _TicketScreenState extends State<TicketScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
-  final List<Tab> tabs = [
-    const Tab(text: AppStrings.all),
-    const Tab(text: AppStrings.success),
-    const Tab(text: AppStrings.processing),
-    const Tab(text: AppStrings.cancelled),
-  ];
-
+  late List<Tab> tabs;
   @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: tabs.length, vsync: this);
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    tabs = [
+      Tab(text: context.appLocaleLanguage.all),
+      Tab(text: context.appLocaleLanguage.success),
+      Tab(text: context.appLocaleLanguage.processing),
+      Tab(text: context.appLocaleLanguage.cancelled),
+    ];
+    _tabController = TabController(
+      length: tabs.length,
+      vsync: this,
+      initialIndex: 0,
+    );
   }
 
   @override
@@ -37,7 +42,7 @@ class _TicketScreenState extends State<TicketScreen>
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppStrings.myTickets,
+          context.appLocaleLanguage.myTickets,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Color(0xFF596DC3),

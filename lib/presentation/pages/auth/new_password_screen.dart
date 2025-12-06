@@ -4,6 +4,7 @@ import 'package:event_go/core/constants/app_image.dart';
 import 'package:event_go/core/constants/app_sizes.dart';
 import 'package:event_go/core/constants/app_spacing.dart';
 import 'package:event_go/core/constants/app_strings.dart';
+import 'package:event_go/core/utils/extension.dart';
 import 'package:event_go/core/utils/validator.dart';
 import 'package:event_go/core/widgets/app_elevated_button.dart';
 import 'package:event_go/core/widgets/showdialog.dart';
@@ -44,10 +45,10 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
 
   String? _validateConfirmPassword(String? value) {
     if (value == null || value.isEmpty) {
-      return AppStrings.pleaseConfirmPassword;
+      return context.appLocaleLanguage.pleaseConfirmPassword;
     }
     if (value != passwordController.text) {
-      return AppStrings.confirmPasswordMismatch;
+      return context.appLocaleLanguage.confirmPasswordMismatch;
     }
     return null;
   }
@@ -80,8 +81,8 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                           radius: AppSizes.size40,
                         ),
                         const SizedBox(height: AppSpacing.space10),
-                        const Text(
-                          AppStrings.newPasswordTitle,
+                         Text(
+                          context.appLocaleLanguage.newPasswordTitle,
                           style: TextStyle(
                             color: Color(0xFFf49415),
                             fontSize: AppSizes.size24,
@@ -90,7 +91,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                         ),
                         const SizedBox(height: AppSpacing.space10),
                         Text(
-                          AppStrings.newPasswordDescription,
+                          context.appLocaleLanguage.newPasswordDescription,
                           style: const TextStyle(
                             color: Color(0xFFf49415),
                             fontSize: AppSizes.size12,
@@ -124,8 +125,8 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                         const SizedBox(height: AppSpacing.space30),
 
                         // Password field
-                        const Text(
-                          AppStrings.newPasswordLabel,
+                         Text(
+                          context.appLocaleLanguage.newPasswordLabel,
                           style: TextStyle(
                             fontSize: AppSizes.size16,
                             fontWeight: FontWeight.w500,
@@ -135,7 +136,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                         const SizedBox(height: AppSpacing.space10),
                         AppTextField(
                           controller: passwordController,
-                          hintText: AppStrings.newPasswordHint,
+                          hintText: context.appLocaleLanguage.newPasswordHint,
                           borderColor: Colors.grey.shade300,
                           fillColor: Colors.grey.shade100,
                           validator: Validator.password,
@@ -156,8 +157,8 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                           ),
                         ),
                         const SizedBox(height: AppSpacing.space20),
-                        const Text(
-                          AppStrings.confirmPasswordLabel,
+                         Text(
+                          context.appLocaleLanguage.confirmPasswordLabel,
                           style: TextStyle(
                             fontSize: AppSizes.size16,
                             fontWeight: FontWeight.w500,
@@ -167,7 +168,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                         const SizedBox(height: AppSpacing.space10),
                         AppTextField(
                           controller: confirmPasswordController,
-                          hintText: AppStrings.confirmNewPasswordHint,
+                          hintText: context.appLocaleLanguage.confirmNewPasswordHint,
                           borderColor: Colors.grey.shade300,
                           fillColor: Colors.grey.shade100,
                           validator: _validateConfirmPassword,
@@ -197,8 +198,8 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                               )
                             : AppElevatedButton(
                                 text: viewModel.isLoading
-                                    ? AppStrings.updating
-                                    : AppStrings.resetPasswordButton,
+                                    ? context.appLocaleLanguage.updating
+                                    : context.appLocaleLanguage.resetPasswordButton,
                                 borderColor: const Color(0xFFf49415),
                                 color: const Color(0xFFf49415),
                                 splashColor: AppColors.transparent,
@@ -214,12 +215,12 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                                           if (success) {
                                             await showCustomDialog(
                                               context: context,
-                                              title: AppStrings
+                                              title: context.appLocaleLanguage
                                                   .resetPasswordSuccessTitle,
-                                              message: AppStrings
+                                              message: context.appLocaleLanguage
                                                   .passwordUpdatedMessage,
                                               buttonText:
-                                                  AppStrings.loginButton,
+                                                  context.appLocaleLanguage.loginButton,
                                               icon: Icons.check_circle,
                                               iconColor: Colors.green,
                                               onPressed: () {
@@ -229,13 +230,13 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                                           } else {
                                             await showCustomDialog(
                                               context: context,
-                                              title: AppStrings
+                                              title: context.appLocaleLanguage
                                                   .resetPasswordFailedTitle,
                                               message:
                                                   viewModel.errorMessage ??
-                                                  AppStrings
+                                                  context.appLocaleLanguage
                                                       .errorOccurredTryAgain,
-                                              buttonText: AppStrings.okayButton,
+                                              buttonText: context.appLocaleLanguage.okayButton,
                                               icon: Icons.error,
                                               iconColor: Colors.red,
                                               onPressed: () {},

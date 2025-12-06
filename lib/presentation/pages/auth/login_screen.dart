@@ -6,6 +6,7 @@ import 'package:event_go/core/constants/app_sizes.dart';
 import 'package:event_go/core/constants/app_spacing.dart';
 import 'package:event_go/core/constants/app_strings.dart';
 import 'package:event_go/core/constants/app_svg.dart';
+import 'package:event_go/core/utils/extension.dart';
 import 'package:event_go/core/utils/validator.dart';
 import 'package:event_go/core/widgets/app_elevated_button.dart';
 import 'package:event_go/core/widgets/showdialog.dart';
@@ -57,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         CircleAvatar(backgroundImage: AssetImage(AppImage.logo), radius: AppSizes.size40),
                         const SizedBox(height: AppSpacing.space10),
                         Text(
-                          AppStrings.loginTitle,
+                          context.appLocaleLanguage.loginTitle,
                           style: TextStyle(
                             color: Color(0xFFf49415),
                             fontSize: AppSizes.size24,
@@ -66,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: AppSpacing.space10),
                         Text(
-                          AppStrings.loginDescription,
+                          context.appLocaleLanguage.loginDescription,
                           style: TextStyle(color: Color(0xFFf49415), fontSize:AppSizes.size12),
                           textAlign: TextAlign.justify,
                         ),
@@ -95,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         AppTextField(
                           controller: emailController,
-                          hintText: AppStrings.emailHint,
+                          hintText: context.appLocaleLanguage.emailHint,
                           borderColor: Colors.grey.shade300,
                           fillColor: Colors.grey.shade100,
                           validator: Validator.email,
@@ -118,7 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(height: AppSpacing.space20),
                         AppTextFieldPassword(
                           controller: passwordController,
-                          hintText: AppStrings.passwordHint,
+                          hintText: context.appLocaleLanguage.passwordHint,
                           borderColor: Colors.grey.shade300,
                           validator: Validator.password,
                           fillColor: Colors.grey.shade100,
@@ -133,8 +134,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               onPressed: () {
                                 context.push(RouterPath.forgotPassword);
                               },
-                              child: const Text(
-                                AppStrings.forgotPasswordButton,
+                              child:  Text(
+                                context.appLocaleLanguage.forgotPasswordButton,
                                 style: TextStyle(color: Color(0xFFf49415)),
                               ),
                             ),
@@ -149,7 +150,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         )
                             : AppElevatedButton(
-                          text: AppStrings.loginButton,
+                          text: context.appLocaleLanguage.loginButton,
                           borderColor: Color(0xFFf49415),
                           color: Color(0xFFf49415),
                           splashColor: AppColors.transparent,
@@ -163,9 +164,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               if (success) {
                                 await showCustomDialog(
                                   context: context,
-                                  title: AppStrings.loginSuccessTitle,
-                                  message: AppStrings.loginSuccessMessage,
-                                  buttonText: AppStrings.okayButton,
+                                  title: context.appLocaleLanguage.loginSuccessTitle,
+                                  message: context.appLocaleLanguage.loginSuccessMessage,
+                                  buttonText: context.appLocaleLanguage.okayButton,
                                   icon: Icons.check_circle,
                                   iconColor: Colors.green,
                                   onPressed: () {
@@ -175,10 +176,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               } else {
                                 await showCustomDialog(
                                   context: context,
-                                  title: AppStrings.loginFailedTitle,
+                                  title: context.appLocaleLanguage.loginFailedTitle,
                                   message:
-                                  viewModel.errorMessage ?? AppStrings.wrongEmailOrPasswordMessage,
-                                  buttonText: AppStrings.okayButton,
+                                  viewModel.errorMessage ?? context.appLocaleLanguage.wrongEmailOrPasswordMessage,
+                                  buttonText: context.appLocaleLanguage.okayButton,
                                   icon: Icons.error,
                                   iconColor: Colors.red,
                                   onPressed: () {},
@@ -190,11 +191,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(height: AppSpacing.space20),
                         RichText(
                           text: TextSpan(
-                            text: AppStrings.noAccount,
+                            text: context.appLocaleLanguage.noAccount,
                             style: TextStyle(color: Colors.grey, fontSize: AppSizes.size14),
                             children: [
                               TextSpan(
-                                text: AppStrings.signUpButton,
+                                text: context.appLocaleLanguage.signUpButton,
                                 style: TextStyle(
                                   color: Color(0xFFf49415),
                                   fontWeight: FontWeight.bold,

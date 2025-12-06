@@ -398,9 +398,6 @@ class AppLocalizationsVi extends AppLocalizations {
   String get liveMusic => 'Nhạc sống';
 
   @override
-  String get theaterAndArts => 'Sân khấu & Nghệ thuật';
-
-  @override
   String get sports => 'Thể Thao';
 
   @override
@@ -756,4 +753,19 @@ class AppLocalizationsVi extends AppLocalizations {
   String failedToStartWatchingEvents(Object error) {
     return 'Không thể bắt đầu theo dõi sự kiện: $error';
   }
+
+  @override
+  String get homeTabLabel => 'Trang chủ';
+
+  @override
+  String get myTicketsTabLabel => 'Vé của tôi';
+
+  @override
+  String get accountTabLabel => 'Tài khoản';
+
+  @override
+  String get theaterAndArts => 'Sân khấu Nghệ thuật';
+
+  @override
+  String get conference => 'Hội thảo';
 }

@@ -2,6 +2,7 @@ import 'package:event_go/core/constants/app_colors.dart';
 import 'package:event_go/core/constants/app_image.dart';
 import 'package:event_go/core/constants/app_strings.dart';
 import 'package:event_go/core/constants/app_text_styles.dart';
+import 'package:event_go/core/utils/extension.dart';
 import 'package:event_go/core/widgets/app_elevated_button.dart';
 import 'package:event_go/routers/router_name.dart';
 import 'package:flutter/material.dart';
@@ -35,14 +36,14 @@ class _LangdingScreenState extends State<LangdingScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    AppStrings.appName,
+                    context.appLocaleLanguage.appName,
                     style: AppTextStyles.heading1.copyWith(
                       color: AppColors.primary,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
                   Text(
-                    AppStrings.heading,
+                    context.appLocaleLanguage.heading,
                     style: AppTextStyles.heading1.copyWith(
                       color: AppColors.primary,
                       fontWeight: FontWeight.w700,
@@ -50,13 +51,13 @@ class _LangdingScreenState extends State<LangdingScreen> {
                   ),
                   SizedBox(height: 12.0),
                   Text(
-                    AppStrings.slogan,
+                    context.appLocaleLanguage.slogan,
                     style: AppTextStyles.content2,
                     textAlign: TextAlign.justify,
                   ),
                   SizedBox(height: 20.0),
                   AppElevatedButton(
-                    text: AppStrings.getStarted,
+                    text: context.appLocaleLanguage.getStarted,
                     textColor: AppColors.white,
                     color: Color(0xFFf49415),
                     fontSize: 15.0,

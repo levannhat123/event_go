@@ -5,6 +5,7 @@ import 'package:event_go/core/constants/app_sizes.dart';
 import 'package:event_go/core/constants/app_spacing.dart';
 import 'package:event_go/core/constants/app_strings.dart';
 import 'package:event_go/core/constants/app_svg.dart';
+import 'package:event_go/core/utils/extension.dart';
 import 'package:event_go/core/utils/validator.dart';
 import 'package:event_go/core/widgets/app_elevated_button.dart';
 import 'package:event_go/core/widgets/showdialog.dart';
@@ -66,7 +67,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                         const SizedBox(height: AppSpacing.space10),
                         Text(
-                          AppStrings.signUpTitle,
+                          context.appLocaleLanguage.signUpTitle,
                           style: TextStyle(
                             color: Color(0xFFf49415),
                             fontSize: AppSizes.size24,
@@ -75,7 +76,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                         const SizedBox(height: AppSpacing.space10),
                         Text(
-                          AppStrings.signUpDescription,
+                          context.appLocaleLanguage.signUpDescription,
                           style: TextStyle(
                             color: Color(0xFFf49415),
                             fontSize: AppSizes.size12,
@@ -109,7 +110,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       children: [
                         AppTextField(
                           controller: emailController,
-                          hintText: AppStrings.emailHint,
+                          hintText: context.appLocaleLanguage.emailHint,
                           borderColor: Colors.grey.shade300,
                           validator: Validator.email,
                           fillColor: Colors.white,
@@ -133,7 +134,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         AppTextFieldPassword(
                           controller: passwordController,
                           validator: Validator.password,
-                          hintText: AppStrings.passwordLabel,
+                          hintText: context.appLocaleLanguage.passwordLabel,
                           borderColor: Colors.grey.shade300,
                           fillColor: Colors.white,
                           focusedBorderColor: const Color(0xFF4257b4),
@@ -143,13 +144,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         const SizedBox(height: AppSpacing.space20),
                         AppTextFieldPassword(
                           controller: configpasswordController,
-                          hintText: AppStrings.confirmPasswordHint,
+                          hintText: context.appLocaleLanguage.confirmPasswordHint,
                           borderColor: Colors.grey.shade300,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return AppStrings.pleaseReenterPassword;
+                              return context.appLocaleLanguage.pleaseReenterPassword;
                             } else if (value != passwordController.text) {
-                              return AppStrings.passwordMismatch;
+                              return context.appLocaleLanguage.passwordMismatch;
                             }
                             return null;
                           },
@@ -167,7 +168,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 ),
                               )
                             : AppElevatedButton(
-                                text: AppStrings.register,
+                                text: context.appLocaleLanguage.register,
                                 textColor: AppColors.textPrimary,
                                 color: Color(0xFFf49415),
                                 fontSize: AppSizes.size15,
@@ -184,10 +185,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     if (success) {
                                       await showCustomDialog(
                                         context: context,
-                                        title: AppStrings.signUpSuccessTitle,
+                                        title: context.appLocaleLanguage.signUpSuccessTitle,
                                         message:
-                                            AppStrings.signUpSuccessMessage,
-                                        buttonText: AppStrings.okayButton,
+                                            context.appLocaleLanguage.signUpSuccessMessage,
+                                        buttonText: context.appLocaleLanguage.okayButton,
                                         icon: Icons.check_circle,
                                         iconColor: Colors.green,
                                         onPressed: () {
@@ -197,11 +198,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     } else {
                                       await showCustomDialog(
                                         context: context,
-                                        title: AppStrings.signUpFailedTitle,
+                                        title: context.appLocaleLanguage.signUpFailedTitle,
                                         message:
                                             viewModel.errorMessage ??
-                                            AppStrings.errorOccurredMessage,
-                                        buttonText: AppStrings.okayButton,
+                                            context.appLocaleLanguage.errorOccurredMessage,
+                                        buttonText: context.appLocaleLanguage.okayButton,
                                         icon: Icons.error,
                                         iconColor: Colors.red,
                                         onPressed: () {},
@@ -213,14 +214,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         const SizedBox(height: AppSpacing.space20),
                         RichText(
                           text: TextSpan(
-                            text: AppStrings.hasAccount,
+                            text: context.appLocaleLanguage.hasAccount,
                             style: TextStyle(
                               color: Colors.grey,
                               fontSize: AppSizes.size14,
                             ),
                             children: [
                               TextSpan(
-                                text: AppStrings.login,
+                                text: context.appLocaleLanguage.login,
                                 style: TextStyle(
                                   color: Color(0xFFf49415),
                                   fontWeight: FontWeight.bold,

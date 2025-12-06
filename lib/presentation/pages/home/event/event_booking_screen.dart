@@ -3,6 +3,7 @@ import 'package:event_go/core/constants/app_colors.dart';
 import 'package:event_go/core/constants/app_sizes.dart';
 import 'package:event_go/core/constants/app_spacing.dart';
 import 'package:event_go/core/constants/app_strings.dart';
+import 'package:event_go/core/utils/extension.dart';
 import 'package:event_go/core/utils/format_price.dart';
 import 'package:event_go/core/widgets/app_elevated_button.dart';
 import 'package:event_go/data/models/event/event_detail_model.dart';
@@ -44,7 +45,7 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
             title: SizedBox(
               height: AppSizes.size50,
               child: Marquee(
-                text: AppStrings.clickToSelectTicket,
+                text: context.appLocaleLanguage.clickToSelectTicket,
                 style: const TextStyle(
                   fontSize: AppSizes.size18,
                   color: Colors.white,
@@ -103,11 +104,10 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
   ) {
     final bool hasTickets = vm.hasTickets;
     final String buttonText = hasTickets
-        ? AppStrings.paymentFormat.replaceAll(
-            '{amount}',
-            vm.currencyFormat.format(vm.grandTotal),
-          )
-        : AppStrings.pleaseSelectTicket;
+        ? context.appLocaleLanguage.paymentFormat( // Gọi như một hàm
+      vm.currencyFormat.format(vm.grandTotal), // Truyền giá trị vào đây
+    )
+        : context.appLocaleLanguage.pleaseSelectTicket;
     final Color buttonColor = hasTickets
         ? AppColors.green
         : const Color(0xFFDEE0E4);
@@ -200,11 +200,10 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
   ) {
     final bool hasTickets = vm.hasTickets;
     final String buttonText = hasTickets
-        ? AppStrings.paymentFormat.replaceAll(
-            '{amount}',
-            vm.currencyFormat.format(vm.grandTotal),
-          )
-        : AppStrings.pleaseSelectTicket;
+        ? context.appLocaleLanguage.paymentFormat( // Gọi như một hàm
+      vm.currencyFormat.format(vm.grandTotal), // Truyền giá trị vào đây
+    )
+        : context.appLocaleLanguage.pleaseSelectTicket;
     final Color buttonColor = hasTickets
         ? AppColors.green
         : const Color(0xFFDEE0E4);

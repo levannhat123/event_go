@@ -4,6 +4,7 @@ import 'package:event_go/core/constants/app_image.dart';
 import 'package:event_go/core/constants/app_sizes.dart';
 import 'package:event_go/core/constants/app_spacing.dart';
 import 'package:event_go/core/constants/app_strings.dart';
+import 'package:event_go/core/utils/extension.dart';
 import 'package:event_go/core/utils/format_price.dart';
 import 'package:event_go/core/widgets/text_field.dart';
 import 'package:event_go/injection/injection.dart';
@@ -47,7 +48,7 @@ class _SearchScreenState extends State<SearchScreen> {
         final bool isDisplayingResults = viewModel.isFilterActive;
         return Scaffold(
           appBar: AppBar(
-            title: Text(AppStrings.searchTitle),
+            title: Text(context.appLocaleLanguage.searchTitle),
             centerTitle: true,
             backgroundColor: Color(0xFF596DC3),
           ),
@@ -65,7 +66,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   onFieldSubmitted: (query) {
                     viewModel.addRecentSearch(query);
                   },
-                  hintText: AppStrings.searchHint,
+                  hintText: context.appLocaleLanguage.searchHint,
                   borderColor: AppColors.transparent,
                   fillColor: AppColors.transparent,
                   focusedBorderColor: AppColors.transparent,
@@ -177,7 +178,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               const SizedBox(width: AppSpacing.space4),
                               Center(
                                 child: Text(
-                                  AppStrings.filterButton,
+                                  context.appLocaleLanguage.filterButton,
                                   style: TextStyle(
                                     color: AppColors.white,
                                     fontSize: AppSizes.size14,
@@ -212,13 +213,59 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Widget _buildDiscoveryContent(HomeViewModel viewModel) {
-    final List<Map<String, String>> categories = [
-      {'name': AppStrings.liveMusic, 'image': AppImage.music_category},
-      {'name': AppStrings.theaterAndArtsSimple, 'image': AppImage.film_category},
-      {'name': AppStrings.sportsCategory, 'image': AppImage.sport_category},
-      {'name': AppStrings.other, 'image': AppImage.other_category},
-    ];
+    Map<String, String> getCategoryInfo(String dbKey) {
+      if (dbKey == AppStrings.liveMusic) {
+        return {
+          'display': context.appLocaleLanguage.liveMusic,
+          'image': AppImage.music_category
+        };
+      }
+      else if (dbKey == AppStrings.theaterAndArtsSimple) {
+        return {
+          'display': context.appLocaleLanguage.theaterAndArtsSimple,
+          'image': AppImage.film_category
+        };
+      }
+      else if (dbKey == AppStrings.sportsCategory) {
+        return {
+          'display': context.appLocaleLanguage.sports,
+          'image': AppImage.sport_category
+        };
+      }
+      else if (dbKey == AppStrings.other) {
+        return {
+          'display': context.appLocaleLanguage.other,
+          'image': AppImage.other_category
+        };
+      }
 
+      return {
+        'display': dbKey,
+        'image': AppImage.other_category
+      };
+    }
+    final List<Map<String, String>> locations = [
+      {
+        'display': context.appLocaleLanguage.hanoi,
+        'filterValue': AppStrings.hanoi,
+        'image': AppImage.location_hn
+      },
+      {
+        'display': context.appLocaleLanguage.hoChiMinh,
+        'filterValue': AppStrings.hoChiMinh,
+        'image': AppImage.location_hcm
+      },
+      {
+        'display': context.appLocaleLanguage.dalat,
+        'filterValue': AppStrings.dalat,
+        'image': AppImage.location_dalat
+      },
+      {
+        'display': context.appLocaleLanguage.otherLocation,
+        'filterValue': AppStrings.otherLocation,
+        'image': AppImage.location_other
+      },
+    ];
     final List<Map<String, String>> cities = [
       {'name': AppStrings.hanoi, 'image': AppImage.hn_location},
       {'name': AppStrings.hoChiMinh, 'image': AppImage.hcm_location},
@@ -233,7 +280,7 @@ class _SearchScreenState extends State<SearchScreen> {
           if (viewModel.recentSearches.isNotEmpty) ...[
             const SizedBox(height: AppSpacing.space10),
             Text(
-              AppStrings.recentSearches,
+              context.appLocaleLanguage.recentSearches,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: AppSizes.size18,
@@ -267,7 +314,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
           const SizedBox(height: AppSpacing.space10),
           Text(
-            AppStrings.trendingSearches,
+            context.appLocaleLanguage.trendingSearches,
             style: TextStyle(
               color: Colors.white,
               fontSize: AppSizes.size18,
@@ -295,7 +342,7 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
           const SizedBox(height: AppSpacing.space20),
           Text(
-            AppStrings.exploreByCategory,
+            context.appLocaleLanguage.exploreByCategory,
             style: TextStyle(
               color: Colors.white,
               fontSize: AppSizes.size24,
@@ -306,14 +353,20 @@ class _SearchScreenState extends State<SearchScreen> {
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
-              children: categories.map((cat) {
+              children: viewModel.eventsByCategory.keys.map((dbKey) {
+
+                final info = getCategoryInfo(dbKey);
+                final displayName = info['display']!;
+                final imagePath = info['image']!;
+
                 return Padding(
                   padding: const EdgeInsets.only(right: AppSpacing.space10),
                   child: CategoryCard(
-                    title: cat['name']!,
-                    imagePath: cat['image']!,
+                    title: displayName, // Hiển thị tên đa ngôn ngữ
+                    imagePath: imagePath, // Hiển thị ảnh map tương ứng
                     onTap: () {
-                      viewModel.selectCategoryAndSearch(cat['name']!);
+                      // QUAN TRỌNG: Vẫn dùng dbKey (giá trị gốc) để lọc
+                      viewModel.selectCategoryAndSearch(dbKey);
                     },
                   ),
                 );
@@ -323,7 +376,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
           const SizedBox(height: AppSpacing.space10),
           Text(
-            AppStrings.exploreByCity,
+            context.appLocaleLanguage.exploreByCity,
             style: TextStyle(
               color: Colors.white,
               fontSize: AppSizes.size24,
@@ -334,15 +387,14 @@ class _SearchScreenState extends State<SearchScreen> {
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
-              children: cities.map((city) {
+              children: locations.map((city) {
                 return Padding(
                   padding: const EdgeInsets.only(right: AppSpacing.space10),
-                  child: CategoryCard( // Trong code SearchScreen cũ bạn dùng CategoryCard cho cả City
-                    title: city['name']!,
+                  child: CategoryCard(
+                    title: city['display']!,
                     imagePath: city['image']!,
                     onTap: () {
-                      // Gọi hàm lọc Location trong ViewModel
-                      viewModel.selectLocationAndSearch(city['name']!);
+                      viewModel.selectLocationAndSearch(city['filterValue']!);
                     },
                   ),
                 );
@@ -351,10 +403,8 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
 
           const SizedBox(height: AppSpacing.space10),
-
-          // ... (Phần Suggestions For You giữ nguyên) ...
           Text(
-            AppStrings.suggestionsForYou,
+            context.appLocaleLanguage.suggestionsForYou,
             style: TextStyle(
               color: Colors.white,
               fontSize: AppSizes.size24,
@@ -377,7 +427,7 @@ class _SearchScreenState extends State<SearchScreen> {
               final event = viewModel.events[index];
               final date = event.startTime != null
                   ? FormatPrice.formatDate(event.startTime.toString())
-                  : AppStrings.comingSoon;
+                  : context.appLocaleLanguage.comingSoon;
               return EventCard(
                 height: AppSizes.size100,
                 width: AppSizes.size200,
@@ -402,26 +452,26 @@ class _SearchScreenState extends State<SearchScreen> {
     if (viewModel.searchResults.isEmpty) {
       return Center(
         child: Text(
-          AppStrings.noResultsFound,
+          context.appLocaleLanguage.noResultsFound,
           style: TextStyle(color: Colors.white70),
         ),
       );
     }
 
     return GridView.builder(
-      padding: const EdgeInsets.only(top: AppSpacing.space10), // Thêm padding cho lưới
+      padding: const EdgeInsets.only(top: AppSpacing.space10),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         mainAxisSpacing: AppSpacing.space10,
         crossAxisSpacing: AppSpacing.space10,
-        childAspectRatio: 0.8, // Tỷ lệ này bạn có thể điều chỉnh
+        childAspectRatio: 0.8,
       ),
       itemCount: viewModel.searchResults.length,
       itemBuilder: (context, index) {
         final event = viewModel.searchResults[index];
         final date = event.startTime != null
             ? FormatPrice.formatDate(event.startTime.toString())
-            : AppStrings.comingSoon;
+            : context.appLocaleLanguage.comingSoon;
         return EventCard(
           height: AppSizes.size100,
           width: AppSizes.size200,
@@ -441,7 +491,7 @@ class _SearchScreenState extends State<SearchScreen> {
     return Chip(
       label: Text(label),
       onDeleted: onDeleted,
-      backgroundColor: AppColors.green, // Màu giống nút "Bộ lọc"
+      backgroundColor: AppColors.green,
       labelStyle: const TextStyle(color: Colors.white, fontSize: 14),
       deleteIcon: const Icon(Icons.close, color: Colors.white, size: AppSizes.size18),
       padding: const EdgeInsets.symmetric(
@@ -451,11 +501,8 @@ class _SearchScreenState extends State<SearchScreen> {
       shape: const StadiumBorder(),
     );
   }
-  // [THÊM HÀM NÀY VÀO _SearchScreenState]
   Widget _buildAppliedFilters(HomeViewModel viewModel) {
     final List<Widget> chips = [];
-
-    // 2. Chip Lọc Địa điểm
     if (viewModel.appliedLocation != AppStrings.nationwide) {
       chips.add(
         _buildFilterChip(
@@ -464,8 +511,6 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
       );
     }
-
-    // 3. Chip Lọc Giá
     if (viewModel.appliedIsFree) {
       chips.add(
         _buildFilterChip(
@@ -474,8 +519,6 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
       );
     }
-
-    // 4. Các Chip Lọc Thể loại
     for (String categoryName in viewModel.appliedCategories) {
       chips.add(
         _buildFilterChip(
@@ -486,15 +529,13 @@ class _SearchScreenState extends State<SearchScreen> {
     }
 
     if (chips.isEmpty) {
-      return SizedBox.shrink(); // Không có filter thì không hiển thị gì
+      return SizedBox.shrink();
     }
-
-    // Dùng Wrap để các chip tự động xuống dòng
     return Padding(
       padding: const EdgeInsets.only(top: AppSpacing.space10),
       child: Wrap(
-        spacing: AppSpacing.space8, // Khoảng cách ngang giữa các chip
-        runSpacing: AppSpacing.space4, // Khoảng cách dọc nếu xuống dòng
+        spacing: AppSpacing.space8,
+        runSpacing: AppSpacing.space4,
         children: chips,
       ),
     );

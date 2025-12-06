@@ -3,6 +3,7 @@ import 'package:event_go/core/base/base_view.dart';
 import 'package:event_go/core/constants/app_colors.dart';
 import 'package:event_go/core/constants/app_image.dart';
 import 'package:event_go/core/constants/app_strings.dart';
+import 'package:event_go/core/utils/extension.dart';
 import 'package:event_go/core/widgets/app_elevated_button.dart';
 import 'package:event_go/core/widgets/event_card.dart';
 import 'package:event_go/core/widgets/order_history_card.dart';
@@ -28,13 +29,13 @@ class _TicketOrderScreenState extends State<TicketOrderScreen>
   Map<String, dynamic> _getStatusDisplay(String? status) {
     switch (status) {
       case 'completed':
-        return {'text': AppStrings.success, 'color': Colors.green};
+        return {'text': context.appLocaleLanguage.success, 'color': Colors.green};
       case 'cancelled':
-        return {'text': AppStrings.cancelled, 'color': Colors.red};
+        return {'text': context.appLocaleLanguage.cancelled, 'color': Colors.red};
       case 'failed':
-        return {'text': AppStrings.failed, 'color': Colors.orange};
+        return {'text': context.appLocaleLanguage.failed, 'color': Colors.orange};
       default:
-        return {'text': AppStrings.unknown, 'color': Colors.grey};
+        return {'text': context.appLocaleLanguage.unknown, 'color': Colors.grey};
     }
   }
 
@@ -52,7 +53,7 @@ class _TicketOrderScreenState extends State<TicketOrderScreen>
         final ordersStream = viewModel.ordersStream;
         if (ordersStream == null) {
           return _buildEmptyState(
-            AppStrings.pleaseLoginToViewTickets,
+            context.appLocaleLanguage.pleaseLoginToViewTickets,
             Icons.login,
           );
         }
@@ -77,7 +78,7 @@ class _TicketOrderScreenState extends State<TicketOrderScreen>
                   }
                   if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                     return _buildEmptyState(
-                      AppStrings.noOrdersYet,
+                      context.appLocaleLanguage.noOrdersYet,
                       Icons.receipt_long,
                     );
                   }
@@ -95,7 +96,7 @@ class _TicketOrderScreenState extends State<TicketOrderScreen>
                   }).toList();
                   if (filteredOrders.isEmpty) {
                     return _buildEmptyState(
-                      AppStrings.noOrdersInThisCategory,
+                      context.appLocaleLanguage.noOrdersInThisCategory,
                       Icons.inventory_2,
                     );
                   }
@@ -126,7 +127,7 @@ class _TicketOrderScreenState extends State<TicketOrderScreen>
                             child: OrderHistoryCard(
                               title:
                                   data['eventName'] as String? ??
-                                  AppStrings.eventName,
+                                  context.appLocaleLanguage.eventName,
                               statusText: statusInfo['text'],
                               statusColor: statusInfo['color'],
                               orderCode: orderId,
@@ -148,7 +149,7 @@ class _TicketOrderScreenState extends State<TicketOrderScreen>
               SizedBox(height: 25),
               Center(
                 child: Text(
-                  AppStrings.youMayAlsoLike,
+                  context.appLocaleLanguage.youMayAlsoLike,
                   style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
               ),
@@ -172,7 +173,7 @@ class _TicketOrderScreenState extends State<TicketOrderScreen>
                     title: event.title,
                     price: event.minTicketPrice != null
                         ? event.minTicketPrice.toString()
-                        : AppStrings.free,
+                        : context.appLocaleLanguage.free,
                     date: event.startTime.toString(),
                     onTap: () {
                       context.push(RouterPath.event_detail, extra: event);
@@ -184,7 +185,7 @@ class _TicketOrderScreenState extends State<TicketOrderScreen>
               Align(
                 alignment: Alignment.center,
                 child: AppElevatedButton(
-                  text: AppStrings.seeMore,
+                  text: context.appLocaleLanguage.seeMore,
                   onPressed: () {},
                   height: 40,
                   width: 120,

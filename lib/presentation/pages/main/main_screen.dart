@@ -1,4 +1,5 @@
 import 'package:event_go/core/constants/app_svg.dart';
+import 'package:event_go/core/utils/extension.dart';
 import 'package:event_go/core/widgets/custom_navbottom_bar.dart';
 import 'package:event_go/data/models/navbar/nav_item.dart';
 import 'package:event_go/routers/router_name.dart';
@@ -11,9 +12,9 @@ class MainScreen extends StatefulWidget {
   const MainScreen({super.key, required this.child});
 
   static List<NavItem> navItems(BuildContext context) => [
-    NavItem(icon: AppSvg.home, label: 'Trang chủ', route: RouterPath.home),
-    NavItem(icon: AppSvg.order, label: 'Vé của tôi', route: RouterPath.ticket),
-    NavItem(icon: AppSvg.user, label: 'Tài khoản', route: RouterPath.user),
+    NavItem(icon: AppSvg.home, label: context.appLocaleLanguage.homeTabLabel, route: RouterPath.home),
+    NavItem(icon: AppSvg.order, label: context.appLocaleLanguage.myTicketsTabLabel, route: RouterPath.ticket),
+    NavItem(icon: AppSvg.user, label: context.appLocaleLanguage.accountTabLabel, route: RouterPath.user),
   ];
 
   @override

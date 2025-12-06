@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:event_go/core/base/base_view.dart';
 import 'package:event_go/core/constants/app_colors.dart';
 import 'package:event_go/core/constants/app_strings.dart';
+import 'package:event_go/core/utils/extension.dart';
 import 'package:event_go/core/widgets/app_elevated_button.dart';
 import 'package:event_go/data/models/profile_model.dart';
 import 'package:event_go/injection/injection.dart';
@@ -39,7 +40,7 @@ class ProfileScreen extends StatelessWidget {
               },
             ),
             title: Text(
-              AppStrings.accountInfo,
+              context.appLocaleLanguage.accountInfo,
               style: TextStyle(
                 color: _lightTextColor,
                 fontWeight: FontWeight.bold,
@@ -55,7 +56,7 @@ class ProfileScreen extends StatelessWidget {
                     child: CircularProgressIndicator(color: Color(0xFFf49415)),
                   )
                 : AppElevatedButton(
-                    text: AppStrings.complete,
+                    text: context.appLocaleLanguage.complete,
                     borderColor: Color(0xFFf49415),
                     color: Color(0xFFf49415),
                     splashColor: AppColors.transparent,
@@ -73,7 +74,7 @@ class ProfileScreen extends StatelessWidget {
                       if (ScaffoldMessenger.of(context).mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text(AppStrings.updateProfileSuccess),
+                            content: Text(context.appLocaleLanguage.updateProfileSuccess),
                           ),
                         );
                       }
@@ -148,18 +149,18 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    AppStrings.profileInfoDescription,
+                    context.appLocaleLanguage.profileInfoDescription,
                     textAlign: TextAlign.center,
                     style: TextStyle(color: _dimTextColor, fontSize: 14),
                   ),
                   const SizedBox(height: 30),
-                  _buildLabel(AppStrings.fullName),
+                  _buildLabel(context.appLocaleLanguage.fullName),
                   _buildTextField(controller: viewModel.nameController),
                   const SizedBox(height: 20),
-                  _buildLabel(AppStrings.phoneNumber),
+                  _buildLabel(context.appLocaleLanguage.phoneNumber),
                   _buildPhoneField(viewModel.phoneController),
                   const SizedBox(height: 20),
-                  _buildLabel(AppStrings.emailHint),
+                  _buildLabel(context.appLocaleLanguage.emailHint),
                   _buildTextField(
                     controller: viewModel.emailController,
                     readOnly: true,

@@ -6,6 +6,7 @@ import 'package:event_go/core/constants/app_image.dart';
 import 'package:event_go/core/constants/app_sizes.dart';
 import 'package:event_go/core/constants/app_spacing.dart';
 import 'package:event_go/core/constants/app_strings.dart';
+import 'package:event_go/core/utils/extension.dart';
 import 'package:event_go/core/utils/format_price.dart';
 import 'package:event_go/core/widgets/app_elevated_button.dart';
 import 'package:event_go/core/widgets/event_card.dart';
@@ -23,14 +24,13 @@ import 'package:slider_captcha/slider_captcha.dart';
 
 class EventDetailScreen extends StatefulWidget {
   final EventDetailModel event;
-   EventDetailScreen({Key? key, required this.event}) : super(key: key);
+  EventDetailScreen({Key? key, required this.event}) : super(key: key);
 
   @override
   State<EventDetailScreen> createState() => _EventDetailScreenState();
 }
 
 class _EventDetailScreenState extends State<EventDetailScreen> {
-
   @override
   Widget build(BuildContext context) {
     return BaseView<HomeViewModel>(
@@ -55,9 +55,12 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
         return Scaffold(
           backgroundColor: Color(0xFFE6EAF5),
           appBar: AppBar(
-            title: const Text(
-              AppStrings.eventDetailTitle,
-              style: TextStyle(fontSize: AppSizes.size20, fontWeight: FontWeight.bold),
+            title: Text(
+              context.appLocaleLanguage.eventDetailTitle,
+              style: TextStyle(
+                fontSize: AppSizes.size20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             backgroundColor: const Color(0xFF596DC3),
             centerTitle: true,
@@ -73,19 +76,27 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 RichText(
-                  text:  TextSpan(
-                    style: TextStyle(color: Colors.white, fontSize: AppSizes.size16),
+                  text: TextSpan(
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: AppSizes.size16,
+                    ),
                     children: [
-                      TextSpan(text: AppStrings.priceFrom),
+                      TextSpan(text: context.appLocaleLanguage.priceFrom),
                       TextSpan(
-                        text: FormatPrice.format(double.tryParse(widget.event.minTicketPrice.toString()) ?? 0),
+                        text: FormatPrice.format(
+                          double.tryParse(
+                                widget.event.minTicketPrice.toString(),
+                              ) ??
+                              0,
+                        ),
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
                 ),
                 AppElevatedButton(
-                  text: AppStrings.buyTicketNow,
+                  text: context.appLocaleLanguage.buyTicketNow,
                   onPressed: () {
                     if (viewModel.isLockedOut) {
                       final remainingSeconds =
@@ -93,14 +104,18 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                            AppStrings.captchaLockoutMessage.replaceAll('{seconds}', remainingSeconds.toString()),
+                            context.appLocaleLanguage
+                                .captchaLockoutMessage(remainingSeconds)
+                                .replaceAll(
+                                  '{seconds}',
+                                  remainingSeconds.toString(),
+                                ),
                           ),
                           backgroundColor: Colors.red,
                         ),
                       );
                       return;
                     }
-
                     viewModel.refreshCaptchaImage();
 
                     showDialog(
@@ -114,13 +129,19 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                             builder: (context, vm, _) {
                               return Dialog(
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(AppSizes.size12),
+                                  borderRadius: BorderRadius.circular(
+                                    AppSizes.size12,
+                                  ),
                                 ),
                                 child: Container(
-                                  padding: const EdgeInsets.all(AppSpacing.space16),
+                                  padding: const EdgeInsets.all(
+                                    AppSpacing.space16,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
-                                    borderRadius: BorderRadius.circular(AppSizes.size12),
+                                    borderRadius: BorderRadius.circular(
+                                      AppSizes.size12,
+                                    ),
                                   ),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
@@ -132,7 +153,9 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            AppStrings.captchaTitle,
+                                            context
+                                                .appLocaleLanguage
+                                                .captchaTitle,
                                             style: TextStyle(
                                               color: Colors.black,
                                             ),
@@ -149,17 +172,27 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                           ),
                                         ],
                                       ),
-                                      const SizedBox(height: AppSpacing.space20),
+                                      const SizedBox(
+                                        height: AppSpacing.space20,
+                                      ),
                                       Text(
-                                        AppStrings.captchaDescription,
+                                        context
+                                            .appLocaleLanguage
+                                            .captchaDescription,
                                         style: TextStyle(color: Colors.black),
                                       ),
-                                      const SizedBox(height: AppSpacing.space10),
+                                      const SizedBox(
+                                        height: AppSpacing.space10,
+                                      ),
                                       Text(
-                                        AppStrings.captchaInstruction,
+                                        context
+                                            .appLocaleLanguage
+                                            .captchaInstruction,
                                         style: TextStyle(color: Colors.black),
                                       ),
-                                      const SizedBox(height: AppSpacing.space20),
+                                      const SizedBox(
+                                        height: AppSpacing.space20,
+                                      ),
                                       SliderCaptcha(
                                         controller: controller,
                                         image: Image.asset(
@@ -175,16 +208,21 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
 
                                           if (result == CaptchaResult.success) {
                                             dialogContext.pop();
-                                            context.push(RouterPath.booking,extra: widget.event);
+                                            context.push(
+                                              RouterPath.booking,
+                                              extra: widget.event,
+                                            );
                                           } else if (result ==
                                               CaptchaResult.lockedOut) {
                                             dialogContext.pop();
                                             ScaffoldMessenger.of(
                                               context,
                                             ).showSnackBar(
-                                              const SnackBar(
+                                              SnackBar(
                                                 content: Text(
-                                                  AppStrings.captchaLockoutMessage1Min,
+                                                  context
+                                                      .appLocaleLanguage
+                                                      .captchaLockoutMessage1Min,
                                                 ),
                                                 backgroundColor: Colors.red,
                                               ),
@@ -199,7 +237,9 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                           }
                                         },
                                       ),
-                                      const SizedBox(height: AppSpacing.space20),
+                                      const SizedBox(
+                                        height: AppSpacing.space20,
+                                      ),
                                       Row(
                                         children: [
                                           InkWell(
@@ -216,7 +256,9 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                           ),
                                           SizedBox(width: AppSizes.size8),
                                           Text(
-                                            AppStrings.captchaReload,
+                                            context
+                                                .appLocaleLanguage
+                                                .captchaReload,
                                             style: TextStyle(
                                               color: Colors.black,
                                             ),
@@ -250,7 +292,9 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                   textColor: AppColors.white,
                   color: AppColors.green,
                   fontSize: AppSizes.size15,
-                  borderRadius: const BorderRadius.all(Radius.circular(AppSizes.size4)),
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(AppSizes.size4),
+                  ),
                   borderColor: AppColors.green,
                   splashColor: AppColors.transparent,
                   highlightColor: AppColors.white,
@@ -265,8 +309,10 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                   height: MediaQuery.of(context).size.height * AppSizes.size0_6,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    image:  DecorationImage(
-                      image: NetworkImage(widget.event.bannerURL?? AppImage.banner_1),
+                    image: DecorationImage(
+                      image: NetworkImage(
+                        widget.event.bannerURL ?? AppImage.banner_1,
+                      ),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -281,19 +327,19 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                       Padding(
                         padding: const EdgeInsets.all(AppSpacing.space20),
                         child: EventTicketCard(
-                          imagePath: widget.event.bannerURL ?? AppImage.banner_1,
+                          imagePath:
+                              widget.event.bannerURL ?? AppImage.banner_1,
                           title: widget.event.title,
                           date: widget.event.startTime.toString(),
-                          location: widget.event.venue??'',
-                          address:
-                              widget.event.address ?? '',
+                          location: widget.event.venue ?? '',
+                          address: widget.event.address ?? '',
                         ),
                       ),
                     ],
                   ),
                 ),
                 ImprovedLocationCard(
-                  title: widget.event.venue??'',
+                  title: widget.event.venue ?? '',
                   line1: line1,
                   line2: line2,
                 ),
@@ -318,8 +364,8 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          AppStrings.introduction,
+                        Text(
+                          context.appLocaleLanguage.introduction,
                           style: TextStyle(
                             fontSize: AppSizes.size17,
                             fontWeight: FontWeight.bold,
@@ -330,7 +376,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                         AnimatedCrossFade(
                           duration: const Duration(milliseconds: 300),
                           firstChild: Text(
-                            widget.event.description??'',
+                            widget.event.description ?? '',
                             maxLines: 3,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
@@ -340,16 +386,14 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                             ),
                           ),
                           secondChild: Text(
-                            widget.event.description??'',
+                            widget.event.description ?? '',
                             style: const TextStyle(
                               fontSize: AppSizes.size15,
                               height: 1.4,
                               color: Colors.black,
                             ),
                           ),
-                          crossFadeState:
-                              viewModel
-                                  .isExpanded
+                          crossFadeState: viewModel.isExpanded
                               ? CrossFadeState.showSecond
                               : CrossFadeState.showFirst,
                         ),
@@ -357,9 +401,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                           alignment: Alignment.center,
                           child: IconButton(
                             icon: AnimatedRotation(
-                              turns: viewModel.isExpanded
-                                  ? 0.5
-                                  : 0,
+                              turns: viewModel.isExpanded ? 0.5 : 0,
                               duration: const Duration(milliseconds: 300),
                               child: const Icon(
                                 Icons.keyboard_arrow_down,
@@ -367,8 +409,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                               ),
                             ),
                             onPressed: () {
-                              viewModel
-                                  .toggleDescriptionExpanded();
+                              viewModel.toggleDescriptionExpanded();
                             },
                           ),
                         ),
@@ -393,7 +434,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                           AppSpacing.space0,
                         ),
                         child: Text(
-                          AppStrings.ticketInfo,
+                          context.appLocaleLanguage.ticketInfo,
                           style: TextStyle(
                             fontSize: AppSizes.size16,
                             fontWeight: FontWeight.w600,
@@ -414,8 +455,10 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                 Text(
-                                   FormatPrice.formatDate(widget.event.startTime.toString()),
+                                Text(
+                                  FormatPrice.formatDate(
+                                    widget.event.startTime.toString(),
+                                  ),
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: AppSizes.size12,
@@ -425,9 +468,8 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                               ],
                             ),
                             AppElevatedButton(
-                              text: AppStrings.buyTicketNow,
-                              onPressed: () {
-                              },
+                              text: context.appLocaleLanguage.buyTicketNow,
+                              onPressed: () {},
                               height: AppSizes.size40,
                               width: AppSizes.size125,
                               borderRadius: const BorderRadius.all(
@@ -442,14 +484,16 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                             ),
                           ],
                         ),
-                        childrenPadding: const EdgeInsets.all(AppSpacing.space12),
+                        childrenPadding: const EdgeInsets.all(
+                          AppSpacing.space12,
+                        ),
                         children: [
                           ListView.separated(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
                             itemCount: widget.event.ticketType!.length,
-                        separatorBuilder: (context, index) =>
-                            const SizedBox(height: AppSpacing.space16),
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(height: AppSpacing.space16),
                             itemBuilder: (context, index) {
                               final ticket = widget.event.ticketType![index];
                               return TicketItemRow(
@@ -458,7 +502,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                 isSoldOut: false,
                               );
                             },
-                          )
+                          ),
                         ],
                       ),
                     ],
@@ -485,8 +529,8 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          AppStrings.organizer,
+                        Text(
+                          context.appLocaleLanguage.organizer,
                           style: TextStyle(
                             fontSize: AppSizes.size16,
                             fontWeight: FontWeight.bold,
@@ -520,7 +564,10 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                         const SizedBox(height: AppSpacing.space12),
                         Text(
                           widget.event.orgDescription ?? '',
-                          style: TextStyle(fontSize: AppSizes.size14, color: Colors.black),
+                          style: TextStyle(
+                            fontSize: AppSizes.size14,
+                            color: Colors.black,
+                          ),
                         ),
                       ],
                     ),
@@ -528,14 +575,19 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                 ),
                 Container(
                   color: Colors.black,
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.space10,
+                  ),
                   child: Column(
                     children: [
                       SizedBox(height: AppSpacing.space25),
                       Center(
                         child: Text(
-                          AppStrings.youMayAlsoLike,
-                          style: TextStyle(fontSize: AppSizes.size16, color: Colors.white),
+                          context.appLocaleLanguage.youMayAlsoLike,
+                          style: TextStyle(
+                            fontSize: AppSizes.size16,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                       SizedBox(height: AppSpacing.space25),
@@ -561,7 +613,10 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                 : 'Miễn phí',
                             date: event.startTime.toString(),
                             onTap: () {
-                              context.push(RouterPath.event_detail,extra: event);
+                              context.push(
+                                RouterPath.event_detail,
+                                extra: event,
+                              );
                             },
                           );
                         },
@@ -570,7 +625,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                       Align(
                         alignment: Alignment.center,
                         child: AppElevatedButton(
-                          text: AppStrings.seeMore,
+                          text: context.appLocaleLanguage.seeMore,
                           onPressed: () {
                             context.push(RouterPath.search);
                           },

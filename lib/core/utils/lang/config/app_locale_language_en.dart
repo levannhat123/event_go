@@ -398,9 +398,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get liveMusic => 'Live Music';
 
   @override
-  String get theaterAndArts => 'Theater & Arts';
-
-  @override
   String get sports => 'Sports';
 
   @override
@@ -434,13 +431,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get eventDetailTitle => 'Event Details';
 
   @override
-  String get priceFrom => 'From';
+  String get priceFrom => 'From ';
 
   @override
-  String get fromPrice => 'From';
+  String get fromPrice => 'From ';
 
   @override
-  String get buyTicketNow => 'Buy Ticket Now';
+  String get buyTicketNow => 'Buy Ticket';
 
   @override
   String get introduction => 'Introduction';
@@ -755,4 +752,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String failedToStartWatchingEvents(Object error) {
     return 'Failed to start watching events: $error';
   }
+
+  @override
+  String get homeTabLabel => 'Home';
+
+  @override
+  String get myTicketsTabLabel => 'My Tickets';
+
+  @override
+  String get accountTabLabel => 'My Account';
+
+  @override
+  String get theaterAndArts => 'Theater Arts';
+
+  @override
+  String get conference => 'Conference';
 }

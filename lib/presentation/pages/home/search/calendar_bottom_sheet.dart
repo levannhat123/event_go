@@ -1,3 +1,4 @@
+import 'package:event_go/core/utils/extension.dart';
 import 'package:event_go/core/widgets/app_elevated_button.dart';
 import 'package:event_go/presentation/view_models/home_view_model.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +45,7 @@ class CalendarBottomSheet extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      AppStrings.selectTime,
+                      context.appLocaleLanguage.selectTime,
                       style: TextStyle(
                         fontSize: AppSizes.size18,
                         color: AppColors.primary,
@@ -67,27 +68,27 @@ class CalendarBottomSheet extends StatelessWidget {
                 runSpacing: AppSpacing.space8,
                 children: [
                   _buildQuickSelectButton(
-                    AppStrings.allDays,
+                    context.appLocaleLanguage.allDays,
                     viewModel.selectedQuickButtonIndex == 0,
                     () => viewModel.selectQuickButton(0),
                   ),
                   _buildQuickSelectButton(
-                    AppStrings.today,
+                    context.appLocaleLanguage.today,
                     viewModel.selectedQuickButtonIndex == 1,
                     () => viewModel.selectQuickButton(1),
                   ),
                   _buildQuickSelectButton(
-                    AppStrings.tomorrow,
+                    context.appLocaleLanguage.tomorrow,
                     viewModel.selectedQuickButtonIndex == 2,
                     () => viewModel.selectQuickButton(2),
                   ),
                   _buildQuickSelectButton(
-                    AppStrings.thisWeekend,
+                    context.appLocaleLanguage.thisWeekend,
                     viewModel.selectedQuickButtonIndex == 3,
                     () => viewModel.selectQuickButton(3),
                   ),
                   _buildQuickSelectButton(
-                    AppStrings.thisMonth,
+                    context.appLocaleLanguage.thisMonth,
                     viewModel.selectedQuickButtonIndex == 4,
                     () => viewModel.selectQuickButton(4),
                   ),
@@ -102,15 +103,10 @@ class CalendarBottomSheet extends StatelessWidget {
                     onPressed: () => viewModel.previousMonth(),
                   ),
                   Text(
-                    AppStrings.monthFormat
-                        .replaceAll(
-                          '{month}',
-                          viewModel.focusedDay.month.toString(),
-                        )
-                        .replaceAll(
-                          '{year}',
-                          viewModel.focusedDay.year.toString(),
-                        ),
+                    context.appLocaleLanguage.monthFormat(
+                      viewModel.focusedDay.month.toString(), // Tham số {month}
+                      viewModel.focusedDay.year.toString(),  // Tham số {year}
+                    ),
                     style: const TextStyle(
                       fontSize: AppSizes.size16,
                       fontWeight: FontWeight.bold,
@@ -212,7 +208,7 @@ class CalendarBottomSheet extends StatelessWidget {
                 children: [
                   Expanded(
                     child: AppElevatedButton(
-                      text: AppStrings.resetButton,
+                      text: context.appLocaleLanguage.resetButton,
                       onPressed: () => viewModel.resetCalendar(),
                       height: AppSizes.size45,
                       borderRadius: const BorderRadius.all(
@@ -229,7 +225,7 @@ class CalendarBottomSheet extends StatelessWidget {
                   const SizedBox(width: AppSpacing.space16),
                   Expanded(
                     child: AppElevatedButton(
-                      text: AppStrings.applyButton,
+                      text: context.appLocaleLanguage.applyButton,
                       onPressed:
                           (viewModel.selectedDay != null ||
                               viewModel.rangeStart != null ||

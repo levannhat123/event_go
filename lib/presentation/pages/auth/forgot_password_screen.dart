@@ -5,6 +5,7 @@ import 'package:event_go/core/constants/app_sizes.dart';
 import 'package:event_go/core/constants/app_spacing.dart';
 import 'package:event_go/core/constants/app_strings.dart';
 import 'package:event_go/core/constants/app_svg.dart';
+import 'package:event_go/core/utils/extension.dart';
 import 'package:event_go/core/utils/validator.dart';
 import 'package:event_go/core/widgets/app_elevated_button.dart';
 import 'package:event_go/core/widgets/auth_bottom_sheet.dart';
@@ -59,7 +60,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         CircleAvatar(backgroundImage: AssetImage(AppImage.logo), radius: AppSizes.size40),
                         const SizedBox(height: AppSpacing.space10),
                          Text(
-                          AppStrings.forgotPasswordTitle,
+                          context.appLocaleLanguage.forgotPasswordTitle,
                           style: TextStyle(
                             color: Color(0xFFf49415),
                             fontSize: AppSizes.size12,
@@ -67,8 +68,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           ),
                         ),
                         const SizedBox(height: AppSpacing.space10),
-                        const Text(
-                          AppStrings.forgotPasswordDescription,
+                         Text(
+                          context.appLocaleLanguage.forgotPasswordDescription,
                           style: TextStyle(color: Color(0xFFf49415), fontSize: AppSizes.size12),
                           textAlign: TextAlign.center,
                         ),
@@ -97,7 +98,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       children: [
                         AppTextField(
                           controller: emailController,
-                          hintText: AppStrings.emailHint,
+                          hintText: context.appLocaleLanguage.emailHint,
                           borderColor: Colors.grey.shade300,
                           fillColor: Colors.grey.shade100,
                           validator: Validator.email,
@@ -119,7 +120,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         ),
                         const SizedBox(height: AppSpacing.space20),
                         AppElevatedButton(
-                          text: AppStrings.nextButton,
+                          text: context.appLocaleLanguage.nextButton,
                           borderColor: const Color(0xFFf49415),
                           color: const Color(0xFFf49415),
                           splashColor: AppColors.transparent,
@@ -162,7 +163,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                           ScaffoldMessenger.of(context).showSnackBar(
                                             SnackBar(
                                               content: Text(
-                                                viewModel.errorMessage ?? AppStrings.sendEmailError,
+                                                viewModel.errorMessage ?? context.appLocaleLanguage.sendEmailError,
                                               ),
                                               backgroundColor: Colors.red,
                                             ),

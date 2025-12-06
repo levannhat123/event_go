@@ -854,12 +854,6 @@ abstract class AppLocalizations {
   /// **'Nhạc sống'**
   String get liveMusic;
 
-  /// No description provided for @theaterAndArts.
-  ///
-  /// In vi, this message translates to:
-  /// **'Sân khấu & Nghệ thuật'**
-  String get theaterAndArts;
-
   /// No description provided for @sports.
   ///
   /// In vi, this message translates to:
@@ -1483,6 +1477,36 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Không thể bắt đầu theo dõi sự kiện: {error}'**
   String failedToStartWatchingEvents(Object error);
+
+  /// No description provided for @homeTabLabel.
+  ///
+  /// In vi, this message translates to:
+  /// **'Trang chủ'**
+  String get homeTabLabel;
+
+  /// No description provided for @myTicketsTabLabel.
+  ///
+  /// In vi, this message translates to:
+  /// **'Vé của tôi'**
+  String get myTicketsTabLabel;
+
+  /// No description provided for @accountTabLabel.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tài khoản'**
+  String get accountTabLabel;
+
+  /// No description provided for @theaterAndArts.
+  ///
+  /// In vi, this message translates to:
+  /// **'Sân khấu Nghệ thuật'**
+  String get theaterAndArts;
+
+  /// No description provided for @conference.
+  ///
+  /// In vi, this message translates to:
+  /// **'Hội thảo'**
+  String get conference;
 }
 
 class _AppLocalizationsDelegate

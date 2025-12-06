@@ -50,7 +50,7 @@ class _UserScreenState extends State<UserScreen> {
                     children: [
                       _buildSettingsGroup(
                         icon: Icons.person_outline,
-                        title: AppStrings.accountSettings,
+                        title: context.appLocaleLanguage.accountSettings,
                         backgroundColor: itemBackgroundColor,
                         children: [
                           _buildSettingsItem(
@@ -77,7 +77,7 @@ class _UserScreenState extends State<UserScreen> {
                       const SizedBox(height: 40),
                       _buildSingleSettingsItem(
                         icon: Icons.logout,
-                        title: AppStrings.logout,
+                        title: context.appLocaleLanguage.logout,
                         backgroundColor: itemBackgroundColor,
                         onTap: () async {
                           // Gọi hàm signOut từ ViewModel
@@ -92,7 +92,7 @@ class _UserScreenState extends State<UserScreen> {
                 ),
                 const SizedBox(height: 40),
                 Text(
-                  AppStrings.version,
+                  context.appLocaleLanguage.version,
                   style: TextStyle(color: secondaryTextColor, fontSize: 12),
                 ),
                 const SizedBox(height: 20),
@@ -281,7 +281,7 @@ class _UserScreenState extends State<UserScreen> {
               children: [
                 Expanded(
                   child: Text(
-                    AppStrings.changeLanguage,
+                    context.appLocaleLanguage.changeLanguage,
                     style: const TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 ),
