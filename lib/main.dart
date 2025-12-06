@@ -6,16 +6,21 @@ import 'package:event_go/firebase_options.dart';
 import 'package:event_go/injection/injection.dart';
 import 'package:event_go/presentation/view_models/auth_change_notifier.dart';
 import 'package:event_go/presentation/view_models/auth_view_model.dart';
+import 'package:event_go/presentation/view_models/locale_langue/locale_language_view_model.dart';
 import 'package:event_go/routers/app_route.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'core/utils/lang/config/app_locale_language.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'core/utils/lang/language.dart';
 
 void main() {
@@ -23,6 +28,8 @@ void main() {
     () async {
       WidgetsFlutterBinding.ensureInitialized();
       await initializeDateFormatting('vi_VN', null);
+      await Hive.initFlutter();
+      await Hive.openBox('settings');
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );
@@ -47,6 +54,7 @@ void main() {
           providers: [
             ChangeNotifierProvider(create: (_) => AuthChangeNotifier()),
             ChangeNotifierProvider(create: (_) => getIt<AuthViewModel>()),
+            ChangeNotifierProvider.value(value: getIt<LocaleNotifier>()),
           ],
           child: ScreenUtilInit(
             designSize: const Size(428, 926),
@@ -75,13 +83,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       supportedLocales: Language.all,
-      // locale: context.watch<LocaleNotifier>().locale,
-      // localizationsDelegates: const [
-      //   AppLocalizations.delegate,
-      //   GlobalMaterialLocalizations.delegate,
-      //   GlobalWidgetsLocalizations.delegate,
-      //   GlobalCupertinoLocalizations.delegate,
-      // ],
+      locale: context.watch<LocaleNotifier>().locale,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       theme: ThemeData(
         scaffoldBackgroundColor: AppColors.background,
         fontFamily: 'IBMPlexSans',

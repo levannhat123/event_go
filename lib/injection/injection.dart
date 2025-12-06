@@ -15,6 +15,8 @@ import 'package:event_go/presentation/view_models/home_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 
+import '../presentation/view_models/locale_langue/locale_language_view_model.dart';
+
 final getIt = GetIt.instance;
 
 void setupDependencies(GoRouter router) {
@@ -49,4 +51,5 @@ void setupDependencies(GoRouter router) {
     ),
   );
   getIt.registerLazySingleton(() => HomeViewModel(getIt<WatchAllEventsUsecase>()));
+  getIt.registerLazySingleton<LocaleNotifier>(() => LocaleNotifier());
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'lang/config/app_locale_language.dart';
+
 extension BuildContextExt on BuildContext {
   TextTheme get textTheme => Theme.of(this).textTheme;
   EdgeInsets get padding => MediaQuery.of(this).padding;
@@ -13,4 +15,7 @@ extension IntExt on int {
 extension DoubleExt on double {
   SizedBox get sizeWidth => SizedBox(width: this);
   SizedBox get sizeHeigth => SizedBox(height: this);
+}
+extension AppLocalizationsX on BuildContext {
+  AppLocalizations get appLocaleLanguage => AppLocalizations.of(this)!;
 }

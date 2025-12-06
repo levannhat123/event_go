@@ -6,8 +6,6 @@ class AppStrings {
   static const String login = "Đăng Nhập";
   static const String register = "Đăng Ký";
   static const String loading = "Đang tải...";
-
-  // Auth related strings
   static const String signUpTitle = "Đăng Ký ";
   static const String signUpDescription = "Tạo, chia sẻ và quản lý cácsự kiện đáng nhớ chỉ với vài lần chạm!";
   static const String loginTitle = "Đăng nhập ";
@@ -19,8 +17,6 @@ class AppStrings {
   static const String otpInputTitle = "Nhập mã OTP";
   static const String otpDescription = "Nhập mã 6 chữ số được gửi đến email của bạn";
   static const String verify = "Verify";
-
-  // Form labels and hints
   static const String emailHint = "Email";
   static const String passwordHint = "Mật khẩu";
   static const String confirmPasswordHint = "Nhập lại mật khẩu";
@@ -29,8 +25,6 @@ class AppStrings {
   static const String newPasswordLabel = "Mật khẩu mới";
   static const String confirmPasswordLabel = "Xác nhận mật khẩu";
   static const String passwordLabel = "Nhập mật khẩu";
-
-  // Button texts
   static const String signUpButton = "Đăng ký";
   static const String loginButton = "Đăng nhập";
   static const String forgotPasswordButton = "Quên mật khẩu?";
@@ -44,27 +38,19 @@ class AppStrings {
   static const String okayButton = "Okay";
   static const String tryAgainButton = "Thử lại";
   static const String adminLoginOnWeb = "Admin vui lòng đăng nhập ở trang quản trị.";
-
-  // Loading states
   static const String signingUp = "Đang đăng ký...";
   static const String signingIn = "Đang đăng nhập...";
   static const String updating = "Đang cập nhật...";
   static const String verifying = "Đang xác thực...";
-
-  // Account related
   static const String hasAccount = "Bạn đã có tài khoản? ";
   static const String noAccount = "Bạn chưa có tài khoản? ";
   static const String forgotPasswordDescription = "Nhập email của bạn và chúng tôi sẽ \ngửi cho bạn liên kết để đặt lại mật khẩu!";
   static const String newPasswordDescription = "Tạo mật khẩu mới cho tài khoản";
   static const String resetPasswordDescription = "Tạo mật khẩu mới cho tài khoản";
-
-  // Validation messages
   static const String pleaseConfirmPassword = "Vui lòng xác nhận mật khẩu";
   static const String passwordMismatch = "Mật khẩu không khớp";
   static const String pleaseReenterPassword = "Vui lòng nhập lại mật khẩu";
   static const String confirmPasswordMismatch = "Mật khẩu xác nhận không khớp";
-
-  // Success messages
   static const String signUpSuccess = "Đăng ký thành công!";
   static const String loginSuccess = "Đăng nhập thành công!";
   static const String loginSuccessTitle = "ĐĂNG NHẬP THÀNH CÔNG";
@@ -74,8 +60,6 @@ class AppStrings {
   static const String resetPasswordSuccessTitle = "ĐẶT LẠI MẬT KHẨU THÀNH CÔNG";
   static const String passwordUpdatedMessage = "Mật khẩu của bạn đã được cập nhật.";
   static const String otpResentSuccess = "Đã gửi lại OTP";
-
-  // Error messages
   static const String signUpFailed = "Đăng ký thất bại";
   static const String loginFailed = "Đăng nhập thất bại";
   static const String unknownError = "Đã xảy ra lỗi không xác định";
@@ -95,25 +79,17 @@ class AppStrings {
   static const String resendFailed = "Gửi lại thất bại";
   static const String resetPasswordFailedTitle = "ĐẶT LẠI MẬT KHẨU THẤT BẠI";
   static const String errorOccurredTryAgain = "Có lỗi xảy ra, vui lòng thử lại.";
-
-  // OTP related
   static const String enterFullOtp = "Vui lòng nhập đầy đủ 6 chữ số";
   static const String otpSentTo = "Nhập mã 6 chữ số được gửi đến\n";
   static const String enterVerificationCode = "Nhập mã xác thực";
   static const String resendOtpAfter = "Gửi lại mã sau ";
   static const String otpIncorrectAttempts = "Mã OTP không đúng. Còn {remaining} lần thử.";
   static const String seconds = " giây";
-
-  // Password requirements
   static const String passwordRequirements = "Yêu cầu mật khẩu:";
   static const String passwordRequirementsText = "• Ít nhất 6 ký tự\n• Bao gồm chữ và số\n• Không chứa ký tự đặc biệt";
-
-  // Reset password
   static const String verifyingLink = "Đang xác thực liên kết...";
   static const String invalidLink = "Liên kết không hợp lệ";
   static const String tryAgainOrRequestNew = "Vui lòng thử lại hoặc yêu cầu liên kết mới";
-
-  // Repository error messages
   static const String unknownErrorWithDetails = "Đã xảy ra lỗi không xác định: ";
   static const String logoutErrorWithDetails = "Lỗi khi đăng xuất: ";
   static const String noUserToDelete = "Không có người dùng để xóa";
@@ -126,8 +102,6 @@ class AppStrings {
   static const String accountNotFound = "Không tìm thấy tài khoản với email này";
   static const String tooManyRequests = "Quá nhiều yêu cầu, vui lòng thử lại sau";
   static const String errorOccurred = "Đã xảy ra lỗi: ";
-
-  // Search related strings
   static const String searchTitle = "Tìm Kiếm";
   static const String searchHint = "Nhập từ khóa";
   static const String filterButton = "Bộ lọc";
@@ -151,24 +125,18 @@ class AppStrings {
   static const String thisWeekend = "Cuối tuần này";
   static const String thisMonth = "Tháng này";
   static const String monthFormat = "Tháng {month}, {year}";
-
-  // Category names
   static const String liveMusic = "Nhạc sống";
   static const String theaterAndArts = "Sân khấu & Nghệ thuật";
   static const String sports = "Thể Thao";
   static const String sportsCategory = "Thể thao";
   static const String theaterAndArtsSimple = "Sân khấu nghệ thuật";
   static const String other = "Khác";
-
-  // Location names
   static const String nationwide = "Toàn quốc";
   static const String hanoi = "Hà Nội";
   static const String hoChiMinh = "TP Hồ Chí Minh";
   static const String dalat = "Đà Lạt";
   static const String otherLocation = "Vị trí khác";
   static const String unknownTime = "không rõ";
-
-  // Event detail related strings
   static const String eventDetailTitle = "Chi tiết sự kiện";
   static const String priceFrom = "Giá từ ";
   static const String fromPrice = "Từ ";
@@ -184,13 +152,9 @@ class AppStrings {
   static const String captchaReload = "Tải lại";
   static const String captchaLockoutMessage = "Bạn đã thử quá 5 lần. Vui lòng thử lại sau {seconds} giây.";
   static const String captchaLockoutMessage1Min = "Bạn đã thử quá 5 lần. Vui lòng thử lại sau 1 phút.";
-
-  // Event booking related strings
   static const String clickToSelectTicket = "Bấm vào khu vực để chọn vé   ";
   static const String pleaseSelectTicket = "Vui lòng chọn vé";
   static const String paymentFormat = "Thanh toán {amount}";
-
-  // Event payment related strings
   static const String paymentTitle = "Thanh toán";
   static const String ticketHoldTimeRemaining = "Thời gian giữ vé còn lại: {time}";
   static const String recipientInfoTitle = "Thông tin nhận vé";
@@ -204,8 +168,6 @@ class AppStrings {
   static const String subtotal = "Tạm tính";
   static const String totalAmount = "Tổng tiền";
   static const String paymentButton = "Thanh toán";
-
-  // Ticket related strings
   static const String myTickets = "Vé của tôi";
   static const String all = "Tất cả";
   static const String success = "Thành công";
@@ -218,8 +180,6 @@ class AppStrings {
   static const String noOrdersYet = "Bạn chưa có đơn hàng nào.";
   static const String noOrdersInThisCategory = "Không có đơn hàng nào trong mục này.";
   static const String eventName = "Tên sự kiện";
-
-  // User related strings
   static const String accountSettings = "Cài đặt tài khoản";
   static const String accountInfo = "Thông tin tài khoản";
   static const String appSettings = "Cài đặt ứng dụng";
@@ -238,16 +198,12 @@ class AppStrings {
   static const String successPrefix = "THÀNH CÔNG";
   static const String guest = "Khách";
   static const String noEmail = "Không có email";
-
-  // Home screen strings
   static const String trendingEventsTitle = "🔥 Sự kiện xu hướng";
   static const String recommendedForYouTitle = "Dành cho bạn";
   static const String chooseLocationTitle = "Chọn địa điểm";
   static const String captchaInvalid = "Xác minh không đúng! (Thử lại: {count}/5)";
   static const String mapOpenError = "Không thể mở bản đồ cho: {address}";
   static const String genericErrorWithDetails = "Lỗi: {error}";
-
-  // Payment result strings
   static const String transactionResultTitle = "Kết quả giao dịch";
   static const String paymentSuccess = "Thanh toán thành công";
   static const String paymentSuccessWithExclamation = "Thanh toán thành công!";
@@ -256,8 +212,6 @@ class AppStrings {
   static const String backToHomeButton = "Về trang chủ";
   static const String invalidAmount = "Invalid Amount";
   static const String paymentErrorWithDetails = "Error: {error}";
-
-  // Order and check-in strings
   static const String eventNotFound = "Sự kiện không tồn tại.";
   static const String userNotFound = "Người dùng không tồn tại.";
   static const String ticketTypeNotFound = "Loại vé không tồn tại.";

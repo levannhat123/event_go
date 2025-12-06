@@ -5,12 +5,15 @@ import 'package:event_go/core/constants/app_colors.dart';
 import 'package:event_go/core/constants/app_sizes.dart';
 import 'package:event_go/core/constants/app_spacing.dart';
 import 'package:event_go/core/constants/app_strings.dart';
+import 'package:event_go/core/utils/extension.dart';
 import 'package:event_go/injection/injection.dart';
 import 'package:event_go/presentation/view_models/auth_view_model.dart';
 import 'package:event_go/routers/router_name.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+
+import '../../view_models/locale_langue/locale_language_view_model.dart';
 
 class UserScreen extends StatefulWidget {
   const UserScreen({super.key});
@@ -52,7 +55,7 @@ class _UserScreenState extends State<UserScreen> {
                         children: [
                           _buildSettingsItem(
                             showDivider: false,
-                            title: AppStrings.accountInfo,
+                            title: context.appLocaleLanguage.accountInfo,
                             onTap: () async {
                               final didUpdate = await context.push<bool>(
                                 RouterPath.profile,
@@ -60,7 +63,6 @@ class _UserScreenState extends State<UserScreen> {
                               if (didUpdate == true && mounted) {
                                 viewModel.refreshUserProfile();
                               }
-                              // context.push(RouterPath.check_in);
                             },
                           ),
                         ],
@@ -68,7 +70,7 @@ class _UserScreenState extends State<UserScreen> {
                       const SizedBox(height: 40),
                       _buildSettingsGroup(
                         icon: Icons.settings_outlined,
-                        title: AppStrings.appSettings,
+                        title: context.appLocaleLanguage.appSettings,
                         backgroundColor: itemBackgroundColor,
                         children: [_buildLanguageItem(onTap: () {})],
                       ),
@@ -267,56 +269,63 @@ class _UserScreenState extends State<UserScreen> {
   }
 
   Widget _buildLanguageItem({required VoidCallback onTap}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                AppStrings.changeLanguage,
-                style: TextStyle(color: Colors.white, fontSize: 16),
-              ),
-            ),
-            AnimatedToggleSwitch<bool>.size(
-              current: isDarkMode,
-              values: const [false, true],
-              iconOpacity: 0.3,
-              indicatorSize: const Size(30, 30),
-              borderWidth: 1.0,
-              customIconBuilder: (context, local, global) => Text(
-                local.value
-                    ? AppStrings.languageVietnamese
-                    : AppStrings.languageEnglish,
-                style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
-                  color: Color.lerp(
-                    Colors.black,
-                    Colors.white,
-                    local.animationValue,
+    return Consumer<LocaleNotifier>(
+      builder: (context, localeNotifier, _) {
+        bool isVietnamese = localeNotifier.locale.languageCode == 'vi';
+
+        return GestureDetector(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    AppStrings.changeLanguage,
+                    style: const TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 ),
-              ),
-              style: ToggleStyle(
-                backgroundColor: Colors.white,
-                borderColor: const Color(0xFF596DC3),
-                indicatorColor: const Color(0xFF596DC3),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              onChanged: (b) {
-                setState(() {
-                  isDarkMode = b;
-                });
-              },
-              iconAnimationType: AnimationType.onHover,
-              height: 30,
-              spacing: 1,
+                AnimatedToggleSwitch<bool>.size(
+                  current: isVietnamese,
+                  values: const [false, true], // false = EN, true = VI
+                  iconOpacity: 0.3,
+                  indicatorSize: const Size(30, 30),
+                  borderWidth: 1.0,
+                  customIconBuilder: (context, local, global) => Text(
+                    local.value ? "VI" : "EN",
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                      color: Color.lerp(
+                        Colors.black,
+                        Colors.white,
+                        local.animationValue,
+                      ),
+                    ),
+                  ),
+                  style: ToggleStyle(
+                    backgroundColor: Colors.white,
+                    borderColor: const Color(0xFF596DC3),
+                    indicatorColor: const Color(0xFF596DC3),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  onChanged: (value) {
+                    if (value) {
+                      localeNotifier.setLocale(const Locale("vi"));
+                    } else {
+                      localeNotifier.setLocale(const Locale("en"));
+                    }
+                  },
+                  iconAnimationType: AnimationType.onHover,
+                  height: 30,
+                  spacing: 1,
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
+
 }
