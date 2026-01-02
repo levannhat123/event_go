@@ -169,7 +169,7 @@
   "myTickets": "Vé của tôi",
   "all": "Tất cả",
   "success": "Thành công",
-  "processing": "Đang xử lý",
+  "processing": "Thất bại",
   "cancelled": "Đã hủy",
   "failed": "Thất bại",
   "unknown": "Không xác định",

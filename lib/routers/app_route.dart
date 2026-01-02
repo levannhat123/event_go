@@ -6,6 +6,7 @@ import 'package:event_go/presentation/pages/auth/sign_up_screen.dart';
 import 'package:event_go/presentation/pages/home/event/event_booking_screen.dart';
 import 'package:event_go/presentation/pages/home/event/event_detail_screen.dart';
 import 'package:event_go/presentation/pages/home/event/event_payment_screen.dart';
+import 'package:event_go/presentation/pages/home/event/payment_result_screen.dart';
 import 'package:event_go/presentation/pages/home/home_screen.dart';
 import 'package:event_go/presentation/pages/home/payment_result_screen.dart';
 import 'package:event_go/presentation/pages/home/search/search_screen.dart';
@@ -79,6 +80,17 @@ class AppRouter {
             builder: (context, state) {
               final event = state.extra as EventDetailModel;
               return EventBookingScreen(event: event);
+            },
+          ),
+          GoRoute(
+            path: '/payment-result',
+            builder: (context, state) {
+              final map = state.extra as Map<String, dynamic>;
+              return PaymentResultVnPlayScreen(
+                isSuccess: map['isSuccess'] as bool,
+                message: map['message'] as String,
+                transactionId: map['transactionId'] as String,
+              );
             },
           ),
           GoRoute(

@@ -28,10 +28,7 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   @override
   void dispose() {
-    // Lấy viewModel từ getIt (vì nó là autoDispose: false)
     final viewModel = getIt<HomeViewModel>();
-
-    // Gọi hàm reset tổng
     viewModel.resetAllFiltersAndSearch();
 
     super.dispose();
@@ -55,7 +52,6 @@ class _SearchScreenState extends State<SearchScreen> {
           body: Padding(
             padding: const EdgeInsets.all(AppSpacing.space10),
             child: Column(
-              // Layout chính là Column
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 AppTextField(
@@ -84,7 +80,6 @@ class _SearchScreenState extends State<SearchScreen> {
                 Divider(thickness: 1, color: AppColors.primary),
                 const SizedBox(height: AppSpacing.space10),
 
-                // --- CÁC NÚT LỌC ---
                 Row(
                   children: [
                     InkWell(
@@ -108,12 +103,14 @@ class _SearchScreenState extends State<SearchScreen> {
                         height: AppSizes.size32,
                         decoration: BoxDecoration(
                           color: viewModel.isDateFilterActive
-                              ? AppColors.green // Màu xanh khi active
+                              ? AppColors.green
                               : Color(0xFF515158),
                           borderRadius: BorderRadius.circular(AppSizes.size16),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space12),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.space12,
+                          ),
                           child: Row(
                             children: [
                               Icon(
@@ -162,12 +159,14 @@ class _SearchScreenState extends State<SearchScreen> {
                         height: AppSizes.size32,
                         decoration: BoxDecoration(
                           color: viewModel.isMainFilterActive
-                              ? AppColors.green // Màu xanh khi active
+                              ? AppColors.green
                               : Color(0xFF515158),
                           borderRadius: BorderRadius.circular(AppSizes.size16),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.space12),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.space12,
+                          ),
                           child: Row(
                             children: [
                               Icon(
@@ -217,53 +216,48 @@ class _SearchScreenState extends State<SearchScreen> {
       if (dbKey == AppStrings.liveMusic) {
         return {
           'display': context.appLocaleLanguage.liveMusic,
-          'image': AppImage.music_category
+          'image': AppImage.music_category,
         };
-      }
-      else if (dbKey == AppStrings.theaterAndArtsSimple) {
+      } else if (dbKey == AppStrings.theaterAndArtsSimple) {
         return {
           'display': context.appLocaleLanguage.theaterAndArtsSimple,
-          'image': AppImage.film_category
+          'image': AppImage.film_category,
         };
-      }
-      else if (dbKey == AppStrings.sportsCategory) {
+      } else if (dbKey == AppStrings.sportsCategory) {
         return {
           'display': context.appLocaleLanguage.sports,
-          'image': AppImage.sport_category
+          'image': AppImage.sport_category,
         };
-      }
-      else if (dbKey == AppStrings.other) {
+      } else if (dbKey == AppStrings.other) {
         return {
           'display': context.appLocaleLanguage.other,
-          'image': AppImage.other_category
+          'image': AppImage.other_category,
         };
       }
 
-      return {
-        'display': dbKey,
-        'image': AppImage.other_category
-      };
+      return {'display': dbKey, 'image': AppImage.other_category};
     }
+
     final List<Map<String, String>> locations = [
       {
         'display': context.appLocaleLanguage.hanoi,
         'filterValue': AppStrings.hanoi,
-        'image': AppImage.location_hn
+        'image': AppImage.location_hn,
       },
       {
         'display': context.appLocaleLanguage.hoChiMinh,
         'filterValue': AppStrings.hoChiMinh,
-        'image': AppImage.location_hcm
+        'image': AppImage.location_hcm,
       },
       {
         'display': context.appLocaleLanguage.dalat,
         'filterValue': AppStrings.dalat,
-        'image': AppImage.location_dalat
+        'image': AppImage.location_dalat,
       },
       {
         'display': context.appLocaleLanguage.otherLocation,
         'filterValue': AppStrings.otherLocation,
-        'image': AppImage.location_other
+        'image': AppImage.location_other,
       },
     ];
     final List<Map<String, String>> cities = [
@@ -299,7 +293,11 @@ class _SearchScreenState extends State<SearchScreen> {
                   leading: Icon(Icons.access_time, color: Colors.white70),
                   title: Text(item),
                   trailing: IconButton(
-                    icon: Icon(Icons.clear, size: AppSizes.size18, color: Colors.white38),
+                    icon: Icon(
+                      Icons.clear,
+                      size: AppSizes.size18,
+                      color: Colors.white38,
+                    ),
                     onPressed: () => viewModel.removeRecentSearch(item),
                   ),
                   onTap: () {
@@ -354,7 +352,6 @@ class _SearchScreenState extends State<SearchScreen> {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: viewModel.eventsByCategory.keys.map((dbKey) {
-
                 final info = getCategoryInfo(dbKey);
                 final displayName = info['display']!;
                 final imagePath = info['image']!;
@@ -362,10 +359,9 @@ class _SearchScreenState extends State<SearchScreen> {
                 return Padding(
                   padding: const EdgeInsets.only(right: AppSpacing.space10),
                   child: CategoryCard(
-                    title: displayName, // Hiển thị tên đa ngôn ngữ
-                    imagePath: imagePath, // Hiển thị ảnh map tương ứng
+                    title: displayName,
+                    imagePath: imagePath,
                     onTap: () {
-                      // QUAN TRỌNG: Vẫn dùng dbKey (giá trị gốc) để lọc
                       viewModel.selectCategoryAndSearch(dbKey);
                     },
                   ),
@@ -435,6 +431,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 title: event.title,
                 price: event.minTicketPrice.toString(),
                 date: date,
+                status: event.status,
                 onTap: () {
                   viewModel.event = event;
                   context.push(RouterPath.event_detail, extra: event);
@@ -479,6 +476,7 @@ class _SearchScreenState extends State<SearchScreen> {
           title: event.title,
           price: event.minTicketPrice.toString(),
           date: date,
+          status: event.status,
           onTap: () {
             viewModel.event = event;
             context.push(RouterPath.event_detail, extra: event);
@@ -487,13 +485,18 @@ class _SearchScreenState extends State<SearchScreen> {
       },
     );
   }
+
   Widget _buildFilterChip(String label, VoidCallback onDeleted) {
     return Chip(
       label: Text(label),
       onDeleted: onDeleted,
       backgroundColor: AppColors.green,
       labelStyle: const TextStyle(color: Colors.white, fontSize: 14),
-      deleteIcon: const Icon(Icons.close, color: Colors.white, size: AppSizes.size18),
+      deleteIcon: const Icon(
+        Icons.close,
+        color: Colors.white,
+        size: AppSizes.size18,
+      ),
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.space4,
         vertical: AppSpacing.space0,
@@ -501,29 +504,27 @@ class _SearchScreenState extends State<SearchScreen> {
       shape: const StadiumBorder(),
     );
   }
+
   Widget _buildAppliedFilters(HomeViewModel viewModel) {
     final List<Widget> chips = [];
     if (viewModel.appliedLocation != AppStrings.nationwide) {
       chips.add(
         _buildFilterChip(
           viewModel.appliedLocation,
-              () => viewModel.removeLocationFilter(),
+          () => viewModel.removeLocationFilter(),
         ),
       );
     }
     if (viewModel.appliedIsFree) {
       chips.add(
-        _buildFilterChip(
-          AppStrings.free,
-              () => viewModel.removePriceFilter(),
-        ),
+        _buildFilterChip(AppStrings.free, () => viewModel.removePriceFilter()),
       );
     }
     for (String categoryName in viewModel.appliedCategories) {
       chips.add(
         _buildFilterChip(
           categoryName,
-              () => viewModel.removeCategoryFilter(categoryName),
+          () => viewModel.removeCategoryFilter(categoryName),
         ),
       );
     }

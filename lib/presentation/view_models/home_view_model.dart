@@ -20,6 +20,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../core/config/vnpay_flutter.dart';
+
 enum CaptchaResult { success, fail, lockedOut }
 
 class HomeViewModel extends BaseViewModel {
@@ -31,7 +33,9 @@ class HomeViewModel extends BaseViewModel {
   final String _emailJSServiceID = 'service_ylcyotg';
   final String _emailJSTemplateID = 'template_w5qexdc';
   final String _emailJSPublicKey = 'eU0EwYJSkgAxSxz3K';
-
+  final String _vnpTmnCode = '0MS82K1F';
+  final String _vnpHashKey = '3906YDIHHGXTRHO8NW2UKIC6ZLJX4O20';
+  final String _vnpUrl = 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html';
   int _currentIndex = 0;
   int get currentIndex => _currentIndex;
 
@@ -464,37 +468,38 @@ class HomeViewModel extends BaseViewModel {
     }
   }
 
-  Future<FlutterZaloPayStatus> handlePayment() async {
+  Future<dynamic> handlePayment(BuildContext context) async {
     clearError();
-    FlutterZaloPayStatus status;
     if (_selectedPaymentMethod == 'zalopay') {
-      status = await _processZaloPayPayment();
-    } else {
-      status = FlutterZaloPayStatus.failed;
-    }
+      FlutterZaloPayStatus status = await _processZaloPayPayment();
 
-    String? orderId;
-    if (status == FlutterZaloPayStatus.success) {
-      orderId = await saveOrderToFirebase('completed');
-      if (orderId != null) {
-        final email = userEmail;
-        if (event != null && email != null && email.contains('@')) {
-          sendOrderEmailWithQR(orderId, email, event!.title).catchError((e) {});
-        } else {
-          print(
-            'Không gửi email: Email không hợp lệ hoặc người dùng không đăng nhập ($email)',
-          );
+      if (status == FlutterZaloPayStatus.success) {
+        String? orderId = await saveOrderToFirebase('completed');
+        if (orderId != null) {
+          final email = userEmail;
+          if (event != null && email != null) {
+            sendOrderEmailWithQR(
+              orderId,
+              email,
+              event!.title,
+            ).catchError((e) {});
+          }
+          initBooking();
+          notifyListeners();
         }
-        initBooking();
-        notifyListeners();
+      } else if (status == FlutterZaloPayStatus.failed) {
+        await saveOrderToFirebase('failed');
+      } else if (status == FlutterZaloPayStatus.cancelled) {
+        await saveOrderToFirebase('cancelled');
       }
-    } else if (status == FlutterZaloPayStatus.failed) {
-      await saveOrderToFirebase('failed');
-    } else if (status == FlutterZaloPayStatus.cancelled) {
-      await saveOrderToFirebase('cancelled');
+      return status;
+    } else if (_selectedPaymentMethod == 'vnpay') {
+      _processVNPayPayment(context);
+      return null;
+    } else {
+      setError("Phương thức thanh toán chưa được hỗ trợ");
+      return null;
     }
-
-    return status;
   }
 
   Future<FlutterZaloPayStatus> _processZaloPayPayment() async {
@@ -511,34 +516,65 @@ class HomeViewModel extends BaseViewModel {
   Map<String, List<EventDetailModel>> _eventsByCategory = {};
   Map<String, List<EventDetailModel>> get eventsByCategory => _eventsByCategory;
 
+  bool _isInitialized = false;
   void watchAll() {
+    if (_isInitialized) return;
+    _isInitialized = true;
     _subscription?.cancel();
     setBusy(true);
     clearError();
+
     try {
       _subscription = watchAllEventsUsecase.call().listen(
-        (list) {
-          _events = list;
-          _hotEvents = list.where((event) => event.isHot == true).toList();
+        (list) async {
+          final mappedEvents = list.map((event) {
+            return event.copyWith(
+              status: calculateEventStatus(
+                startTime: event.startTime,
+                endTime: event.endTime,
+              ),
+            );
+          }).toList();
+
+          mappedEvents.sort((a, b) {
+            final aStart = a.startTime ?? DateTime(1900);
+            final bStart = b.startTime ?? DateTime(1900);
+            return bStart.compareTo(aStart);
+          });
+
+          _events = mappedEvents;
+          final soldMap = await _getSoldTicketsByEvent();
+          _hotEvents =
+              List<EventDetailModel>.from(
+                  _events,
+                ).where((event) => event.status != 'COMPLETED').toList()
+                ..sort((a, b) {
+                  final aSold = soldMap[a.id] ?? 0;
+                  final bSold = soldMap[b.id] ?? 0;
+                  return bSold.compareTo(aSold);
+                });
+
+          _hotEvents = _hotEvents.take(5).toList();
           final allCategories = groupBy(
-            list,
+            _events,
             (EventDetailModel e) => e.categories?.name ?? 'Khác',
           );
+
           const desiredCategories = [
             'Nhạc sống',
             'Thể thao',
             'Sân khấu nghệ thuật',
             'Khác',
           ];
+
           _eventsByCategory = Map.fromEntries(
             allCategories.entries.where(
               (entry) => desiredCategories.contains(entry.key),
             ),
           );
+
           setBusy(false);
-          Future.microtask(() {
-            notifyListeners();
-          });
+          notifyListeners();
         },
         onError: (err) {
           setError('Failed to watch events: ${err.toString()}');
@@ -549,6 +585,12 @@ class HomeViewModel extends BaseViewModel {
       setError('Failed to start watching events: ${e.toString()}');
       setBusy(false);
     }
+  }
+
+  List<EventDetailModel> get upcomingAndActiveEvents {
+    return _events.where((event) {
+      return event.status == 'ACTIVE' || event.status == 'INACTIVE';
+    }).toList();
   }
 
   String? get userEmail {
@@ -786,7 +828,7 @@ class HomeViewModel extends BaseViewModel {
   DateTime? _appliedSelectedDay;
   DateTime? _appliedRangeStart;
   DateTime? _appliedRangeEnd;
-  bool _appliedIsAllDays = true; // Mặc định là 'Tất cả các ngày'
+  bool _appliedIsAllDays = true;
 
   bool get isFilterActive {
     return _appliedSearchQuery.isNotEmpty ||
@@ -989,10 +1031,145 @@ class HomeViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  String calculateEventStatus({
+    required DateTime? startTime,
+    required DateTime? endTime,
+  }) {
+    final now = DateTime.now();
+
+    if (startTime == null || endTime == null) {
+      return 'INACTIVE';
+    }
+
+    if (now.isBefore(startTime)) {
+      return 'INACTIVE';
+    }
+
+    if (now.isAfter(endTime)) {
+      return 'COMPLETED';
+    }
+
+    return 'ACTIVE';
+  }
+
+  void _processVNPayPayment(BuildContext context) {
+    if (event == null) return;
+    final paymentUrl = VNPAYFlutter.instance.generatePaymentUrl(
+      url: _vnpUrl,
+      version: '2.1.0',
+      tmnCode: _vnpTmnCode,
+      txnRef: DateTime.now().millisecondsSinceEpoch.toString(),
+      orderInfo: 'Thanh toan ve: ${event!.title}',
+      amount: grandTotal,
+      returnUrl: 'https://vnpay.vn/return',
+      ipAdress: '192.168.1.1',
+      vnpayHashKey: _vnpHashKey,
+      vnPayHashType: VNPayHashType.HMACSHA512,
+    );
+
+    print("VNPAY URL: $paymentUrl");
+    VNPAYFlutter.instance.show(
+      context: context,
+      paymentUrl: paymentUrl,
+      onPaymentSuccess: (params) async {
+        print("VNPAY Success: $params");
+        setLoading(true);
+        String? orderId = await saveOrderToFirebase('completed');
+        setLoading(false);
+
+        if (orderId != null) {
+          final email = userEmail;
+          if (email != null && email.contains('@')) {
+            sendOrderEmailWithQR(
+              orderId,
+              email,
+              event!.title,
+            ).catchError((e) {});
+          }
+          initBooking();
+          notifyListeners();
+          if (context.mounted) {
+            context.pushReplacement(
+              '/payment-result',
+              extra: {
+                'isSuccess': true,
+                'message':
+                    'Bạn đã thanh toán vé thành công! Vé đã được gửi tới email của bạn.',
+                'transactionId':
+                    params['vnp_TransactionNo'] ?? orderId ?? 'Unknown',
+              },
+            );
+          }
+        }
+      },
+      onPaymentError: (params) async {
+        setLoading(true);
+        await saveOrderToFirebase('failed');
+        setLoading(false);
+        String errorMsg = getVnPayMessage(params['vnp_ResponseCode'] ?? '99');
+        if (context.mounted) {
+          context.push(
+            '/payment-result',
+            extra: {
+              'isSuccess': false,
+              'message': errorMsg,
+              'transactionId': params['vnp_TransactionNo'] ?? 'Giao dịch lỗi',
+            },
+          );
+        }
+
+        setError("Thanh toán VNPAY thất bại hoặc bị hủy.");
+      },
+    );
+  }
+
+  Future<Map<String, int>> _getSoldTicketsByEvent() async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('tickets')
+        .where('paymentStatus', isEqualTo: 'completed')
+        .get();
+
+    final Map<String, int> soldMap = {};
+
+    for (final doc in snapshot.docs) {
+      final data = doc.data();
+      final eventId = data['eventId'] as String?;
+      final List tickets = data['tickets'] ?? [];
+
+      if (eventId == null) continue;
+
+      int totalQty = 0;
+      for (final t in tickets) {
+        totalQty += (t['quantity'] ?? 0) as int;
+      }
+
+      soldMap[eventId] = (soldMap[eventId] ?? 0) + totalQty;
+    }
+
+    return soldMap;
+  }
+
   @override
   void dispose() {
     _timer?.cancel();
     searchController.dispose();
     super.dispose();
+  }
+}
+
+String getVnPayMessage(String responseCode) {
+  switch (responseCode) {
+    case '00':
+      return 'Giao dịch thành công';
+    case '24':
+      return 'Bạn đã hủy giao dịch.';
+    case '51':
+      return 'Tài khoản không đủ số dư.';
+    case '11':
+      return 'Hết hạn chờ thanh toán.';
+    case '13':
+      return 'Nhập sai OTP quá quy định.';
+    default:
+      return 'Giao dịch thất bại (Mã lỗi: $responseCode).';
   }
 }

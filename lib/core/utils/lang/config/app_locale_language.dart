@@ -1121,7 +1121,7 @@ abstract class AppLocalizations {
   /// No description provided for @processing.
   ///
   /// In vi, this message translates to:
-  /// **'Đang xử lý'**
+  /// **'Thất bại'**
   String get processing;
 
   /// No description provided for @cancelled.

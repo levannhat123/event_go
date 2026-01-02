@@ -31,6 +31,8 @@ class EventDetailScreen extends StatefulWidget {
 }
 
 class _EventDetailScreenState extends State<EventDetailScreen> {
+
+
   @override
   Widget build(BuildContext context) {
     return BaseView<HomeViewModel>(
@@ -44,6 +46,11 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
       builder: (context, viewModel, child) {
         final String fullAddress = widget.event.address ?? '';
         final int lastCommaIndex = fullAddress.lastIndexOf(',');
+        final bool isEventCompleted = widget.event.status == 'COMPLETED';
+        debugPrint(
+          'Event: ${widget.event.title} | status=${widget.event.status} | start=${widget.event.startTime} | end=${widget.event.endTime}',
+        );
+
         String line1 = '';
         String line2 = '';
         if (lastCommaIndex != -1) {
@@ -83,6 +90,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                     ),
                     children: [
                       TextSpan(text: context.appLocaleLanguage.priceFrom),
+                      WidgetSpan(child: SizedBox(width: AppSizes.size4)),
                       TextSpan(
                         text: FormatPrice.format(
                           double.tryParse(
@@ -96,7 +104,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                   ),
                 ),
                 AppElevatedButton(
-                  text: context.appLocaleLanguage.buyTicketNow,
+                   text:!isEventCompleted? context.appLocaleLanguage.buyTicketNow:'Sự kiện kết thúc',
                   onPressed: () {
                     if (viewModel.isLockedOut) {
                       final remainingSeconds =
@@ -288,16 +296,17 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                     );
                   },
                   height: AppSizes.size40,
-                  width: AppSizes.size125,
+                  width: !isEventCompleted? AppSizes.size125:AppSizes.size156,
                   textColor: AppColors.white,
-                  color: AppColors.green,
+                  color: !isEventCompleted?AppColors.green:AppColors.transparent,
                   fontSize: AppSizes.size15,
                   borderRadius: const BorderRadius.all(
                     Radius.circular(AppSizes.size4),
                   ),
-                  borderColor: AppColors.green,
+                  borderColor: !isEventCompleted? AppColors.green: AppColors.grey,
                   splashColor: AppColors.transparent,
                   highlightColor: AppColors.white,
+                  isDisable: isEventCompleted,
                 ),
               ],
             ),
@@ -468,19 +477,209 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                               ],
                             ),
                             AppElevatedButton(
-                              text: context.appLocaleLanguage.buyTicketNow,
-                              onPressed: () {},
+                              text:!isEventCompleted? context.appLocaleLanguage.buyTicketNow:'Sự kiện kết thúc',
+                              onPressed: () {
+                                if (viewModel.isLockedOut) {
+                                  final remainingSeconds =
+                                      viewModel.lockoutRemainingSeconds;
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        context.appLocaleLanguage
+                                            .captchaLockoutMessage(remainingSeconds)
+                                            .replaceAll(
+                                          '{seconds}',
+                                          remainingSeconds.toString(),
+                                        ),
+                                      ),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                  return;
+                                }
+                                viewModel.refreshCaptchaImage();
+
+                                showDialog(
+                                  context: context,
+                                  builder: (dialogContext) {
+                                    final SliderController controller = SliderController();
+
+                                    return ChangeNotifierProvider.value(
+                                      value: viewModel,
+                                      child: Consumer<HomeViewModel>(
+                                        builder: (context, vm, _) {
+                                          return Dialog(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(
+                                                AppSizes.size12,
+                                              ),
+                                            ),
+                                            child: Container(
+                                              padding: const EdgeInsets.all(
+                                                AppSpacing.space16,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius: BorderRadius.circular(
+                                                  AppSizes.size12,
+                                                ),
+                                              ),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                    MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                        context
+                                                            .appLocaleLanguage
+                                                            .captchaTitle,
+                                                        style: TextStyle(
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                      InkWell(
+                                                        onTap: () {
+                                                          dialogContext.pop();
+                                                        },
+                                                        child: Icon(
+                                                          Icons.close,
+                                                          size: AppSizes.size20,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  const SizedBox(
+                                                    height: AppSpacing.space20,
+                                                  ),
+                                                  Text(
+                                                    context
+                                                        .appLocaleLanguage
+                                                        .captchaDescription,
+                                                    style: TextStyle(color: Colors.black),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: AppSpacing.space10,
+                                                  ),
+                                                  Text(
+                                                    context
+                                                        .appLocaleLanguage
+                                                        .captchaInstruction,
+                                                    style: TextStyle(color: Colors.black),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: AppSpacing.space20,
+                                                  ),
+                                                  SliderCaptcha(
+                                                    controller: controller,
+                                                    image: Image.asset(
+                                                      vm.currentCaptchaImage,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                    colorBar: Colors.blue,
+                                                    colorCaptChar: Colors.blue,
+                                                    onConfirm: (success) async {
+                                                      final result = vm.onCaptchaConfirm(
+                                                        success,
+                                                      );
+
+                                                      if (result == CaptchaResult.success) {
+                                                        dialogContext.pop();
+                                                        context.push(
+                                                          RouterPath.booking,
+                                                          extra: widget.event,
+                                                        );
+                                                      } else if (result ==
+                                                          CaptchaResult.lockedOut) {
+                                                        dialogContext.pop();
+                                                        ScaffoldMessenger.of(
+                                                          context,
+                                                        ).showSnackBar(
+                                                          SnackBar(
+                                                            content: Text(
+                                                              context
+                                                                  .appLocaleLanguage
+                                                                  .captchaLockoutMessage1Min,
+                                                            ),
+                                                            backgroundColor: Colors.red,
+                                                          ),
+                                                        );
+                                                      } else {
+                                                        await Future.delayed(
+                                                          const Duration(milliseconds: 500),
+                                                        );
+                                                        controller.create();
+                                                        vm.refreshCaptchaImage();
+                                                        vm.clearCaptchaError();
+                                                      }
+                                                    },
+                                                  ),
+                                                  const SizedBox(
+                                                    height: AppSpacing.space20,
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      InkWell(
+                                                        onTap: () {
+                                                          controller.create();
+                                                          vm.refreshCaptchaImage();
+                                                          vm.clearCaptchaError();
+                                                        },
+                                                        child: Icon(
+                                                          Icons.refresh,
+                                                          size: AppSizes.size16,
+                                                          color: Colors.grey,
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: AppSizes.size8),
+                                                      Text(
+                                                        context
+                                                            .appLocaleLanguage
+                                                            .captchaReload,
+                                                        style: TextStyle(
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  if (vm.captchaErrorText != null)
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(
+                                                        top: AppSpacing.space8,
+                                                      ),
+                                                      child: Text(
+                                                        vm.captchaErrorText!,
+                                                        style: TextStyle(color: Colors.red),
+                                                      ),
+                                                    )
+                                                  else
+                                                    SizedBox.shrink(),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
                               height: AppSizes.size40,
-                              width: AppSizes.size125,
+                              width:!isEventCompleted? AppSizes.size125:AppSizes.size156,
                               borderRadius: const BorderRadius.all(
                                 Radius.circular(AppSizes.size4),
                               ),
                               textColor: AppColors.white,
-                              color: AppColors.green,
+                              color:!isEventCompleted?AppColors.green:AppColors.transparent,
                               fontSize: AppSizes.size15,
-                              borderColor: AppColors.green,
+                              borderColor: !isEventCompleted? AppColors.green: AppColors.grey,
                               splashColor: AppColors.transparent,
                               highlightColor: AppColors.white,
+                              isDisable: isEventCompleted,
                             ),
                           ],
                         ),
@@ -608,6 +807,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                             width: AppSizes.size200,
                             imageUrl: event.bannerURL ?? AppImage.banner_1,
                             title: event.title,
+                            status: event.status,
                             price: event.minTicketPrice != null
                                 ? event.minTicketPrice.toString()
                                 : 'Miễn phí',

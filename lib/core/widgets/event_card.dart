@@ -8,6 +8,8 @@ class EventCard extends StatelessWidget {
   final String title;
   final String price;
   final String date;
+  final String? status;
+
   final VoidCallback? onTap;
   final double width;
   final double height;
@@ -18,6 +20,7 @@ class EventCard extends StatelessWidget {
     required this.title,
     required this.price,
     required this.date,
+    this.status,
     this.onTap,
     this.height = 160,
     this.width = 250,
@@ -39,22 +42,50 @@ class EventCard extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
-              child: Image.network(
-                imageUrl,
-                height: height,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    height: 160,
-                    color: Colors.grey[800],
-                    child: const Icon(
-                      Icons.broken_image,
-                      color: Colors.white54,
-                      size: 48,
+              child: Stack(
+                children: [
+                  Image.network(
+                    imageUrl,
+                    height: height,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        height: height,
+                        color: Colors.grey[800],
+                        alignment: Alignment.center,
+                        child: const Icon(
+                          Icons.broken_image,
+                          color: Colors.white54,
+                          size: 48,
+                        ),
+                      );
+                    },
+                  ),
+                  if (status == 'COMPLETED')
+                    Positioned(
+                      right: 0,
+
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: _getStatusColor(status!),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          getEventStatusLabel(status!),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ),
-                  );
-                },
+                ],
               ),
             ),
             Padding(
@@ -64,17 +95,14 @@ class EventCard extends StatelessWidget {
                 children: [
                   SizedBox(
                     height: 45,
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        title,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    child: Text(
+                      title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -112,5 +140,31 @@ class EventCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Color _getStatusColor(String status) {
+    switch (status) {
+      case 'ACTIVE':
+        return Colors.green; // Đang mở bán
+      case 'INACTIVE':
+        return Colors.blue; // Sắp diễn ra
+      case 'COMPLETED':
+        return Colors.orange; // Đã diễn ra
+      default:
+        return Colors.black54;
+    }
+  }
+
+  String getEventStatusLabel(String status) {
+    switch (status) {
+      case 'ACTIVE':
+        return 'Đang mở bán'; //
+      case 'INACTIVE':
+        return 'Sắp diễn ra'; // Sắp diễn ra
+      case 'COMPLETED':
+        return 'Đã diễn ra'; // Đã diễn ra
+      default:
+        return status;
+    }
   }
 }

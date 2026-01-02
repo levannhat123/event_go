@@ -128,14 +128,7 @@ class AppElevatedButton extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (icon != null) ...[icon!, const SizedBox(width: 30)],
-              isDisable
-                  ? Center(
-                      child: SizedBox.square(
-                        dimension: height - 22.0,
-                        child: CircularProgressIndicator(color: textColor, strokeWidth: 2.2),
-                      ),
-                    )
-                  : Text(
+               Text(
                       text,
                       style: TextStyle(
                         color: textColor,

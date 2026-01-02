@@ -10,18 +10,19 @@ import 'package:event_go/core/widgets/app_elevated_button.dart';
 import 'package:event_go/data/models/event/event_detail_model.dart';
 import 'package:event_go/injection/injection.dart';
 import 'package:event_go/presentation/view_models/home_view_model.dart';
-import 'package:event_go/routers/router_name.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_zalopay_sdk/flutter_zalopay_sdk.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class EventPaymentScreen extends StatefulWidget {
-  String token;
+  final String token;
   final EventDetailModel event;
-  EventPaymentScreen({super.key, required this.token, required this.event});
+
+  const EventPaymentScreen({
+    super.key,
+    required this.token,
+    required this.event,
+  });
 
   @override
   State<EventPaymentScreen> createState() => _EventPaymentScreenState();
@@ -38,6 +39,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
   Widget build(BuildContext context) {
     const Color cardColor = Color(0xFF2C2C2E);
     const Color backgroundColor = Color(0xFF121212);
+
     return BaseView<HomeViewModel>(
       viewModelBuilder: () => getIt<HomeViewModel>(),
       padding: false,
@@ -48,63 +50,109 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
       },
       builder: (context, viewModel, child) {
         final vmReader = context.read<HomeViewModel>();
+
         return Scaffold(
           backgroundColor: backgroundColor,
           appBar: _buildAppBar(),
-          body: Column(
+          body: Stack(
             children: [
-              Container(
-                padding: const EdgeInsets.all(AppSpacing.space12),
-                decoration: BoxDecoration(color: Colors.red),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.timer,
-                      color: Colors.white,
-                      size: AppSizes.size20,
+              Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(AppSpacing.space12),
+                    decoration: const BoxDecoration(color: Colors.red),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.timer,
+                          color: Colors.white,
+                          size: AppSizes.size20,
+                        ),
+                        const SizedBox(width: AppSizes.size8),
+                        Text(
+                          context.appLocaleLanguage.ticketHoldTimeRemaining(
+                            viewModel.formattedTimeRemaining,
+                          ),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: AppSizes.size14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: AppSizes.size8),
-                    Text(
-                      context.appLocaleLanguage.ticketHoldTimeRemaining(
-                        viewModel.formattedTimeRemaining,
+                  ),
+
+                  _buildEventInfoCard(widget.event),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.space10,
                       ),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: AppSizes.size14,
-                        fontWeight: FontWeight.bold,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildSectionHeader(
+                            context.appLocaleLanguage.recipientInfoTitle,
+                          ),
+                          const SizedBox(height: AppSpacing.space12),
+                          _buildRecipientInfoCard(cardColor, viewModel),
+
+                          const SizedBox(height: AppSpacing.space24),
+                          _buildSectionHeader(
+                            context.appLocaleLanguage.paymentMethodTitle,
+                          ),
+                          const SizedBox(height: AppSpacing.space12),
+                          _buildPaymentMethodCard(
+                            cardColor,
+                            viewModel,
+                            vmReader,
+                          ),
+
+                          const SizedBox(height: AppSpacing.space24),
+                          _buildSectionHeader(
+                            context.appLocaleLanguage.bookingInfoTitle,
+                          ),
+                          const SizedBox(height: AppSpacing.space12),
+                          _buildOrderInfoCard(Colors.white, vmReader),
+                          const SizedBox(height: 20),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-              _buildEventInfoCard(widget.event),
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.space10,
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildSectionHeader(context.appLocaleLanguage.recipientInfoTitle),
-                      const SizedBox(height: AppSpacing.space12),
-                      _buildRecipientInfoCard(cardColor, viewModel),
-                      const SizedBox(height: AppSpacing.space24),
-                      _buildSectionHeader(context.appLocaleLanguage.paymentMethodTitle),
-                      const SizedBox(height: AppSpacing.space12),
-                      _buildPaymentMethodCard(cardColor, viewModel, vmReader),
-                      const SizedBox(height: AppSpacing.space24),
-                      _buildSectionHeader(context.appLocaleLanguage.bookingInfoTitle),
-                      const SizedBox(height: AppSpacing.space12),
-                      _buildOrderInfoCard(Colors.white, vmReader),
-                    ],
+                ],
+              ),
+
+              if (viewModel.isLoading)
+                Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  color: Colors.black.withOpacity(0.85),
+                  child: const Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CircularProgressIndicator(color: AppColors.green),
+                        SizedBox(height: 20),
+                        Text(
+                          "Đang xử lý kết quả...",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
             ],
           ),
-          bottomNavigationBar: _buildStickyFooter(context, vmReader),
+          bottomNavigationBar: viewModel.isLoading
+              ? const SizedBox.shrink()
+              : _buildStickyFooter(context, vmReader),
         );
       },
     );
@@ -122,13 +170,13 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
   Widget _buildEventInfoCard(EventDetailModel event) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.space16),
-      decoration: BoxDecoration(color: const Color(0xFF1A1A1A)),
+      decoration: const BoxDecoration(color: Color(0xFF1A1A1A)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             widget.event.title,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontSize: AppSizes.size16,
               fontWeight: FontWeight.bold,
@@ -137,16 +185,16 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
           const SizedBox(height: AppSpacing.space12),
           Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.calendar_today,
-                color: Colors.grey[300],
+                color: Colors.grey,
                 size: AppSizes.size16,
               ),
               const SizedBox(width: AppSpacing.space8),
               Text(
                 FormatPrice.formatDate(widget.event.startTime.toString()),
-                style: TextStyle(
-                  color: Colors.grey[300],
+                style: const TextStyle(
+                  color: Colors.grey,
                   fontSize: AppSizes.size14,
                 ),
               ),
@@ -155,16 +203,16 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
           const SizedBox(height: AppSpacing.space8),
           Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.location_on,
-                color: Colors.grey[300],
+                color: Colors.grey,
                 size: AppSizes.size16,
               ),
               const SizedBox(width: AppSpacing.space8),
               Text(
                 widget.event.venue ?? '',
-                style: TextStyle(
-                  color: Colors.grey[300],
+                style: const TextStyle(
+                  color: Colors.grey,
                   fontSize: AppSizes.size14,
                 ),
               ),
@@ -249,10 +297,23 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
           _buildPaymentOptionRow(
             value: 'zalopay',
             title: context.appLocaleLanguage.zalopay,
-            icon: SvgPicture.asset(
-              AppSvg.zalopay,
-              width: 20,
-              height: AppSpacing.space20,
+            icon: SvgPicture.asset(AppSvg.zalopay, width: 24, height: 24),
+            viewModel: viewModel,
+            vmReader: vmReader,
+          ),
+
+          Divider(color: Colors.grey.withOpacity(0.2), height: 1),
+          _buildPaymentOptionRow(
+            value: 'vnpay',
+            title: 'VNPAY',
+            icon: Container(
+              width: 24,
+              height: 24,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+                color: Colors.white,
+              ),
+              child: SvgPicture.asset(AppSvg.vnpay, width: 24, height: 24),
             ),
             viewModel: viewModel,
             vmReader: vmReader,
@@ -296,7 +357,9 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
               value: value,
               groupValue: viewModel.selectedPaymentMethod,
               onChanged: (String? newValue) {
-                vmReader.selectPaymentMethod(newValue!);
+                if (newValue != null) {
+                  vmReader.selectPaymentMethod(newValue);
+                }
               },
               activeColor: AppColors.green,
             ),
@@ -376,7 +439,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
             children: [
               Text(
                 context.appLocaleLanguage.ticketType,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
                   fontSize: AppSizes.size16,
@@ -384,7 +447,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
               ),
               Text(
                 context.appLocaleLanguage.quantity,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: AppSizes.size16,
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
@@ -410,7 +473,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
                 flex: 3,
                 child: Text(
                   context.appLocaleLanguage.subtotal,
-                  style: TextStyle(color: Colors.black),
+                  style: const TextStyle(color: Colors.black),
                 ),
               ),
               Expanded(
@@ -433,7 +496,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
                 flex: 3,
                 child: Text(
                   context.appLocaleLanguage.totalAmount,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
                   ),
@@ -479,7 +542,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
             children: [
               Text(
                 context.appLocaleLanguage.totalAmount,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: AppSizes.size14,
                   fontWeight: FontWeight.bold,
@@ -498,7 +561,7 @@ class _EventPaymentScreenState extends State<EventPaymentScreen> {
           ),
           AppElevatedButton(
             onPressed: () {
-              vmReader.handlePayment();
+              vmReader.handlePayment(context);
             },
             text: context.appLocaleLanguage.paymentButton,
             height: AppSizes.size40,

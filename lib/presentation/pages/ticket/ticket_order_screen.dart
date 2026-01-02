@@ -11,6 +11,7 @@ import 'package:event_go/injection/injection.dart';
 import 'package:event_go/presentation/view_models/home_view_model.dart';
 import 'package:event_go/routers/router_name.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:go_router/go_router.dart';
 
 class TicketOrderScreen extends StatefulWidget {
@@ -47,7 +48,9 @@ class _TicketOrderScreenState extends State<TicketOrderScreen>
       padding: false,
       autoDispose: false,
       onModelReady: (viewModel) {
-        viewModel.watchAll();
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          viewModel.watchAll();
+        });
       },
       builder: (context, viewModel, child) {
         final ordersStream = viewModel.ordersStream;
@@ -175,6 +178,7 @@ class _TicketOrderScreenState extends State<TicketOrderScreen>
                         ? event.minTicketPrice.toString()
                         : context.appLocaleLanguage.free,
                     date: event.startTime.toString(),
+                    status: event.status,
                     onTap: () {
                       context.push(RouterPath.event_detail, extra: event);
                     },

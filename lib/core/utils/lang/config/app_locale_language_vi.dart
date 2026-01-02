@@ -539,7 +539,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get success => 'Thành công';
 
   @override
-  String get processing => 'Đang xử lý';
+  String get processing => 'Thất bại';
 
   @override
   String get cancelled => 'Đã hủy';

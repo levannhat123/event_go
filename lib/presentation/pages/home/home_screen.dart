@@ -45,22 +45,22 @@ class _HomeScreenState extends State<HomeScreen> {
     {
       'display': context.appLocaleLanguage.hanoi,
       'filterValue': AppStrings.hanoi,
-      'image': AppImage.location_hn
+      'image': AppImage.location_hn,
     },
     {
       'display': context.appLocaleLanguage.hoChiMinh,
       'filterValue': AppStrings.hoChiMinh,
-      'image': AppImage.location_hcm
+      'image': AppImage.location_hcm,
     },
     {
       'display': context.appLocaleLanguage.dalat,
       'filterValue': AppStrings.dalat,
-      'image': AppImage.location_dalat
+      'image': AppImage.location_dalat,
     },
     {
       'display': context.appLocaleLanguage.otherLocation,
       'filterValue': AppStrings.otherLocation,
-      'image': AppImage.location_other
+      'image': AppImage.location_other,
     },
   ];
 
@@ -68,33 +68,28 @@ class _HomeScreenState extends State<HomeScreen> {
     if (dbKey == AppStrings.liveMusic) {
       return {
         'display': context.appLocaleLanguage.liveMusic,
-        'image': AppImage.music_category
+        'image': AppImage.music_category,
       };
-    }
-    else if (dbKey == AppStrings.theaterAndArtsSimple) {
+    } else if (dbKey == AppStrings.theaterAndArtsSimple) {
       return {
         'display': context.appLocaleLanguage.theaterAndArtsSimple,
-        'image': AppImage.film_category
+        'image': AppImage.film_category,
       };
-    }
-    else if (dbKey == AppStrings.sportsCategory) {
+    } else if (dbKey == AppStrings.sportsCategory) {
       return {
         'display': context.appLocaleLanguage.sports,
-        'image': AppImage.sport_category
+        'image': AppImage.sport_category,
       };
-    }
-    else if (dbKey == AppStrings.other) {
+    } else if (dbKey == AppStrings.other) {
       return {
         'display': context.appLocaleLanguage.other,
-        'image': AppImage.other_category
+        'image': AppImage.other_category,
       };
     }
 
-    return {
-      'display': dbKey,
-      'image': AppImage.other_category
-    };
+    return {'display': dbKey, 'image': AppImage.other_category};
   }
+
   @override
   Widget build(BuildContext context) {
     return BaseView<HomeViewModel>(
@@ -109,7 +104,16 @@ class _HomeScreenState extends State<HomeScreen> {
         return Scaffold(
           backgroundColor: AppColors.background,
           appBar: AppBar(
-            title: Text(context.appLocaleLanguage.appName),
+            title: Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(AppSizes.size8.r),
+                  child: Image.asset(AppImage.logo, height: AppSizes.size40),
+                ),
+                SizedBox(width: AppSpacing.space10),
+                Text(context.appLocaleLanguage.appName),
+              ],
+            ),
             backgroundColor: Color(0xFF596DC3),
             actions: [
               IconButton(
@@ -183,10 +187,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             separatorBuilder: (context, index) =>
                                 SizedBox(width: AppSizes.size10),
                             scrollDirection: Axis.horizontal,
-                            itemCount: viewModel.events.length,
+                            itemCount: viewModel.upcomingAndActiveEvents.length,
                             itemBuilder: (context, index) {
                               final EventDetailModel event =
-                                  viewModel.events[index];
+                                  viewModel.upcomingAndActiveEvents[index];
                               final String imageUrl =
                                   event.bannerURL ?? AppImage.banner_2;
                               return EventCard(
@@ -205,10 +209,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         ...viewModel.eventsByCategory.entries.map((entry) {
+                          final events = entry.value
+                              .where((e) => e.status != 'COMPLETED')
+                              .toList();
+                          if (events.isEmpty) return const SizedBox.shrink();
                           final categoryName = entry.key;
-                          final events = entry.value;
                           final categoryInfo = getCategoryInfo(categoryName);
                           final displayName = categoryInfo['display']!;
+
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -251,10 +259,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               SizedBox(height: AppSpacing.space20),
                               GridView.builder(
                                 shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
+                                physics: const NeverScrollableScrollPhysics(),
                                 itemCount: events.length,
                                 gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
                                       crossAxisCount: 2,
                                       mainAxisSpacing: 10,
                                       crossAxisSpacing: 10,
@@ -272,6 +280,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ? event.minTicketPrice.toString()
                                         : context.appLocaleLanguage.free,
                                     date: event.startTime.toString(),
+                                    status: event.status,
                                     onTap: () {
                                       context.push(
                                         RouterPath.event_detail,
@@ -285,6 +294,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           );
                         }).toList(),
+
                         SizedBox(height: AppSpacing.space20),
                         Text(
                           context.appLocaleLanguage.chooseLocationTitle,
@@ -331,7 +341,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget recentEventsShow(HomeViewModel viewModel) {
     final allEvents =
-        viewModel.events.where((event) => event.startTime != null).toList()
+        viewModel.events
+            .where(
+              (event) => event.startTime != null && event.status != 'COMPLETED',
+            )
+            .toList()
           ..sort((a, b) => a.startTime!.compareTo(b.startTime!));
     final recentEvents = allEvents.take(5).toList();
     if (recentEvents.isEmpty) {
