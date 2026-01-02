@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+// 1. IMPORT THƯ VIỆN MỚI
+import 'package:webview_flutter/webview_flutter.dart';
 
 enum VNPayHashType { SHA256, HMACSHA512 }
 
@@ -58,7 +59,7 @@ class VNPAYFlutter {
           expireAt ??
           DateFormat(
             'yyyyMMddHHmmss',
-          ).format(DateTime.now().add(Duration(minutes: 5))).toString(),
+          ).format(DateTime.now().add(Duration(minutes: 15))).toString(),
     };
     var sortedParam = _sortParams(params);
     final hashDataBuffer = StringBuffer();
@@ -102,42 +103,93 @@ class VNPAYFlutter {
         onWebPaymentComplete();
       }
     } else {
-      final FlutterWebviewPlugin flutterWebviewPlugin = FlutterWebviewPlugin();
-      bool isHandled = false;
-      flutterWebviewPlugin.onUrlChanged.listen((url) async {
-        if (isHandled) return;
-
-        if (url.contains('vnp_ResponseCode')) {
-          isHandled = true;
-          final params = Uri.parse(url).queryParameters;
-
-          if (params['vnp_ResponseCode'] == '00') {
-            if (onPaymentSuccess != null) {
-              onPaymentSuccess(params);
-            }
-            await Future.delayed(const Duration(milliseconds: 1500));
-          } else {
-            if (onPaymentError != null) {
-              onPaymentError(params);
-              await Future.delayed(const Duration(milliseconds: 1500));
-            }
-          }
-          flutterWebviewPlugin.close();
-        }
-      });
-
-      flutterWebviewPlugin.launch(
-        paymentUrl,
-        rect: Rect.fromLTWH(
-          0.0,
-          0.0,
-          MediaQuery.of(context).size.width,
-          MediaQuery.of(context).size.height,
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => VNPAYWebView(
+            paymentUrl: paymentUrl,
+            onPaymentSuccess: onPaymentSuccess,
+            onPaymentError: onPaymentError,
+          ),
         ),
-        clearCache: true,
-        clearCookies: true,
-        withJavascript: true,
       );
     }
+  }
+}
+
+class VNPAYWebView extends StatefulWidget {
+  final String paymentUrl;
+  final Function(Map<String, dynamic>)? onPaymentSuccess;
+  final Function(Map<String, dynamic>)? onPaymentError;
+
+  const VNPAYWebView({
+    Key? key,
+    required this.paymentUrl,
+    this.onPaymentSuccess,
+    this.onPaymentError,
+  }) : super(key: key);
+
+  @override
+  State<VNPAYWebView> createState() => _VNPAYWebViewState();
+}
+
+class _VNPAYWebViewState extends State<VNPAYWebView> {
+  late final WebViewController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(const Color(0x00000000))
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onProgress: (int progress) {},
+          onPageStarted: (String url) {},
+          onPageFinished: (String url) {},
+          onWebResourceError: (WebResourceError error) {},
+
+          onNavigationRequest: (NavigationRequest request) {
+            if (request.url.contains('vnp_ResponseCode')) {
+              final params = Uri.parse(request.url).queryParameters;
+
+              if (params['vnp_ResponseCode'] == '00') {
+                if (widget.onPaymentSuccess != null) {
+                  widget.onPaymentSuccess!(params);
+                }
+              } else {
+                if (widget.onPaymentError != null) {
+                  widget.onPaymentError!(params);
+                }
+              }
+              Navigator.pop(context);
+              return NavigationDecision.prevent;
+            }
+            return NavigationDecision.navigate;
+          },
+        ),
+      )
+      ..loadRequest(Uri.parse(widget.paymentUrl));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Thanh toán VNPAY"),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: () {
+            if (widget.onPaymentError != null) {
+              widget.onPaymentError!({'vnp_ResponseCode': '24'});
+            }
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      body: WebViewWidget(controller: _controller),
+    );
   }
 }
