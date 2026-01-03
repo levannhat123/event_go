@@ -19,12 +19,15 @@ class TicketExpansionItem extends StatelessWidget {
   final TicketTypeModel ticket;
   final int index;
 
-
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<HomeViewModel>();
     final quantity = vm.getQuantity(index);
     final vmReader = context.read<HomeViewModel>();
+    final int currentSold = vm.getSoldQuantity(ticket.name);
+    final int totalQuantity = ticket.totalQuantity ?? 0;
+    final int remaining = (totalQuantity > 0) ? (totalQuantity - currentSold) : 9999;
+    final bool isSoldOut = remaining <= 0;
     return Container(
       decoration: BoxDecoration(
         color: const Color(0xFF2A2D34),
@@ -45,37 +48,74 @@ class TicketExpansionItem extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      ticket.name,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: AppSizes.size12,
-                        color: AppColors.green,
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          ticket.name,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: AppSizes.size12,
+                            color: AppColors.green,
+                          ),
+                        ),
+                        if (isSoldOut) ...[
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFFFCDD2),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: const Text(
+                              'Hết vé',
+                              style: TextStyle(
+                                color: Color(0xFFD32F2F),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 10,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
                     Text(
                       FormatPrice.format(double.tryParse(ticket.price.toString()) ?? 0),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: AppSizes.size12,
                         color: Colors.white,
+                        decoration: isSoldOut ? TextDecoration.lineThrough : null,
+                        decorationColor: Colors.white,
                       ),
                     ),
                   ],
                 ),
                 _buildQuantityStepper(
-                  quantity,
-                      () => vmReader.incrementTicket(index),
-                      () => vmReader.decrementTicket(index),
+                  quantity: quantity,
+                  remaining: remaining,
+                  isSoldOut: isSoldOut,
+                  onIncrement: () => vmReader.incrementTicket(index),
+                  onDecrement: () => vmReader.decrementTicket(index),
                 ),
               ],
             ),
             childrenPadding: const EdgeInsets.all(AppSpacing.space12),
             children: [
               Text(
-                ticket.description??'',
+                ticket.description ?? '',
                 style: TextStyle(color: Colors.grey[400], fontSize: AppSizes.size12),
               ),
+              if (!isSoldOut && remaining < 10)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Text(
+                    "Chỉ còn lại $remaining vé",
+                    style: const TextStyle(color: Colors.orange, fontSize: 11, fontStyle: FontStyle.italic),
+                  ),
+                ),
             ],
           ),
         ],
@@ -83,11 +123,15 @@ class TicketExpansionItem extends StatelessWidget {
     );
   }
 
-  Widget _buildQuantityStepper(
-      int quantity,
-      VoidCallback onIncrement,
-      VoidCallback onDecrement,
-      ) {
+  Widget _buildQuantityStepper({
+    required int quantity,
+    required int remaining,
+    required bool isSoldOut,
+    required VoidCallback onIncrement,
+    required VoidCallback onDecrement,
+  }) {
+    final bool canIncrement = !isSoldOut && quantity < remaining;
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.grey[100],
@@ -101,7 +145,7 @@ class TicketExpansionItem extends StatelessWidget {
               Icons.remove,
               color: quantity > 0 ? Colors.black : Colors.grey,
             ),
-            onPressed: onDecrement,
+            onPressed: quantity > 0 ? onDecrement : null,
             splashRadius: AppSizes.size20,
             constraints: const BoxConstraints(),
           ),
@@ -118,8 +162,11 @@ class TicketExpansionItem extends StatelessWidget {
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.add, color: AppColors.btnError),
-            onPressed: onIncrement,
+            icon: Icon(
+              Icons.add,
+              color: canIncrement ? AppColors.btnError : Colors.grey,
+            ),
+            onPressed: canIncrement ? onIncrement : null,
             splashRadius: AppSizes.size20,
             constraints: const BoxConstraints(),
           ),

@@ -37,6 +37,7 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
       onModelReady: (viewModel) {
         viewModel.initBooking();
         viewModel.event = widget.event;
+        viewModel.initEventDetail(widget.event.id);
       },
       builder: (context, viewModel, child) {
         final vmReader = context.read<HomeViewModel>();
@@ -98,14 +99,14 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
   }
 
   Widget _buildCollapsedPanel(
-    BuildContext context,
-    HomeViewModel vm,
-    HomeViewModel vmReader,
-  ) {
+      BuildContext context,
+      HomeViewModel vm,
+      HomeViewModel vmReader,
+      ) {
     final bool hasTickets = vm.hasTickets;
     final String buttonText = hasTickets
-        ? context.appLocaleLanguage.paymentFormat( // Gọi như một hàm
-      vm.currencyFormat.format(vm.grandTotal), // Truyền giá trị vào đây
+        ? context.appLocaleLanguage.paymentFormat(
+      vm.currencyFormat.format(vm.grandTotal),
     )
         : context.appLocaleLanguage.pleaseSelectTicket;
     final Color buttonColor = hasTickets
@@ -194,14 +195,14 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
   }
 
   Widget _buildPriceListPanel(
-    BuildContext context,
-    HomeViewModel vm,
-    HomeViewModel vmReader,
-  ) {
+      BuildContext context,
+      HomeViewModel vm,
+      HomeViewModel vmReader,
+      ) {
     final bool hasTickets = vm.hasTickets;
     final String buttonText = hasTickets
-        ? context.appLocaleLanguage.paymentFormat( // Gọi như một hàm
-      vm.currencyFormat.format(vm.grandTotal), // Truyền giá trị vào đây
+        ? context.appLocaleLanguage.paymentFormat(
+      vm.currencyFormat.format(vm.grandTotal),
     )
         : context.appLocaleLanguage.pleaseSelectTicket;
     final Color buttonColor = hasTickets
@@ -314,7 +315,7 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
                 context.pop();
 
                 if (token != null) {
-                  context.push(RouterPath.payment, extra: token);
+                  context.push(RouterPath.payment, extra: {'token': token, 'event': widget.event},);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text(vmReader.zpTransToken)),

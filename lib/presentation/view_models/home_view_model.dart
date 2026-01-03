@@ -291,12 +291,57 @@ class HomeViewModel extends BaseViewModel {
     return _captchaImages[random.nextInt(_captchaImages.length)];
   }
 
-  void initEventDetail() {
+  Map<String, int> _soldTicketsByName = {};
+
+  StreamSubscription<QuerySnapshot>? _ticketSalesSubscription;
+
+  int getSoldQuantity(String ticketName) {
+    return _soldTicketsByName[ticketName] ?? 0;
+  }
+
+  void initEventDetail(String eventId) {
     _isExpanded = false;
     _captchaFailCount = 0;
     _lockoutEndTime = null;
     _captchaErrorText = null;
     _currentCaptchaImage = getRandomCaptchaImage();
+
+    _soldTicketsByName.clear();
+
+    _listenToTicketSales(eventId);
+  }
+
+  void _listenToTicketSales(String eventId) {
+    _ticketSalesSubscription?.cancel();
+
+    try {
+      _ticketSalesSubscription = _db
+          .collection('tickets')
+          .where('eventId', isEqualTo: eventId)
+          .where('paymentStatus', isEqualTo: 'completed')
+          .snapshots()
+          .listen((snapshot) {
+
+        final Map<String, int> tempMap = {};
+
+        for (var doc in snapshot.docs) {
+          final data = doc.data();
+          final List<dynamic> tickets = data['tickets'] ?? [];
+          for (var t in tickets) {
+            final String name = t['name'];
+            final int qty = (t['quantity'] ?? 0) as int;
+            tempMap[name] = (tempMap[name] ?? 0) + qty;
+          }
+        }
+
+        _soldTicketsByName = tempMap;
+        notifyListeners();
+      }, onError: (e) {
+        print("Lỗi lắng nghe vé bán: $e");
+      });
+    } catch (e) {
+      print("Lỗi thiết lập stream: $e");
+    }
   }
 
   void toggleDescriptionExpanded() {
@@ -325,7 +370,7 @@ class HomeViewModel extends BaseViewModel {
         return CaptchaResult.lockedOut;
       } else {
         _captchaErrorText =
-            'Xác minh không đúng! (Thử lại: $_captchaFailCount/5)';
+        'Xác minh không đúng! (Thử lại: $_captchaFailCount/5)';
         notifyListeners();
         return CaptchaResult.fail;
       }
@@ -355,7 +400,6 @@ class HomeViewModel extends BaseViewModel {
       return 0;
     }
     final List<TicketTypeModel>? tickets = event!.ticketType;
-    print('123tickets: ${tickets?.length}');
     if (tickets == null) {
       return 0;
     }
@@ -434,10 +478,10 @@ class HomeViewModel extends BaseViewModel {
   String get selectedPaymentMethod => _selectedPaymentMethod;
 
   void initPaymentScreen(
-    String token,
-    BuildContext context, {
-    VoidCallback? onTimerExpired,
-  }) {
+      String token,
+      BuildContext context, {
+        VoidCallback? onTimerExpired,
+      }) {
     _paymentToken = token;
     _timeRemaining = const Duration(minutes: 10, seconds: 00);
     _paymentTimer?.cancel();
@@ -526,7 +570,7 @@ class HomeViewModel extends BaseViewModel {
 
     try {
       _subscription = watchAllEventsUsecase.call().listen(
-        (list) async {
+            (list) async {
           final mappedEvents = list.map((event) {
             return event.copyWith(
               status: calculateEventStatus(
@@ -545,19 +589,19 @@ class HomeViewModel extends BaseViewModel {
           _events = mappedEvents;
           final soldMap = await _getSoldTicketsByEvent();
           _hotEvents =
-              List<EventDetailModel>.from(
-                  _events,
-                ).where((event) => event.status != 'COMPLETED').toList()
-                ..sort((a, b) {
-                  final aSold = soldMap[a.id] ?? 0;
-                  final bSold = soldMap[b.id] ?? 0;
-                  return bSold.compareTo(aSold);
-                });
+          List<EventDetailModel>.from(
+            _events,
+          ).where((event) => event.status != 'COMPLETED').toList()
+            ..sort((a, b) {
+              final aSold = soldMap[a.id] ?? 0;
+              final bSold = soldMap[b.id] ?? 0;
+              return bSold.compareTo(aSold);
+            });
 
           _hotEvents = _hotEvents.take(5).toList();
           final allCategories = groupBy(
             _events,
-            (EventDetailModel e) => e.categories?.name ?? 'Khác',
+                (EventDetailModel e) => e.categories?.name ?? 'Khác',
           );
 
           const desiredCategories = [
@@ -569,7 +613,7 @@ class HomeViewModel extends BaseViewModel {
 
           _eventsByCategory = Map.fromEntries(
             allCategories.entries.where(
-              (entry) => desiredCategories.contains(entry.key),
+                  (entry) => desiredCategories.contains(entry.key),
             ),
           );
 
@@ -720,10 +764,10 @@ class HomeViewModel extends BaseViewModel {
   }
 
   Future<void> sendOrderEmailWithQR(
-    String orderId,
-    String userEmail,
-    String eventName,
-  ) async {
+      String orderId,
+      String userEmail,
+      String eventName,
+      ) async {
     final dio = Dio();
     try {
       final String qrCodeData = orderId;
@@ -812,7 +856,7 @@ class HomeViewModel extends BaseViewModel {
 
   Future<void> removeRecentSearch(String query) async {
     recentSearches.removeWhere(
-      (item) => item.toLowerCase() == query.toLowerCase(),
+          (item) => item.toLowerCase() == query.toLowerCase(),
     );
 
     try {
@@ -922,7 +966,7 @@ class HomeViewModel extends BaseViewModel {
         ).format(_appliedSelectedDay!);
       } else if (_appliedRangeStart != null && _appliedRangeEnd != null) {
         _selectedDateText =
-            '${DateFormat('dd/MM').format(_appliedRangeStart!)} - ${DateFormat('dd/MM').format(_appliedRangeEnd!)}';
+        '${DateFormat('dd/MM').format(_appliedRangeStart!)} - ${DateFormat('dd/MM').format(_appliedRangeEnd!)}';
       }
     } else {
       _appliedIsAllDays = true;
@@ -1094,9 +1138,9 @@ class HomeViewModel extends BaseViewModel {
               extra: {
                 'isSuccess': true,
                 'message':
-                    'Bạn đã thanh toán vé thành công! Vé đã được gửi tới email của bạn.',
+                'Bạn đã thanh toán vé thành công! Vé đã được gửi tới email của bạn.',
                 'transactionId':
-                    params['vnp_TransactionNo'] ?? orderId ?? 'Unknown',
+                params['vnp_TransactionNo'] ?? orderId ?? 'Unknown',
               },
             );
           }
@@ -1152,6 +1196,8 @@ class HomeViewModel extends BaseViewModel {
   @override
   void dispose() {
     _timer?.cancel();
+    _paymentTimer?.cancel();
+    _ticketSalesSubscription?.cancel();
     searchController.dispose();
     super.dispose();
   }

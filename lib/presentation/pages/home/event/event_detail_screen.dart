@@ -40,7 +40,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
       padding: false,
       autoDispose: false,
       onModelReady: (viewModel) {
-        viewModel.initEventDetail();
+        viewModel.initEventDetail(widget.event.id);
         viewModel.watchAll();
       },
       builder: (context, viewModel, child) {
@@ -94,8 +94,8 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                       TextSpan(
                         text: FormatPrice.format(
                           double.tryParse(
-                                widget.event.minTicketPrice.toString(),
-                              ) ??
+                            widget.event.minTicketPrice.toString(),
+                          ) ??
                               0,
                         ),
                         style: TextStyle(fontWeight: FontWeight.bold),
@@ -104,7 +104,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                   ),
                 ),
                 AppElevatedButton(
-                   text:!isEventCompleted? context.appLocaleLanguage.buyTicketNow:'Sự kiện kết thúc',
+                  text:!isEventCompleted? context.appLocaleLanguage.buyTicketNow:'Sự kiện kết thúc',
                   onPressed: () {
                     if (viewModel.isLockedOut) {
                       final remainingSeconds =
@@ -115,9 +115,9 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                             context.appLocaleLanguage
                                 .captchaLockoutMessage(remainingSeconds)
                                 .replaceAll(
-                                  '{seconds}',
-                                  remainingSeconds.toString(),
-                                ),
+                              '{seconds}',
+                              remainingSeconds.toString(),
+                            ),
                           ),
                           backgroundColor: Colors.red,
                         ),
@@ -154,11 +154,11 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
                                             context
@@ -337,7 +337,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                         padding: const EdgeInsets.all(AppSpacing.space20),
                         child: EventTicketCard(
                           imagePath:
-                              widget.event.bannerURL ?? AppImage.banner_1,
+                          widget.event.bannerURL ?? AppImage.banner_1,
                           title: widget.event.title,
                           date: widget.event.startTime.toString(),
                           location: widget.event.venue ?? '',
@@ -692,13 +692,15 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                             physics: const NeverScrollableScrollPhysics(),
                             itemCount: widget.event.ticketType!.length,
                             separatorBuilder: (context, index) =>
-                                const SizedBox(height: AppSpacing.space16),
+                            const SizedBox(height: AppSpacing.space16),
                             itemBuilder: (context, index) {
                               final ticket = widget.event.ticketType![index];
+
                               return TicketItemRow(
                                 ticketName: ticket.name,
                                 price: ticket.price.toString(),
-                                isSoldOut: false,
+                                currentSold: viewModel.getSoldQuantity(ticket.name),
+                                totalQuantity: ticket.totalQuantity ?? 0,
                               );
                             },
                           ),
