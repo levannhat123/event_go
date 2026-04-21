@@ -31,7 +31,7 @@ class EventTicketCard extends StatelessWidget {
       clipper: TicketClipper(notchCenterY: imageHeight),
       child: Container(
         decoration: BoxDecoration(
-          color: const Color(0xFF39383D),
+          color: AppColors.colorFF39383D,
           borderRadius: BorderRadius.circular(AppSizes.size16),
         ),
         child: Column(
@@ -91,14 +91,14 @@ class EventTicketCard extends StatelessWidget {
           const SizedBox(height: AppSpacing.space20),
           _buildInfoRow(
             icon: Icons.calendar_today,
-            iconColor: Color(0xFF6AFB92),
+            iconColor: AppColors.colorFF6AFB92,
             primaryText: date,
             showSecondaryButton: true,
           ),
           const SizedBox(height: AppSpacing.space15),
           _buildInfoRow(
             icon: Icons.location_on,
-            iconColor: Color(0xFF6AFB92),
+            iconColor: AppColors.colorFF6AFB92,
             primaryText: location,
             secondaryText: address,
           ),
@@ -138,7 +138,7 @@ class EventTicketCard extends StatelessWidget {
                   style: TextStyle(
                     color: Colors.grey[300],
                     fontSize: AppSizes.size14,
-                    height: 1.4,
+                    height: AppSizes.size1_4,
                   ),
                 ),
               ],

@@ -5,6 +5,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_sizes.dart';
 import '../../../core/constants/app_spacing.dart';
 import '../../../core/constants/app_strings.dart';
+
 class ImprovedLocationCard extends StatelessWidget {
   final String title;
   final String line1;
@@ -20,14 +21,14 @@ class ImprovedLocationCard extends StatelessWidget {
   Future<void> _launchMaps(BuildContext context) async {
     final String fullAddress = "$title, $line1, $line2";
     final String query = Uri.encodeComponent(fullAddress);
-    final Uri uri = Uri.parse('https://www.google.com/maps/search/?api=1&query=$query');
+    final Uri uri = Uri.parse(
+      'https://www.google.com/maps/search/?api=1&query=$query',
+    );
     try {
       if (await canLaunchUrl(uri)) {
         await launchUrl(uri);
       } else {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
               AppStrings.mapOpenError.replaceFirst('{address}', fullAddress),
@@ -49,7 +50,7 @@ class ImprovedLocationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(AppSizes.size10),
       child: Material(
         color: AppColors.transparent,
         child: InkWell(
@@ -60,12 +61,15 @@ class ImprovedLocationCard extends StatelessWidget {
           child: Ink(
             decoration: BoxDecoration(
               gradient: const LinearGradient(
-                colors: [Color(0xFFF2F6FF), Color(0xFFE6EEFF)],
+                colors: [AppColors.colorFFF2F6FF, AppColors.colorFFE6EEFF],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.circular(12.0),
-              border: Border.all(color: AppColors.white.withOpacity(0.5), width: 1.5),
+              border: Border.all(
+                color: AppColors.white.withOpacity(0.5),
+                width: AppSizes.size1_5,
+              ),
               boxShadow: [
                 BoxShadow(
                   color: Colors.blue.withOpacity(0.08),
@@ -76,20 +80,25 @@ class ImprovedLocationCard extends StatelessWidget {
             ),
             child: Container(
               clipBehavior: Clip.antiAlias,
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(12.0)),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12.0),
+              ),
               child: Stack(
                 children: [
                   Positioned(
                     right: -30,
                     bottom: -40,
-                    child: Icon(Icons.map_rounded, size: AppSizes.size150, color: AppColors.white.withOpacity(0.7)),
+                    child: Icon(
+                      Icons.map_rounded,
+                      size: AppSizes.size150,
+                      color: AppColors.white.withOpacity(0.7),
+                    ),
                   ),
-                  // Nội dung chính
                   Row(
                     children: [
                       Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.all(10.0),
+                          padding: const EdgeInsets.all(AppSizes.size10),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
@@ -99,7 +108,7 @@ class ImprovedLocationCard extends StatelessWidget {
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: AppSizes.size18,
-                                  color: Color(0xFF1C2D56),
+                                  color: AppColors.colorFF1C2D56,
                                 ),
                               ),
                               const SizedBox(height: AppSizes.size8),
@@ -108,7 +117,7 @@ class ImprovedLocationCard extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: AppSizes.size14,
                                   color: Colors.grey[600],
-                                  height: 1.5,
+                                  height: AppSizes.size1_5,
                                 ),
                               ),
                               Text(
@@ -116,16 +125,17 @@ class ImprovedLocationCard extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: AppSizes.size14,
                                   color: Colors.grey[600],
-                                  height: 1.5,
+                                  height: AppSizes.size1_5,
                                 ),
                               ),
                             ],
                           ),
                         ),
                       ),
-                      // Icon Pin
                       Container(
-                        padding: const EdgeInsets.only(right: AppSpacing.space24),
+                        padding: const EdgeInsets.only(
+                          right: AppSpacing.space24,
+                        ),
                         child: Container(
                           padding: const EdgeInsets.all(AppSpacing.space12),
                           decoration: BoxDecoration(
@@ -139,7 +149,11 @@ class ImprovedLocationCard extends StatelessWidget {
                               ),
                             ],
                           ),
-                          child: Icon(Icons.location_on, color: Colors.blue[500], size: AppSizes.size30),
+                          child: Icon(
+                            Icons.location_on,
+                            color: Colors.blue[500],
+                            size: AppSizes.size30,
+                          ),
                         ),
                       ),
                     ],

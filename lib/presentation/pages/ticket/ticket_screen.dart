@@ -4,6 +4,8 @@ import 'package:event_go/core/utils/extension.dart';
 import 'package:event_go/core/widgets/custom_tab_bar.dart';
 import 'package:event_go/presentation/pages/ticket/ticket_order_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:event_go/core/constants/app_colors.dart';
+import 'package:event_go/core/constants/app_sizes.dart';
 
 class TicketScreen extends StatefulWidget {
   const TicketScreen({super.key});
@@ -44,9 +46,9 @@ class _TicketScreenState extends State<TicketScreen>
       appBar: AppBar(
         title: Text(
           context.appLocaleLanguage.myTickets,
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: AppSizes.size20, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Color(0xFF596DC3),
+        backgroundColor: AppColors.homePrimaryBlue,
         centerTitle: true,
       ),
       body: Column(

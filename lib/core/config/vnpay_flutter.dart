@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:event_go/core/constants/app_colors.dart';
 
 enum VNPayHashType { SHA256, HMACSHA512 }
 
@@ -139,7 +140,7 @@ class _VNPAYWebViewState extends State<VNPAYWebView> {
     super.initState();
     _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setBackgroundColor(const Color(0x00000000))
+      ..setBackgroundColor(AppColors.color00000000)
       ..setNavigationDelegate(
         NavigationDelegate(
           onProgress: (int progress) {},

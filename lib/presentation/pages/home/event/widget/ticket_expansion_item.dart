@@ -1,6 +1,5 @@
 import 'package:event_go/core/utils/format_price.dart';
-import 'package:event_go/presentation/pages/home/event/widget/ticket_data.dart';
-import 'package:event_go/presentation/view_models/home_view_model.dart';
+import 'package:event_go/presentation/view_models/event_order_view_model.dart';
 import 'package:event_go/core/constants/app_sizes.dart';
 import 'package:event_go/core/constants/app_spacing.dart';
 import 'package:flutter/material.dart';
@@ -21,16 +20,16 @@ class TicketExpansionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final vm = context.watch<HomeViewModel>();
+    final vm = context.watch<EventOrderViewModel>();
     final quantity = vm.getQuantity(index);
-    final vmReader = context.read<HomeViewModel>();
+    final vmReader = context.read<EventOrderViewModel>();
     final int currentSold = vm.getSoldQuantity(ticket.name);
     final int totalQuantity = ticket.totalQuantity ?? 0;
     final int remaining = (totalQuantity > 0) ? (totalQuantity - currentSold) : 9999;
     final bool isSoldOut = remaining <= 0;
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF2A2D34),
+        color: AppColors.colorFF2A2D34,
         borderRadius: BorderRadius.circular(AppSizes.size12),
       ),
       child: Column(
@@ -59,22 +58,22 @@ class TicketExpansionItem extends StatelessWidget {
                           ),
                         ),
                         if (isSoldOut) ...[
-                          const SizedBox(width: 8),
+                          const SizedBox(width: AppSizes.size8),
                           Container(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 6,
-                              vertical: 2,
+                              horizontal: AppSizes.size6,
+                              vertical: AppSizes.size2,
                             ),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFFFCDD2),
+                              color: AppColors.colorFFFFCDD2,
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: const Text(
                               'Hết vé',
                               style: TextStyle(
-                                color: Color(0xFFD32F2F),
+                                color: AppColors.colorFFD32F2F,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 10,
+                                fontSize: AppSizes.size10,
                               ),
                             ),
                           ),
@@ -110,10 +109,10 @@ class TicketExpansionItem extends StatelessWidget {
               ),
               if (!isSoldOut && remaining < 10)
                 Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
+                  padding: const EdgeInsets.only(top: AppSizes.size8),
                   child: Text(
                     "Chỉ còn lại $remaining vé",
-                    style: const TextStyle(color: Colors.orange, fontSize: 11, fontStyle: FontStyle.italic),
+                    style: const TextStyle(color: Colors.orange, fontSize: AppSizes.size11, fontStyle: FontStyle.italic),
                   ),
                 ),
             ],

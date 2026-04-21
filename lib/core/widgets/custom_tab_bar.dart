@@ -30,7 +30,7 @@ class CustomTabBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      color: Color(0xFF5C6BC0),
+      color: AppColors.colorFF5C6BC0,
       child: TabBar(
         splashFactory: NoSplash.splashFactory,
         isScrollable: true,
@@ -39,7 +39,7 @@ class CustomTabBar extends StatelessWidget {
         controller: controller,
         labelColor: labelColor,
         dividerColor: dividerColor,
-        unselectedLabelColor: Color(0xFFC5CAE9),
+        unselectedLabelColor: AppColors.colorFFC5CAE9,
         indicatorColor: indicatorColor,
         labelStyle: AppTextStyles.content4,
         labelPadding: EdgeInsets.symmetric(horizontal: labelPadding!),

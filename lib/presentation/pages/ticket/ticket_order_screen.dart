@@ -9,11 +9,12 @@ import 'package:event_go/core/widgets/app_elevated_button.dart';
 import 'package:event_go/core/widgets/event_card.dart';
 import 'package:event_go/core/widgets/order_history_card.dart';
 import 'package:event_go/injection/injection.dart';
-import 'package:event_go/presentation/view_models/home_view_model.dart';
+import 'package:event_go/presentation/view_models/event_order_view_model.dart';
 import 'package:event_go/routers/router_name.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:go_router/go_router.dart';
+import 'package:event_go/core/constants/app_sizes.dart';
 
 class TicketOrderScreen extends StatefulWidget {
   final String? statusFilter;
@@ -44,8 +45,8 @@ class _TicketOrderScreenState extends State<TicketOrderScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return BaseView<HomeViewModel>(
-      viewModelBuilder: () => getIt<HomeViewModel>(),
+    return BaseView<EventOrderViewModel>(
+      viewModelBuilder: () => getIt<EventOrderViewModel>(),
       padding: false,
       autoDispose: false,
       onModelReady: (viewModel) {
@@ -62,7 +63,7 @@ class _TicketOrderScreenState extends State<TicketOrderScreen>
           );
         }
         return SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: AppSizes.size10, vertical: AppSizes.size10),
           child: Column(
             children: [
               StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
@@ -106,8 +107,8 @@ class _TicketOrderScreenState extends State<TicketOrderScreen>
                   }
                   return ListView(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 10,
+                      horizontal: AppSizes.size10,
+                      vertical: AppSizes.size10,
                     ),
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
@@ -127,7 +128,7 @@ class _TicketOrderScreenState extends State<TicketOrderScreen>
                               (data[AppStorageKey.createdAt] as Timestamp?)?.toDate() ??
                               DateTime.now();
                           return Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
+                            padding: const EdgeInsets.only(bottom: AppSizes.size10),
                             child: OrderHistoryCard(
                               title:
                                   data[AppStorageKey.eventName] as String? ??
@@ -148,16 +149,16 @@ class _TicketOrderScreenState extends State<TicketOrderScreen>
                   );
                 },
               ),
-              SizedBox(height: 20),
+              SizedBox(height: AppSizes.size20),
               Divider(color: Colors.grey, thickness: 1),
-              SizedBox(height: 25),
+              SizedBox(height: AppSizes.size25),
               Center(
                 child: Text(
                   context.appLocaleLanguage.youMayAlsoLike,
-                  style: TextStyle(fontSize: 16, color: Colors.white),
+                  style: TextStyle(fontSize: AppSizes.size16, color: Colors.white),
                 ),
               ),
-              SizedBox(height: 25),
+              SizedBox(height: AppSizes.size25),
               GridView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
@@ -171,8 +172,8 @@ class _TicketOrderScreenState extends State<TicketOrderScreen>
                 itemBuilder: (context, index) {
                   final event = viewModel.events[index];
                   return EventCard(
-                    height: 100,
-                    width: 200,
+                    height: AppSizes.size100,
+                    width: AppSizes.size200,
                     imageUrl: event.bannerURL ?? AppImage.banner_1,
                     title: event.title,
                     price: event.minTicketPrice != null
@@ -186,23 +187,23 @@ class _TicketOrderScreenState extends State<TicketOrderScreen>
                   );
                 },
               ),
-              SizedBox(height: 10),
+              SizedBox(height: AppSizes.size10),
               Align(
                 alignment: Alignment.center,
                 child: AppElevatedButton(
                   text: context.appLocaleLanguage.seeMore,
                   onPressed: () {},
-                  height: 40,
-                  width: 120,
+                  height: AppSizes.size40,
+                  width: AppSizes.size120,
                   textColor: AppColors.white,
-                  color: Color(0xFFf49415),
-                  fontSize: 15.0,
-                  borderColor: Color(0xFFf49415),
+                  color: AppColors.authOrange,
+                  fontSize: AppSizes.size15,
+                  borderColor: AppColors.authOrange,
                   splashColor: AppColors.transparent,
                   highlightColor: AppColors.white,
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: AppSizes.size20),
             ],
           ),
         );
@@ -213,16 +214,16 @@ class _TicketOrderScreenState extends State<TicketOrderScreen>
   Widget _buildEmptyState(String message, IconData icon) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(AppSizes.size20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, size: 60, color: Colors.grey),
-            SizedBox(height: 16),
+            SizedBox(height: AppSizes.size16),
             Text(
               message,
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey, fontSize: 16),
+              style: TextStyle(color: Colors.grey, fontSize: AppSizes.size16),
             ),
           ],
         ),

@@ -20,6 +20,7 @@ class RouterPath {
 
 
 
+
 }
 
 class RouterName {
@@ -50,4 +51,5 @@ class RouterName {
   static const String payment = 'payment';
   static const String check_in = 'check_in';
   static const String payment_result = 'payment_result';
+  static const String payment_callback = 'payment-callback';
 }

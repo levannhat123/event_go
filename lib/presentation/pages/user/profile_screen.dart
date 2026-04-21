@@ -11,12 +11,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:event_go/core/constants/app_sizes.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
-  static const Color _darkBackground = Color(0xFF1C1C1E);
-  static const Color _fieldFillColor = Color(0xFF2C2C2E);
-  static const Color _accentGreen = Color(0xFF34A853);
+  static const Color _darkBackground = AppColors.surfaceDark;
+  static const Color _fieldFillColor = AppColors.stock;
+  static const Color _accentGreen = AppColors.colorFF34A853;
   static const Color _lightTextColor = Colors.white;
   static const Color _dimTextColor = Colors.white70;
 
@@ -31,7 +32,7 @@ class ProfileScreen extends StatelessWidget {
       builder: (context, viewModel, child) {
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: Color(0xFF596DC3),
+            backgroundColor: AppColors.homePrimaryBlue,
             elevation: 0,
             leading: IconButton(
               icon: const Icon(Icons.arrow_back_ios, color: _lightTextColor),
@@ -50,15 +51,15 @@ class ProfileScreen extends StatelessWidget {
           ),
           backgroundColor: _darkBackground,
           bottomNavigationBar: Padding(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(AppSizes.size10),
             child: viewModel.isLoading
                 ? Center(
-                    child: CircularProgressIndicator(color: Color(0xFFf49415)),
+                    child: CircularProgressIndicator(color: AppColors.authOrange),
                   )
                 : AppElevatedButton(
                     text: context.appLocaleLanguage.complete,
-                    borderColor: Color(0xFFf49415),
-                    color: Color(0xFFf49415),
+                    borderColor: AppColors.authOrange,
+                    color: AppColors.authOrange,
                     splashColor: AppColors.transparent,
                     highlightColor: AppColors.white,
                     onPressed: () async {
@@ -86,7 +87,7 @@ class ProfileScreen extends StatelessWidget {
           ),
           body: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(AppSizes.size10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -96,7 +97,7 @@ class ProfileScreen extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           radius: 50,
-                          backgroundColor: Color(0xFF596DC3),
+                          backgroundColor: AppColors.homePrimaryBlue,
                           backgroundImage: () {
                             if (viewModel.imageFile != null) {
                               return FileImage(viewModel.imageFile!)
@@ -127,14 +128,14 @@ class ProfileScreen extends StatelessWidget {
                             child: Container(
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: Color(0xFF596DC3),
+                                color: AppColors.homePrimaryBlue,
                                 border: Border.all(
                                   color: _darkBackground,
-                                  width: 2,
+                                  width: AppSizes.size2,
                                 ),
                               ),
                               child: const Padding(
-                                padding: EdgeInsets.all(4.0),
+                                padding: EdgeInsets.all(AppSizes.size4),
                                 child: Icon(
                                   Icons.camera_alt,
                                   color: _lightTextColor,
@@ -147,26 +148,26 @@ class ProfileScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: AppSizes.size20),
                   Text(
                     context.appLocaleLanguage.profileInfoDescription,
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: _dimTextColor, fontSize: 14),
+                    style: TextStyle(color: _dimTextColor, fontSize: AppSizes.size14),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: AppSizes.size30),
                   _buildLabel(context.appLocaleLanguage.fullName),
                   _buildTextField(controller: viewModel.nameController),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: AppSizes.size20),
                   _buildLabel(context.appLocaleLanguage.phoneNumber),
                   _buildPhoneField(viewModel.phoneController),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: AppSizes.size20),
                   _buildLabel(context.appLocaleLanguage.emailHint),
                   _buildTextField(
                     controller: viewModel.emailController,
                     readOnly: true,
                     suffixIcon: Icon(Icons.check, color: _accentGreen),
                   ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: AppSizes.size40),
                 ],
               ),
             ),
@@ -178,12 +179,12 @@ class ProfileScreen extends StatelessWidget {
 
   Widget _buildLabel(String text) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
+      padding: const EdgeInsets.only(bottom: AppSizes.size8),
       child: Text(
         text,
         style: const TextStyle(
           color: _lightTextColor,
-          fontSize: 16,
+          fontSize: AppSizes.size16,
           fontWeight: FontWeight.w500,
         ),
       ),
@@ -202,22 +203,22 @@ class ProfileScreen extends StatelessWidget {
       readOnly: readOnly,
       style: TextStyle(
         color: readOnly ? _dimTextColor : _lightTextColor,
-        fontSize: 16,
+        fontSize: AppSizes.size16,
       ),
       keyboardType: keyboardType,
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: const TextStyle(color: _dimTextColor),
         filled: true,
-        fillColor: readOnly ? Color(0xFF222224) : _fieldFillColor,
+        fillColor: readOnly ? AppColors.colorFF222224 : _fieldFillColor,
         suffixIcon: suffixIcon,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.0),
           borderSide: BorderSide.none,
         ),
         contentPadding: const EdgeInsets.symmetric(
-          vertical: 16,
-          horizontal: 12,
+          vertical: AppSizes.size16,
+          horizontal: AppSizes.size12,
         ),
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../constants/app_colors.dart';
+import 'package:event_go/core/constants/app_sizes.dart';
 
 class AppElevatedButton extends StatelessWidget {
   AppElevatedButton({
@@ -15,7 +16,7 @@ class AppElevatedButton extends StatelessWidget {
     this.fontSize = 16.0,
     this.icon,
     BorderRadius? borderRadius,
-    this.padding = const EdgeInsets.symmetric(horizontal: 12.0),
+    this.padding = const EdgeInsets.symmetric(horizontal: AppSizes.size12),
     this.isDisable = false,
     Color? splashColor,
     Color? highlightColor,
@@ -36,7 +37,7 @@ class AppElevatedButton extends StatelessWidget {
     this.fontSize = 16.0,
     this.icon,
     BorderRadius? borderRadius,
-    this.padding = const EdgeInsets.symmetric(horizontal: 12.0),
+    this.padding = const EdgeInsets.symmetric(horizontal: AppSizes.size12),
     this.isDisable = false,
     Color? splashColor,
     Color? highlightColor,
@@ -57,7 +58,7 @@ class AppElevatedButton extends StatelessWidget {
     this.fontSize = 14.6,
     this.icon,
     BorderRadius? borderRadius,
-    this.padding = const EdgeInsets.symmetric(horizontal: 12.0),
+    this.padding = const EdgeInsets.symmetric(horizontal: AppSizes.size12),
     this.isDisable = false,
     Color? splashColor,
     Color? highlightColor,
@@ -78,7 +79,7 @@ class AppElevatedButton extends StatelessWidget {
     this.fontSize = 14.6,
     this.icon,
     BorderRadius? borderRadius,
-    this.padding = const EdgeInsets.symmetric(horizontal: 12.0),
+    this.padding = const EdgeInsets.symmetric(horizontal: AppSizes.size12),
     this.isDisable = false,
     Color? splashColor,
     Color? highlightColor,
@@ -121,13 +122,13 @@ class AppElevatedButton extends StatelessWidget {
           decoration: BoxDecoration(
             color: gradient == null ? color : null,
             gradient: gradient,
-            border: Border.all(color: borderColor, width: 1.4),
+            border: Border.all(color: borderColor, width: AppSizes.size1_4),
             borderRadius: borderRadius,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (icon != null) ...[icon!, const SizedBox(width: 30)],
+              if (icon != null) ...[icon!, const SizedBox(width: AppSizes.size30)],
                Text(
                       text,
                       style: TextStyle(

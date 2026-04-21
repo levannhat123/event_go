@@ -190,7 +190,7 @@ class _PaymentResultScreenState extends State<PaymentResultScreen>
                             side: BorderSide(
                               color: AppColors.white.withOpacity(0.08),
                             ),
-                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            padding: const EdgeInsets.symmetric(vertical: AppSizes.size14),
                             backgroundColor: AppColors.transparent,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -219,7 +219,7 @@ class _PaymentResultScreenState extends State<PaymentResultScreen>
                             backgroundColor: isSuccess
                                 ? successColor
                                 : failColor,
-                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            padding: const EdgeInsets.symmetric(vertical: AppSizes.size14),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),

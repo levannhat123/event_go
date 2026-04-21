@@ -26,8 +26,8 @@ class _UserScreenState extends State<UserScreen> {
   bool isDarkMode = false;
   @override
   Widget build(BuildContext context) {
-    const Color itemBackgroundColor = Color(0xFF2C2C2C);
-    const Color secondaryTextColor = Color(0xFF8A8A8A);
+    const Color itemBackgroundColor = AppColors.colorFF2C2C2C;
+    const Color secondaryTextColor = AppColors.colorFF8A8A8A;
 
     return BaseView<AuthViewModel>(
       viewModelBuilder: () => getIt<AuthViewModel>(),
@@ -67,20 +67,19 @@ class _UserScreenState extends State<UserScreen> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 40),
+                      const SizedBox(height: AppSizes.size40),
                       _buildSettingsGroup(
                         icon: Icons.settings_outlined,
                         title: context.appLocaleLanguage.appSettings,
                         backgroundColor: itemBackgroundColor,
                         children: [_buildLanguageItem(onTap: () {})],
                       ),
-                      const SizedBox(height: 40),
+                      const SizedBox(height: AppSizes.size40),
                       _buildSingleSettingsItem(
                         icon: Icons.logout,
                         title: context.appLocaleLanguage.logout,
                         backgroundColor: itemBackgroundColor,
                         onTap: () async {
-                          // Gọi hàm signOut từ ViewModel
                           await viewModel.logout();
                           if (mounted) {
                             context.go(RouterPath.login);
@@ -90,12 +89,15 @@ class _UserScreenState extends State<UserScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: AppSizes.size40),
                 Text(
                   context.appLocaleLanguage.version,
-                  style: TextStyle(color: secondaryTextColor, fontSize: 12),
+                  style: TextStyle(
+                    color: secondaryTextColor,
+                    fontSize: AppSizes.size12,
+                  ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: AppSizes.size20),
               ],
             ),
           ),
@@ -104,15 +106,14 @@ class _UserScreenState extends State<UserScreen> {
     );
   }
 
-  // Sửa lại để nhận ViewModel
   Widget _buildHeader(AuthViewModel viewModel) {
     return Stack(
       clipBehavior: Clip.none,
       alignment: Alignment.center,
       children: [
         Container(
-          height: 150,
-          decoration: const BoxDecoration(color: Color(0xFF596DC3)),
+          height: AppSizes.size150,
+          decoration: const BoxDecoration(color: AppColors.homePrimaryBlue),
         ),
         Positioned(
           bottom: -70,
@@ -121,11 +122,14 @@ class _UserScreenState extends State<UserScreen> {
               Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: const Color(0xFF1E1E1E), width: 5),
+                  border: Border.all(
+                    color: AppColors.colorFF1E1E1E,
+                    width: AppSizes.size5,
+                  ),
                 ),
                 child: CircleAvatar(
                   radius: 40,
-                  backgroundColor: Color(0xFF596DC3),
+                  backgroundColor: AppColors.homePrimaryBlue,
                   backgroundImage: () {
                     if (viewModel.imageFile != null) {
                       return FileImage(viewModel.imageFile!) as ImageProvider;
@@ -146,12 +150,12 @@ class _UserScreenState extends State<UserScreen> {
                       : null,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSizes.size8),
               Text(
                 viewModel.userEmail,
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 18,
+                  fontSize: AppSizes.size18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -172,23 +176,26 @@ class _UserScreenState extends State<UserScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
+          padding: const EdgeInsets.only(
+            left: AppSizes.size8,
+            bottom: AppSizes.size8,
+          ),
           child: Row(
             children: [
               Icon(icon, color: Colors.white, size: 20),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.size8),
               Text(
                 title,
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 16,
+                  fontSize: AppSizes.size16,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ],
           ),
         ),
-        SizedBox(height: 18),
+        SizedBox(height: AppSizes.size18),
         Container(
           decoration: BoxDecoration(
             color: backgroundColor,
@@ -209,21 +216,23 @@ class _UserScreenState extends State<UserScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 50,
-        padding: const EdgeInsets.symmetric(horizontal: 16), // Thêm padding
+        height: AppSizes.size50,
+        padding: const EdgeInsets.symmetric(horizontal: AppSizes.size16),
         decoration: BoxDecoration(
-          // Thêm decoration
           color: backgroundColor,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
           children: [
             Icon(icon, color: Colors.white, size: 22),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppSizes.size12),
             Expanded(
               child: Text(
                 title,
-                style: const TextStyle(color: Colors.white, fontSize: 16),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: AppSizes.size16,
+                ),
               ),
             ),
             const Icon(Icons.chevron_right, color: Colors.white70),
@@ -243,13 +252,19 @@ class _UserScreenState extends State<UserScreen> {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSizes.size16,
+              vertical: AppSizes.size14,
+            ),
             child: Row(
               children: [
                 Expanded(
                   child: Text(
                     title,
-                    style: const TextStyle(color: Colors.white, fontSize: 16),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: AppSizes.size16,
+                    ),
                   ),
                 ),
                 const Icon(Icons.chevron_right, color: Colors.white70),
@@ -259,7 +274,7 @@ class _UserScreenState extends State<UserScreen> {
           if (showDivider)
             Divider(
               color: Colors.grey.shade700,
-              height: 1,
+              height: AppSizes.size1,
               indent: 16,
               endIndent: 16,
             ),
@@ -276,25 +291,31 @@ class _UserScreenState extends State<UserScreen> {
         return GestureDetector(
           onTap: onTap,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSizes.size16,
+              vertical: AppSizes.size14,
+            ),
             child: Row(
               children: [
                 Expanded(
                   child: Text(
                     context.appLocaleLanguage.changeLanguage,
-                    style: const TextStyle(color: Colors.white, fontSize: 16),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: AppSizes.size16,
+                    ),
                   ),
                 ),
                 AnimatedToggleSwitch<bool>.size(
                   current: isVietnamese,
-                  values: const [false, true], // false = EN, true = VI
+                  values: const [false, true],
                   iconOpacity: 0.3,
                   indicatorSize: const Size(30, 30),
                   borderWidth: 1.0,
                   customIconBuilder: (context, local, global) => Text(
                     local.value ? "VI" : "EN",
                     style: TextStyle(
-                      fontSize: 10,
+                      fontSize: AppSizes.size10,
                       fontWeight: FontWeight.bold,
                       color: Color.lerp(
                         Colors.black,
@@ -305,8 +326,8 @@ class _UserScreenState extends State<UserScreen> {
                   ),
                   style: ToggleStyle(
                     backgroundColor: Colors.white,
-                    borderColor: const Color(0xFF596DC3),
-                    indicatorColor: const Color(0xFF596DC3),
+                    borderColor: AppColors.homePrimaryBlue,
+                    indicatorColor: AppColors.homePrimaryBlue,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   onChanged: (value) {
@@ -317,7 +338,7 @@ class _UserScreenState extends State<UserScreen> {
                     }
                   },
                   iconAnimationType: AnimationType.onHover,
-                  height: 30,
+                  height: AppSizes.size30,
                   spacing: 1,
                 ),
               ],
@@ -327,5 +348,4 @@ class _UserScreenState extends State<UserScreen> {
       },
     );
   }
-
 }

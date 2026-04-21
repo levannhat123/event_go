@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:event_go/core/constants/app_sizes.dart';
 
 class LocationCard extends StatelessWidget {
   final String imageUrl;
@@ -51,12 +52,12 @@ class LocationCard extends StatelessWidget {
             Align(
               alignment: Alignment.bottomLeft,
               child: Padding(
-                padding: const EdgeInsets.all(12.0),
+                padding: const EdgeInsets.all(AppSizes.size12),
                 child: Text(
                   locationName,
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 18,
+                    fontSize: AppSizes.size18,
                     fontWeight: FontWeight.w700,
                   ),
                 ),

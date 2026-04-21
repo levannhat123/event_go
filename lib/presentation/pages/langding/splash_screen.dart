@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'dart:async'; // Đảm bảo import thư viện này
+import 'package:event_go/core/constants/app_colors.dart';
+import 'package:event_go/core/constants/app_sizes.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -47,11 +49,11 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF011836),
+      backgroundColor: AppColors.colorFF011836,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [Image.asset(AppImage.logo, width: 200, height: 200)],
+          children: [Image.asset(AppImage.logo, width: AppSizes.size200, height: AppSizes.size200)],
         ),
       ),
     );

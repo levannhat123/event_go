@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Thêm thư viện intl để format tiền tệ
+import 'package:event_go/core/constants/app_sizes.dart';
 
 class OrderHistoryCard extends StatelessWidget {
   final String title;
@@ -29,12 +30,12 @@ class OrderHistoryCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(AppSizes.size16),
         width: double.infinity,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8.0),
-          border: Border(bottom: BorderSide(color: Colors.grey.shade200, width: 1.0)),
+          border: Border(bottom: BorderSide(color: Colors.grey.shade200, width: AppSizes.size1)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,14 +43,14 @@ class OrderHistoryCard extends StatelessWidget {
             Text(
               title,
               style: const TextStyle(
-                fontSize: 16,
+                fontSize: AppSizes.size16,
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSizes.size12),
             _buildStatusTag(statusText, statusColor),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSizes.size12),
             _buildDetailRow('Mã đơn hàng', orderCode),
             _buildDetailRow('Đặt hàng', dateFormatter.format(orderDate)),
             _buildDetailRow('Thành tiền', currencyFormatter.format(amount)),
@@ -61,22 +62,22 @@ class OrderHistoryCard extends StatelessWidget {
 
   Widget _buildStatusTag(String text, Color color) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.size10, vertical: AppSizes.size4),
       decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(20)),
       child: Text(
         text,
-        style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+        style: const TextStyle(color: Colors.white, fontSize: AppSizes.size12, fontWeight: FontWeight.bold),
       ),
     );
   }
 
   Widget _buildDetailRow(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 6.0),
+      padding: const EdgeInsets.only(bottom: AppSizes.size6),
       child: RichText(
         text: TextSpan(
           style: const TextStyle(
-            fontSize: 14,
+            fontSize: AppSizes.size14,
             color: Colors.black87,
             fontFamily: 'Roboto', // Đảm bảo font chữ đồng nhất
           ),

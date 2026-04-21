@@ -105,7 +105,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         decoration: BoxDecoration(
                           color: viewModel.isDateFilterActive
                               ? AppColors.green
-                              : Color(0xFF515158),
+                              : AppColors.colorFF515158,
                           borderRadius: BorderRadius.circular(AppSizes.size16),
                         ),
                         child: Padding(
@@ -161,7 +161,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         decoration: BoxDecoration(
                           color: viewModel.isMainFilterActive
                               ? AppColors.green
-                              : Color(0xFF515158),
+                              : AppColors.colorFF515158,
                           borderRadius: BorderRadius.circular(AppSizes.size16),
                         ),
                         child: Padding(
@@ -451,8 +451,8 @@ class _SearchScreenState extends State<SearchScreen> {
                 date: date,
                 status: event.status,
                 onTap: () {
-                  viewModel.event = event;
-                  context.push(RouterPath.event_detail, extra: event);
+                  // viewModel.event = event;
+                  // context.push(RouterPath.event_detail, extra: event);
                 },
               );
             },
@@ -496,8 +496,8 @@ class _SearchScreenState extends State<SearchScreen> {
           date: date,
           status: event.status,
           onTap: () {
-            viewModel.event = event;
-            context.push(RouterPath.event_detail, extra: event);
+            // viewModel.event = event;
+            // context.push(RouterPath.event_detail, extra: event);
           },
         );
       },
@@ -509,7 +509,7 @@ class _SearchScreenState extends State<SearchScreen> {
       label: Text(label),
       onDeleted: onDeleted,
       backgroundColor: AppColors.green,
-      labelStyle: const TextStyle(color: AppColors.white, fontSize: 14),
+      labelStyle: const TextStyle(color: AppColors.white, fontSize: AppSizes.size14),
       deleteIcon: const Icon(
         Icons.close,
         color: AppColors.white,

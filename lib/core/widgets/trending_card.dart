@@ -1,5 +1,6 @@
 import 'package:event_go/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:event_go/core/constants/app_sizes.dart';
 
 class RankedEventCard extends StatelessWidget {
   final int rank;
@@ -20,16 +21,16 @@ class RankedEventCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(right: 16.0),
+      padding: const EdgeInsets.only(right: AppSizes.size16),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(
             '$rank',
             style: TextStyle(
-              fontSize: 80,
+              fontSize: AppSizes.size80,
               fontWeight: FontWeight.bold,
-              height: 0.8,
+              height: AppSizes.size0_8_96,
               foreground: Paint()
                 ..style = PaintingStyle.stroke
                 ..strokeWidth = 3

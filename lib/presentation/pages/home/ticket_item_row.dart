@@ -52,46 +52,46 @@ class TicketItemRow extends StatelessWidget {
         ),
         isSoldOut
             ? Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Text(
-              FormatPrice.format(double.tryParse(price) ?? 0),
-              style: TextStyle(
-                color: Colors.grey[600],
-                fontWeight: FontWeight.w600,
-                fontSize: AppSizes.size12,
-                decoration: TextDecoration.lineThrough,
-              ),
-            ),
-            SizedBox(height: AppSizes.size4),
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 10,
-                vertical: 2,
-              ),
-              decoration: BoxDecoration(
-                color: const Color(0xFFFFCDD2),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(
-                'Hết vé',
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    FormatPrice.format(double.tryParse(price) ?? 0),
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                      fontWeight: FontWeight.w600,
+                      fontSize: AppSizes.size12,
+                      decoration: TextDecoration.lineThrough,
+                    ),
+                  ),
+                  SizedBox(height: AppSizes.size4),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSizes.size10,
+                      vertical: AppSizes.size2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.colorFFFFCDD2,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      'Hết vé',
+                      style: TextStyle(
+                        color: AppColors.colorFFD32F2F,
+                        fontWeight: FontWeight.w600,
+                        fontSize: AppSizes.size12,
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            : Text(
+                FormatPrice.format(double.tryParse(price) ?? 0),
                 style: TextStyle(
-                  color: const Color(0xFFD32F2F),
-                  fontWeight: FontWeight.w600,
+                  color: AppColors.green,
+                  fontWeight: FontWeight.bold,
                   fontSize: AppSizes.size12,
                 ),
               ),
-            ),
-          ],
-        )
-            : Text(
-          FormatPrice.format(double.tryParse(price) ?? 0),
-          style: TextStyle(
-            color: AppColors.green,
-            fontWeight: FontWeight.bold,
-            fontSize: AppSizes.size12,
-          ),
-        ),
       ],
     );
   }

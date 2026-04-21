@@ -43,7 +43,7 @@ class AppRouter {
 
           GoRoute(
             path: '/',
-            name: 'payment-callback',
+            name: RouterName.payment_callback,
             builder: (BuildContext context, GoRouterState state) {
               final code = state.uri.queryParameters['code'];
               final appTransID = state.uri.queryParameters['appTransID'];
@@ -83,7 +83,7 @@ class AppRouter {
             },
           ),
           GoRoute(
-            path: '/payment-result',
+            path: RouterPath.payment_result,
             builder: (context, state) {
               final map = state.extra as Map<String, dynamic>;
               return PaymentResultVnPlayScreen(

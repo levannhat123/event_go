@@ -3,11 +3,9 @@ import 'package:event_go/core/widgets/app_elevated_button.dart';
 import 'package:event_go/presentation/view_models/home_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_spacing.dart';
-import '../../../../core/constants/app_strings.dart';
 import '../../../../core/constants/app_storage_key.dart';
 
 class CalendarBottomSheet extends StatelessWidget {
@@ -256,7 +254,7 @@ class CalendarBottomSheet extends StatelessWidget {
                               viewModel.rangeStart != null ||
                               viewModel.selectedQuickButtonIndex == 0)
                           ? AppColors.primary
-                          : Color(0xFFDDDDE3),
+                          : AppColors.colorFFDDDDE3,
                       fontSize: AppSizes.size15,
                       borderColor: AppColors.transparent,
                       splashColor: AppColors.transparent,
@@ -385,7 +383,7 @@ class CalendarBottomSheet extends StatelessWidget {
     Border? border;
     BorderRadius borderRadius = BorderRadius.circular(AppSizes.size100);
     if (isToday && !isSelected) {
-      border = Border.all(color: AppColors.primary, width: 1.5);
+      border = Border.all(color: AppColors.primary, width: AppSizes.size1_5);
     }
     if (viewModel.selectedQuickButtonIndex == 3 ||
         viewModel.selectedQuickButtonIndex == 4) {
