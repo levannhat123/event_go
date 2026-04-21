@@ -3,6 +3,7 @@ import 'package:event_go/core/base/base_view.dart';
 import 'package:event_go/core/constants/app_colors.dart';
 import 'package:event_go/core/constants/app_image.dart';
 import 'package:event_go/core/constants/app_strings.dart';
+import 'package:event_go/core/constants/app_storage_key.dart';
 import 'package:event_go/core/utils/extension.dart';
 import 'package:event_go/core/widgets/app_elevated_button.dart';
 import 'package:event_go/core/widgets/event_card.dart';
@@ -29,14 +30,14 @@ class _TicketOrderScreenState extends State<TicketOrderScreen>
   bool get wantKeepAlive => true;
   Map<String, dynamic> _getStatusDisplay(String? status) {
     switch (status) {
-      case 'completed':
-        return {'text': context.appLocaleLanguage.success, 'color': Colors.green};
-      case 'cancelled':
-        return {'text': context.appLocaleLanguage.cancelled, 'color': Colors.red};
-      case 'failed':
-        return {'text': context.appLocaleLanguage.failed, 'color': Colors.orange};
+      case AppStorageKey.completed:
+        return {AppStorageKey.text: context.appLocaleLanguage.success, AppStorageKey.color: Colors.green};
+      case AppStorageKey.cancelled:
+        return {AppStorageKey.text: context.appLocaleLanguage.cancelled, AppStorageKey.color: Colors.red};
+      case AppStorageKey.failed:
+        return {AppStorageKey.text: context.appLocaleLanguage.failed, AppStorageKey.color: Colors.orange};
       default:
-        return {'text': context.appLocaleLanguage.unknown, 'color': Colors.grey};
+        return {AppStorageKey.text: context.appLocaleLanguage.unknown, AppStorageKey.color: Colors.grey};
     }
   }
 
@@ -91,9 +92,9 @@ class _TicketOrderScreenState extends State<TicketOrderScreen>
                       return true;
                     }
                     final data = doc.data();
-                    final status = data['paymentStatus'] as String?;
-                    if (widget.statusFilter == 'failed') {
-                      return status == 'failed';
+                    final status = data[AppStorageKey.paymentStatus] as String?;
+                    if (widget.statusFilter == AppStorageKey.failed) {
+                      return status == AppStorageKey.failed;
                     }
                     return status == widget.statusFilter;
                   }).toList();
@@ -120,23 +121,23 @@ class _TicketOrderScreenState extends State<TicketOrderScreen>
                           final data = orderDoc.data();
                           final String orderId = orderDoc.id;
                           final statusInfo = _getStatusDisplay(
-                            data['paymentStatus'] as String?,
+                            data[AppStorageKey.paymentStatus] as String?,
                           );
                           final orderDate =
-                              (data['createdAt'] as Timestamp?)?.toDate() ??
+                              (data[AppStorageKey.createdAt] as Timestamp?)?.toDate() ??
                               DateTime.now();
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 10),
                             child: OrderHistoryCard(
                               title:
-                                  data['eventName'] as String? ??
+                                  data[AppStorageKey.eventName] as String? ??
                                   context.appLocaleLanguage.eventName,
-                              statusText: statusInfo['text'],
-                              statusColor: statusInfo['color'],
+                              statusText: statusInfo[AppStorageKey.text],
+                              statusColor: statusInfo[AppStorageKey.color],
                               orderCode: orderId,
                               orderDate: orderDate,
                               amount:
-                                  (data['totalAmount'] as num?)?.toDouble() ??
+                                  (data[AppStorageKey.totalAmount] as num?)?.toDouble() ??
                                   0.0,
                               onTap: () {},
                             ),

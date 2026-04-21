@@ -84,9 +84,9 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   void _verifyOtp(AuthViewModel viewModel) async {
     if (_otpCode.length != 6) {
       ScaffoldMessenger.of(context).showSnackBar(
-         SnackBar(
+        SnackBar(
           content: Text(context.appLocaleLanguage.enterFullOtp),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.red,
         ),
       );
       return;
@@ -105,10 +105,12 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       await showCustomDialog(
         context: context,
         title: context.appLocaleLanguage.verificationFailedTitle,
-        message: viewModel.errorMessage ?? context.appLocaleLanguage.invalidOtpMessage,
+        message:
+            viewModel.errorMessage ??
+            context.appLocaleLanguage.invalidOtpMessage,
         buttonText: context.appLocaleLanguage.tryAgainButton,
         icon: Icons.error,
-        iconColor: Colors.red,
+        iconColor: AppColors.red,
         onPressed: () {
           for (var controller in _controllers) {
             controller.clear();
@@ -129,11 +131,10 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
           resizeToAvoidBottomInset: false,
           body: Stack(
             children: [
-              // Header với logo
               Positioned.fill(
                 child: Container(
                   decoration: const BoxDecoration(
-                    color: Color(0xFF4257b4),
+                    color: AppColors.authPrimaryBlue,
                     borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(AppSizes.size40),
                       bottomRight: Radius.circular(AppSizes.size40),
@@ -148,10 +149,10 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                           radius: AppSizes.size40,
                         ),
                         const SizedBox(height: AppSpacing.space10),
-                         Text(
+                        Text(
                           context.appLocaleLanguage.otpVerificationTitle,
                           style: TextStyle(
-                            color: Color(0xFFf49415),
+                            color: AppColors.authOrange,
                             fontSize: AppSizes.size24,
                             fontWeight: FontWeight.bold,
                           ),
@@ -160,7 +161,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                         Text(
                           context.appLocaleLanguage.otpSentTo + widget.email,
                           style: const TextStyle(
-                            color: Color(0xFFf49415),
+                            color: AppColors.authOrange,
                             fontSize: AppSizes.size12,
                           ),
                           textAlign: TextAlign.center,
@@ -178,7 +179,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                   padding: const EdgeInsets.all(AppSpacing.space20),
                   height: MediaQuery.of(context).size.height * 0.70,
                   decoration: const BoxDecoration(
-                    color: Colors.white,
+                    color: AppColors.white,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(AppSizes.size30),
                       topRight: Radius.circular(AppSizes.size30),
@@ -190,12 +191,12 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         const SizedBox(height: AppSpacing.space30),
-                         Text(
+                        Text(
                           context.appLocaleLanguage.enterVerificationCode,
                           style: TextStyle(
                             fontSize: AppSizes.size18,
                             fontWeight: FontWeight.w600,
-                            color: Color(0xFF333333),
+                            color: AppColors.authDarkText,
                           ),
                         ),
                         const SizedBox(height: AppSpacing.space30),
@@ -214,18 +215,18 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                 style: const TextStyle(
                                   fontSize: AppSizes.size20,
                                   fontWeight: FontWeight.bold,
-                                  color: Color(0xFF4257b4),
+                                  color: AppColors.authPrimaryBlue,
                                 ),
                                 decoration: InputDecoration(
                                   counterText: '',
                                   filled: true,
-                                  fillColor: Colors.grey.shade100,
+                                  fillColor: AppColors.grey100,
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(
                                       AppSizes.size10,
                                     ),
                                     borderSide: BorderSide(
-                                      color: Colors.grey.shade300,
+                                      color: AppColors.grey300,
                                     ),
                                   ),
                                   focusedBorder: OutlineInputBorder(
@@ -233,7 +234,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                       AppSizes.size10,
                                     ),
                                     borderSide: const BorderSide(
-                                      color: Color(0xFF4257b4),
+                                      color: AppColors.authPrimaryBlue,
                                       width: AppSizes.size2,
                                     ),
                                   ),
@@ -242,7 +243,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                       AppSizes.size10,
                                     ),
                                     borderSide: BorderSide(
-                                      color: Colors.grey.shade300,
+                                      color: AppColors.grey300,
                                     ),
                                   ),
                                 ),
@@ -262,8 +263,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                           text: viewModel.isLoading
                               ? context.appLocaleLanguage.verifying
                               : context.appLocaleLanguage.verifyButton,
-                          borderColor: const Color(0xFFf49415),
-                          color: const Color(0xFFf49415),
+                          borderColor: AppColors.authOrange,
+                          color: AppColors.authOrange,
                           splashColor: AppColors.transparent,
                           highlightColor: AppColors.white,
                           onPressed: viewModel.isLoading
@@ -276,18 +277,19 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                         if (viewModel.canResend)
                           TextButton(
                             onPressed: () async {
-                              // Gọi hàm resend từ VM
                               final success = await viewModel.resetPassword(
                                 widget.email,
                               );
                               if (mounted) {
                                 if (success) {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                     SnackBar(
+                                    SnackBar(
                                       content: Text(
-                                        context.appLocaleLanguage.otpResentSuccess,
+                                        context
+                                            .appLocaleLanguage
+                                            .otpResentSuccess,
                                       ),
-                                      backgroundColor: Colors.green,
+                                      backgroundColor: AppColors.green,
                                     ),
                                   );
                                 } else {
@@ -295,18 +297,20 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                     SnackBar(
                                       content: Text(
                                         viewModel.errorMessage ??
-                                            context.appLocaleLanguage.resendFailed,
+                                            context
+                                                .appLocaleLanguage
+                                                .resendFailed,
                                       ),
-                                      backgroundColor: Colors.red,
+                                      backgroundColor: AppColors.red,
                                     ),
                                   );
                                 }
                               }
                             },
-                            child:  Text(
+                            child: Text(
                               context.appLocaleLanguage.resendOtpButton,
                               style: TextStyle(
-                                color: Color(0xFF4257b4),
+                                color: AppColors.authPrimaryBlue,
                                 fontSize: AppSizes.size14,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -318,7 +322,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                 viewModel.countdown.toString() +
                                 context.appLocaleLanguage.seconds,
                             style: TextStyle(
-                              color: Colors.grey.shade600,
+                              color: AppColors.grey600,
                               fontSize: AppSizes.size14,
                             ),
                           ),
@@ -327,10 +331,10 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
 
                         TextButton(
                           onPressed: () => context.go(RouterPath.login),
-                          child:  Text(
+                          child: Text(
                             context.appLocaleLanguage.backToLoginButton,
                             style: TextStyle(
-                              color: Color(0xFF4257b4),
+                              color: AppColors.authPrimaryBlue,
                               fontSize: AppSizes.size14,
                               fontWeight: FontWeight.w500,
                             ),

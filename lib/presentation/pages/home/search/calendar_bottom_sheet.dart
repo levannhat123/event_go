@@ -8,6 +8,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/constants/app_strings.dart';
+import '../../../../core/constants/app_storage_key.dart';
 
 class CalendarBottomSheet extends StatelessWidget {
   const CalendarBottomSheet({super.key});
@@ -110,7 +111,7 @@ class CalendarBottomSheet extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: AppSizes.size16,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      color: AppColors.black,
                     ),
                   ),
                   IconButton(
@@ -134,7 +135,7 @@ class CalendarBottomSheet extends StatelessWidget {
                       weekdays[index],
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                        color: AppColors.black,
                       ),
                     ),
                   );
@@ -197,7 +198,7 @@ class CalendarBottomSheet extends StatelessWidget {
                       isCurrentMonth,
                     ), // Gọi VM
                     child: Container(
-                      color: Colors.transparent,
+                      color: AppColors.transparent,
                       child: _buildDayCell(cellDate, isCurrentMonth, viewModel),
                     ),
                   );
@@ -232,10 +233,10 @@ class CalendarBottomSheet extends StatelessWidget {
                               viewModel.selectedQuickButtonIndex == 0)
                           ? () {
                               Navigator.pop(context, {
-                                'selectedDay': viewModel.selectedDay,
-                                'rangeStart': viewModel.rangeStart,
-                                'rangeEnd': viewModel.rangeEnd,
-                                'isAllDays':
+                                AppStorageKey.selectedDay: viewModel.selectedDay,
+                                AppStorageKey.rangeStart: viewModel.rangeStart,
+                                AppStorageKey.rangeEnd: viewModel.rangeEnd,
+                                AppStorageKey.isAllDays:
                                     viewModel.selectedQuickButtonIndex == 0,
                               });
                             }

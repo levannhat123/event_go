@@ -1,4 +1,5 @@
 import 'package:event_go/core/constants/app_strings.dart';
+import 'package:event_go/core/constants/app_storage_key.dart';
 import 'package:event_go/core/utils/extension.dart';
 import 'package:event_go/core/widgets/custom_tab_bar.dart';
 import 'package:event_go/presentation/pages/ticket/ticket_order_screen.dart';
@@ -56,9 +57,9 @@ class _TicketScreenState extends State<TicketScreen>
               controller: _tabController,
               children: [
                 TicketOrderScreen(statusFilter: null),
-                TicketOrderScreen(statusFilter: 'completed'),
-                TicketOrderScreen(statusFilter: 'failed'),
-                TicketOrderScreen(statusFilter: 'cancelled'),
+                TicketOrderScreen(statusFilter: AppStorageKey.completed),
+                TicketOrderScreen(statusFilter: AppStorageKey.failed),
+                TicketOrderScreen(statusFilter: AppStorageKey.cancelled),
               ],
             ),
           ),

@@ -10,16 +10,13 @@ import 'package:event_go/core/utils/validator.dart';
 import 'package:event_go/core/widgets/app_elevated_button.dart';
 import 'package:event_go/core/widgets/auth_bottom_sheet.dart';
 import 'package:event_go/core/widgets/text_field.dart';
-import 'package:event_go/core/widgets/text_field_password.dart';
 import 'package:event_go/core/widgets/verification_2FA.dart';
 import 'package:event_go/injection/injection.dart';
 import 'package:event_go/presentation/view_models/auth_view_model.dart';
 import 'package:event_go/routers/router_name.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -27,7 +24,6 @@ class ForgotPasswordScreen extends StatefulWidget {
   @override
   State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
 }
-
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final TextEditingController emailController = TextEditingController();
@@ -47,7 +43,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               Positioned.fill(
                 child: Container(
                   decoration: const BoxDecoration(
-                    color: Color(0xFF4257b4),
+                    color: AppColors.authPrimaryBlue,
                     borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(AppSizes.size40),
                       bottomRight: Radius.circular(AppSizes.size40),
@@ -57,20 +53,26 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     padding: const EdgeInsets.only(top: AppSpacing.space60),
                     child: Column(
                       children: [
-                        CircleAvatar(backgroundImage: AssetImage(AppImage.logo), radius: AppSizes.size40),
+                        CircleAvatar(
+                          backgroundImage: AssetImage(AppImage.logo),
+                          radius: AppSizes.size40,
+                        ),
                         const SizedBox(height: AppSpacing.space10),
-                         Text(
+                        Text(
                           context.appLocaleLanguage.forgotPasswordTitle,
                           style: TextStyle(
-                            color: Color(0xFFf49415),
+                            color: AppColors.authOrange,
                             fontSize: AppSizes.size12,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         const SizedBox(height: AppSpacing.space10),
-                         Text(
+                        Text(
                           context.appLocaleLanguage.forgotPasswordDescription,
-                          style: TextStyle(color: Color(0xFFf49415), fontSize: AppSizes.size12),
+                          style: TextStyle(
+                            color: AppColors.authOrange,
+                            fontSize: AppSizes.size12,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -86,7 +88,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   padding: const EdgeInsets.all(AppSpacing.space20),
                   height: MediaQuery.of(context).size.height * AppSizes.size0_7,
                   decoration: const BoxDecoration(
-                    color: Colors.white,
+                    color: AppColors.white,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(AppSizes.size30),
                       topRight: Radius.circular(AppSizes.size30),
@@ -99,8 +101,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         AppTextField(
                           controller: emailController,
                           hintText: context.appLocaleLanguage.emailHint,
-                          borderColor: Colors.grey.shade300,
-                          fillColor: Colors.grey.shade100,
+                          borderColor: AppColors.grey300,
+                          fillColor: AppColors.grey100,
                           validator: Validator.email,
                           suffixIcon: IconButton(
                             onPressed: () {
@@ -110,19 +112,19 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               AppSvg.close,
                               width: AppSizes.size24,
                               height: AppSizes.size24,
-                              color: Colors.grey,
+                              color: AppColors.grey,
                             ),
                           ),
-                          focusedBorderColor: const Color(0xFF4257b4),
-                          enabledBorderColor: Colors.grey.shade300,
+                          focusedBorderColor: AppColors.authPrimaryBlue,
+                          enabledBorderColor: AppColors.grey300,
                           prefixIcon: const Icon(Icons.email),
                           shadowColor: AppColors.transparent,
                         ),
                         const SizedBox(height: AppSpacing.space20),
                         AppElevatedButton(
                           text: context.appLocaleLanguage.nextButton,
-                          borderColor: const Color(0xFFf49415),
-                          color: const Color(0xFFf49415),
+                          borderColor: AppColors.authOrange,
+                          color: AppColors.authOrange,
                           splashColor: AppColors.transparent,
                           highlightColor: AppColors.white,
                           onPressed: viewModel.isLoading
@@ -135,13 +137,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                       child: Verification2FAWidget(
                                         autoFocus: true,
                                         onSubmit: (otpCode) async {
-                                          final verified = await viewModel.sendEmailVerification(
-                                            email,
-                                            otpCode,
-                                          );
+                                          final verified = await viewModel
+                                              .sendEmailVerification(
+                                                email,
+                                                otpCode,
+                                              );
                                           if (verified) {
                                             if (context.mounted) {
-                                              context.push(RouterPath.resetPassword);
+                                              context.push(
+                                                RouterPath.resetPassword,
+                                              );
                                             }
                                             return true;
                                           } else {
@@ -157,15 +162,21 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                       ),
                                     );
                                     Future.microtask(() async {
-                                      final success = await viewModel.resetPassword(email);
+                                      final success = await viewModel
+                                          .resetPassword(email);
                                       if (!success) {
                                         if (mounted) {
-                                          ScaffoldMessenger.of(context).showSnackBar(
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
                                             SnackBar(
                                               content: Text(
-                                                viewModel.errorMessage ?? context.appLocaleLanguage.sendEmailError,
+                                                viewModel.errorMessage ??
+                                                    context
+                                                        .appLocaleLanguage
+                                                        .sendEmailError,
                                               ),
-                                              backgroundColor: Colors.red,
+                                              backgroundColor: AppColors.red,
                                             ),
                                           );
                                         }

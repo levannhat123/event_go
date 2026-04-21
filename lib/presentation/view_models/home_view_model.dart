@@ -706,48 +706,8 @@ class HomeViewModel extends BaseViewModel {
       return null;
     }
   }
-
-  Future<String> processCheckIn(String orderId) async {
-    final ticketRef = _db.collection('tickets').doc(orderId);
-
-    try {
-      final String message = await _db.runTransaction((transaction) async {
-        final ticketDoc = await transaction.get(ticketRef);
-        if (!ticketDoc.exists) {
-          return "LỖI: Vé không hợp lệ hoặc không tồn tại.";
-        }
-        final data = ticketDoc.data();
-        if (data == null) {
-          return "LỖI: Không thể đọc dữ liệu vé.";
-        }
-        if (data['paymentStatus'] != 'completed') {
-          return "LỖI: Vé này chưa hoàn tất thanh toán.";
-        }
-        final checkinStatus = data['checkinStatus'];
-        if (checkinStatus == 'completed') {
-          final timestamp = data['checkinTimestamp'] as Timestamp?;
-          final timeStr = timestamp != null
-              ? DateFormat('HH:mm dd/MM/yyyy').format(timestamp.toDate())
-              : 'không rõ';
-          return "LỖI: Vé này ĐÃ ĐƯỢC CHECK-IN lúc $timeStr.";
-        }
-        transaction.update(ticketRef, {
-          'checkinStatus': 'completed',
-          'checkinTimestamp': FieldValue.serverTimestamp(),
-        });
-        final email = data['userEmail'] ?? 'Khách';
-        return "THÀNH CÔNG: Check-in cho [$email] thành công!";
-      });
-      return message;
-    } catch (e) {
-      print("Lỗi transaction check-in: $e");
-      return "LỖI HỆ THỐNG: Đã xảy ra lỗi. Vui lòng thử lại.";
-    }
-  }
-
   Stream<QuerySnapshot<Map<String, dynamic>>>? get ordersStream {
     if (_userId == null) {
-      print("Không thể lấy order stream: UserID is null.");
       return null;
     }
     try {
@@ -758,7 +718,6 @@ class HomeViewModel extends BaseViewModel {
           .orderBy('createdAt', descending: true)
           .snapshots();
     } catch (e) {
-      print("Lỗi khi lấy orders stream: $e");
       return null;
     }
   }

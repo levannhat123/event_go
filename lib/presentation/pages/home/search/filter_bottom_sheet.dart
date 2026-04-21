@@ -66,7 +66,7 @@ class FilterBottomSheet extends StatelessWidget {
           style: TextStyle(
             fontSize: AppSizes.size18,
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: AppColors.black,
           ),
         ),
         IconButton(
@@ -85,7 +85,7 @@ class FilterBottomSheet extends StatelessWidget {
         style: TextStyle(
           fontSize: AppSizes.size16,
           fontWeight: FontWeight.bold,
-          color: Colors.black,
+          color: AppColors.black,
         ),
       ),
     );
@@ -125,7 +125,7 @@ class FilterBottomSheet extends StatelessWidget {
                   : null,
             ),
             const SizedBox(width: AppSpacing.space12),
-            Text(title, style: TextStyle(fontSize: 16, color: Colors.black)),
+            Text(title, style: TextStyle(fontSize: 16, color: AppColors.black)),
           ],
         ),
       ),
@@ -145,7 +145,7 @@ class FilterBottomSheet extends StatelessWidget {
           children: [
             Text(
               context.appLocaleLanguage.free,
-              style: TextStyle(fontSize: AppSizes.size16, color: Colors.black),
+              style: TextStyle(fontSize: AppSizes.size16, color: AppColors.black),
             ),
             const SizedBox(width: AppSpacing.space8),
             Switch(
@@ -185,7 +185,7 @@ class FilterBottomSheet extends StatelessWidget {
           selectedColor: AppColors.primary.withOpacity(0.4),
           checkmarkColor: AppColors.primary,
           labelStyle: TextStyle(
-            color: isSelected ? AppColors.primary : Colors.black,
+            color: isSelected ? AppColors.primary : AppColors.black,
           ),
           backgroundColor: AppColors.white,
           shape: StadiumBorder(

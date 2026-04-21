@@ -40,8 +40,8 @@ class TicketExpansionItem extends StatelessWidget {
             controlAffinity: ListTileControlAffinity.leading,
             shape: const Border(),
             collapsedShape: const Border(),
-            iconColor: Colors.white,
-            collapsedIconColor: Colors.white,
+            iconColor: AppColors.white,
+            collapsedIconColor: AppColors.white,
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -86,9 +86,9 @@ class TicketExpansionItem extends StatelessWidget {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: AppSizes.size12,
-                        color: Colors.white,
+                        color: AppColors.white,
                         decoration: isSoldOut ? TextDecoration.lineThrough : null,
-                        decorationColor: Colors.white,
+                        decorationColor: AppColors.white,
                       ),
                     ),
                   ],
@@ -143,7 +143,7 @@ class TicketExpansionItem extends StatelessWidget {
           IconButton(
             icon: Icon(
               Icons.remove,
-              color: quantity > 0 ? Colors.black : Colors.grey,
+              color: quantity > 0 ? AppColors.black : AppColors.grey,
             ),
             onPressed: quantity > 0 ? onDecrement : null,
             splashRadius: AppSizes.size20,
@@ -157,14 +157,14 @@ class TicketExpansionItem extends StatelessWidget {
               style: const TextStyle(
                 fontSize: AppSizes.size16,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
+                color: AppColors.black,
               ),
             ),
           ),
           IconButton(
             icon: Icon(
               Icons.add,
-              color: canIncrement ? AppColors.btnError : Colors.grey,
+              color: canIncrement ? AppColors.btnError : AppColors.grey,
             ),
             onPressed: canIncrement ? onIncrement : null,
             splashRadius: AppSizes.size20,

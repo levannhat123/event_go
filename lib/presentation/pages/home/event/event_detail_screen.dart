@@ -6,6 +6,7 @@ import 'package:event_go/core/constants/app_image.dart';
 import 'package:event_go/core/constants/app_sizes.dart';
 import 'package:event_go/core/constants/app_spacing.dart';
 import 'package:event_go/core/constants/app_strings.dart';
+import 'package:event_go/core/constants/app_storage_key.dart';
 import 'package:event_go/core/utils/extension.dart';
 import 'package:event_go/core/utils/format_price.dart';
 import 'package:event_go/core/widgets/app_elevated_button.dart';
@@ -46,11 +47,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
       builder: (context, viewModel, child) {
         final String fullAddress = widget.event.address ?? '';
         final int lastCommaIndex = fullAddress.lastIndexOf(',');
-        final bool isEventCompleted = widget.event.status == 'COMPLETED';
-        debugPrint(
-          'Event: ${widget.event.title} | status=${widget.event.status} | start=${widget.event.startTime} | end=${widget.event.endTime}',
-        );
-
+        final bool isEventCompleted = widget.event.status == AppStorageKey.completed.toUpperCase();
         String line1 = '';
         String line2 = '';
         if (lastCommaIndex != -1) {
@@ -69,7 +66,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            backgroundColor: const Color(0xFF596DC3),
+            backgroundColor: AppColors.homePrimaryBlue,
             centerTitle: true,
             actions: [IconButton(onPressed: () {}, icon: Icon(Icons.share))],
           ),
@@ -78,14 +75,14 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
               horizontal: AppSpacing.space20,
               vertical: AppSpacing.space12,
             ),
-            decoration: const BoxDecoration(color: Colors.black),
+            decoration: const BoxDecoration(color: AppColors.black),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 RichText(
                   text: TextSpan(
                     style: TextStyle(
-                      color: Colors.white,
+                      color: AppColors.white,
                       fontSize: AppSizes.size16,
                     ),
                     children: [
@@ -119,7 +116,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                               remainingSeconds.toString(),
                             ),
                           ),
-                          backgroundColor: Colors.red,
+                          backgroundColor: AppColors.red,
                         ),
                       );
                       return;
@@ -146,7 +143,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                     AppSpacing.space16,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    color: AppColors.white,
                                     borderRadius: BorderRadius.circular(
                                       AppSizes.size12,
                                     ),
@@ -165,7 +162,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                                 .appLocaleLanguage
                                                 .captchaTitle,
                                             style: TextStyle(
-                                              color: Colors.black,
+                                              color: AppColors.black,
                                             ),
                                           ),
                                           InkWell(
@@ -175,7 +172,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                             child: Icon(
                                               Icons.close,
                                               size: AppSizes.size20,
-                                              color: Colors.black,
+                                              color: AppColors.black,
                                             ),
                                           ),
                                         ],
@@ -187,7 +184,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                         context
                                             .appLocaleLanguage
                                             .captchaDescription,
-                                        style: TextStyle(color: Colors.black),
+                                        style: TextStyle(color: AppColors.black),
                                       ),
                                       const SizedBox(
                                         height: AppSpacing.space10,
@@ -196,7 +193,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                         context
                                             .appLocaleLanguage
                                             .captchaInstruction,
-                                        style: TextStyle(color: Colors.black),
+                                        style: TextStyle(color: AppColors.black),
                                       ),
                                       const SizedBox(
                                         height: AppSpacing.space20,
@@ -232,7 +229,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                                       .appLocaleLanguage
                                                       .captchaLockoutMessage1Min,
                                                 ),
-                                                backgroundColor: Colors.red,
+                                                backgroundColor: AppColors.red,
                                               ),
                                             );
                                           } else {
@@ -259,7 +256,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                             child: Icon(
                                               Icons.refresh,
                                               size: AppSizes.size16,
-                                              color: Colors.grey,
+                                              color: AppColors.grey,
                                             ),
                                           ),
                                           SizedBox(width: AppSizes.size8),
@@ -268,7 +265,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                                 .appLocaleLanguage
                                                 .captchaReload,
                                             style: TextStyle(
-                                              color: Colors.black,
+                                              color: AppColors.black,
                                             ),
                                           ),
                                         ],
@@ -280,7 +277,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                           ),
                                           child: Text(
                                             vm.captchaErrorText!,
-                                            style: TextStyle(color: Colors.red),
+                                            style: TextStyle(color: AppColors.red),
                                           ),
                                         )
                                       else
@@ -330,7 +327,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                     children: [
                       Container(
                         decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.5),
+                          color: AppColors.black.withOpacity(0.5),
                         ),
                       ),
                       Padding(
@@ -378,10 +375,10 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                           style: TextStyle(
                             fontSize: AppSizes.size17,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                            color: AppColors.black,
                           ),
                         ),
-                        const Divider(color: Colors.grey),
+                        const Divider(color: AppColors.grey),
                         AnimatedCrossFade(
                           duration: const Duration(milliseconds: 300),
                           firstChild: Text(
@@ -391,7 +388,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                             style: const TextStyle(
                               fontSize: AppSizes.size15,
                               height: 1.4,
-                              color: Colors.black,
+                              color: AppColors.black,
                             ),
                           ),
                           secondChild: Text(
@@ -399,7 +396,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                             style: const TextStyle(
                               fontSize: AppSizes.size15,
                               height: 1.4,
-                              color: Colors.black,
+                              color: AppColors.black,
                             ),
                           ),
                           crossFadeState: viewModel.isExpanded
@@ -447,7 +444,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                           style: TextStyle(
                             fontSize: AppSizes.size16,
                             fontWeight: FontWeight.w600,
-                            color: Colors.white,
+                            color: AppColors.white,
                           ),
                         ),
                       ),
@@ -456,8 +453,8 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                         controlAffinity: ListTileControlAffinity.leading,
                         shape: const Border(),
                         collapsedShape: const Border(),
-                        iconColor: Colors.white,
-                        collapsedIconColor: Colors.white,
+                        iconColor: AppColors.white,
+                        collapsedIconColor: AppColors.white,
                         title: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -471,7 +468,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: AppSizes.size12,
-                                    color: Colors.white,
+                                    color: AppColors.white,
                                   ),
                                 ),
                               ],
@@ -492,7 +489,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                           remainingSeconds.toString(),
                                         ),
                                       ),
-                                      backgroundColor: Colors.red,
+                                      backgroundColor: AppColors.red,
                                     ),
                                   );
                                   return;
@@ -519,7 +516,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                                 AppSpacing.space16,
                                               ),
                                               decoration: BoxDecoration(
-                                                color: Colors.white,
+                                                color: AppColors.white,
                                                 borderRadius: BorderRadius.circular(
                                                   AppSizes.size12,
                                                 ),
@@ -538,7 +535,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                                             .appLocaleLanguage
                                                             .captchaTitle,
                                                         style: TextStyle(
-                                                          color: Colors.black,
+                                                          color: AppColors.black,
                                                         ),
                                                       ),
                                                       InkWell(
@@ -548,7 +545,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                                         child: Icon(
                                                           Icons.close,
                                                           size: AppSizes.size20,
-                                                          color: Colors.black,
+                                                          color: AppColors.black,
                                                         ),
                                                       ),
                                                     ],
@@ -560,7 +557,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                                     context
                                                         .appLocaleLanguage
                                                         .captchaDescription,
-                                                    style: TextStyle(color: Colors.black),
+                                                    style: TextStyle(color: AppColors.black),
                                                   ),
                                                   const SizedBox(
                                                     height: AppSpacing.space10,
@@ -569,7 +566,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                                     context
                                                         .appLocaleLanguage
                                                         .captchaInstruction,
-                                                    style: TextStyle(color: Colors.black),
+                                                    style: TextStyle(color: AppColors.black),
                                                   ),
                                                   const SizedBox(
                                                     height: AppSpacing.space20,
@@ -605,7 +602,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                                                   .appLocaleLanguage
                                                                   .captchaLockoutMessage1Min,
                                                             ),
-                                                            backgroundColor: Colors.red,
+                                                            backgroundColor: AppColors.red,
                                                           ),
                                                         );
                                                       } else {
@@ -632,7 +629,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                                         child: Icon(
                                                           Icons.refresh,
                                                           size: AppSizes.size16,
-                                                          color: Colors.grey,
+                                                          color: AppColors.grey,
                                                         ),
                                                       ),
                                                       SizedBox(width: AppSizes.size8),
@@ -641,7 +638,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                                             .appLocaleLanguage
                                                             .captchaReload,
                                                         style: TextStyle(
-                                                          color: Colors.black,
+                                                          color: AppColors.black,
                                                         ),
                                                       ),
                                                     ],
@@ -653,7 +650,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                                       ),
                                                       child: Text(
                                                         vm.captchaErrorText!,
-                                                        style: TextStyle(color: Colors.red),
+                                                        style: TextStyle(color: AppColors.red),
                                                       ),
                                                     )
                                                   else
@@ -735,10 +732,10 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                           style: TextStyle(
                             fontSize: AppSizes.size16,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                            color: AppColors.black,
                           ),
                         ),
-                        const Divider(color: Colors.grey),
+                        const Divider(color: AppColors.grey),
                         Image.network(
                           widget.event.orgLogoURL ?? AppImage.banner_1,
                           height: AppSizes.size50,
@@ -748,7 +745,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                 color: Colors.grey[700],
                                 child: Icon(
                                   Icons.image_not_supported,
-                                  color: Colors.white,
+                                  color: AppColors.white,
                                   size: 30,
                                 ),
                               ),
@@ -758,7 +755,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                           widget.event.orgName ?? '',
                           style: TextStyle(
                             fontSize: AppSizes.size15,
-                            color: Colors.black,
+                            color: AppColors.black,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -767,7 +764,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                           widget.event.orgDescription ?? '',
                           style: TextStyle(
                             fontSize: AppSizes.size14,
-                            color: Colors.black,
+                            color: AppColors.black,
                           ),
                         ),
                       ],
@@ -775,7 +772,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                   ),
                 ),
                 Container(
-                  color: Colors.black,
+                  color: AppColors.black,
                   padding: const EdgeInsets.symmetric(
                     horizontal: AppSpacing.space10,
                   ),
@@ -787,7 +784,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                           context.appLocaleLanguage.youMayAlsoLike,
                           style: TextStyle(
                             fontSize: AppSizes.size16,
-                            color: Colors.white,
+                            color: AppColors.white,
                           ),
                         ),
                       ),
@@ -853,3 +850,4 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
     );
   }
 }
+

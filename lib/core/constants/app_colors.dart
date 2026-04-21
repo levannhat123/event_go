@@ -81,4 +81,25 @@ class AppColors {
   static const lightGray = Color(0xFFD9D9D9);
   static const neutralGray = Color(0xFF7E7E7E);
 
+  // Home specific colors
+  static const homePrimaryBlue = Color(0xFF596DC3);
+  static const surfaceDark = Color(0xFF1C1C1E);
+  static const darkBlueBg = Color(0xFF0F1722);
+  static const darkGreyBg = Color(0xFF141414);
+
+  // Standard colors
+  static const black = Colors.black;
+  static const black54 = Colors.black54;
+  static const white70 = Colors.white70;
+  static const redAccent = Colors.redAccent;
+  static const greenAccent = Colors.greenAccent;
+
+  // Auth specific colors
+  static const authPrimaryBlue = Color(0xFF4257b4);
+  static const authOrange = Color(0xFFf49415);
+  static const authDarkText = Color(0xFF333333);
+  static const grey100 = Color(0xFFF5F5F5);
+  static const grey300 = Color(0xFFE0E0E0);
+  static const grey600 = Color(0xFF757575);
+
 }

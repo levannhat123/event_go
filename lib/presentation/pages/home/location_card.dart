@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_sizes.dart';
 import '../../../core/constants/app_spacing.dart';
 import '../../../core/constants/app_strings.dart';
@@ -50,7 +51,7 @@ class ImprovedLocationCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Material(
-        color: Colors.transparent,
+        color: AppColors.transparent,
         child: InkWell(
           onTap: () => _launchMaps(context),
           borderRadius: BorderRadius.circular(12.0),
@@ -64,7 +65,7 @@ class ImprovedLocationCard extends StatelessWidget {
                 end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.circular(12.0),
-              border: Border.all(color: Colors.white.withOpacity(0.5), width: 1.5),
+              border: Border.all(color: AppColors.white.withOpacity(0.5), width: 1.5),
               boxShadow: [
                 BoxShadow(
                   color: Colors.blue.withOpacity(0.08),
@@ -81,7 +82,7 @@ class ImprovedLocationCard extends StatelessWidget {
                   Positioned(
                     right: -30,
                     bottom: -40,
-                    child: Icon(Icons.map_rounded, size: AppSizes.size150, color: Colors.white.withOpacity(0.7)),
+                    child: Icon(Icons.map_rounded, size: AppSizes.size150, color: AppColors.white.withOpacity(0.7)),
                   ),
                   // Nội dung chính
                   Row(
@@ -128,11 +129,11 @@ class ImprovedLocationCard extends StatelessWidget {
                         child: Container(
                           padding: const EdgeInsets.all(AppSpacing.space12),
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: AppColors.white,
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
+                                color: AppColors.black.withOpacity(0.1),
                                 blurRadius: 10,
                                 offset: const Offset(0, 4),
                               ),

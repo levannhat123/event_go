@@ -39,7 +39,7 @@ class TicketItemRow extends StatelessWidget {
                 child: Text(
                   ticketName,
                   style: TextStyle(
-                    color: Colors.white,
+                    color: AppColors.white,
                     fontWeight: FontWeight.w600,
                     fontSize: AppSizes.size12,
                   ),

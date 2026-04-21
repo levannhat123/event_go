@@ -49,7 +49,7 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
                 text: context.appLocaleLanguage.clickToSelectTicket,
                 style: const TextStyle(
                   fontSize: AppSizes.size18,
-                  color: Colors.white,
+                  color: AppColors.white,
                 ),
                 velocity: AppSizes.size50,
                 blankSpace: AppSizes.size30,
@@ -112,7 +112,7 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
     final Color buttonColor = hasTickets
         ? AppColors.green
         : const Color(0xFFDEE0E4);
-    final Color textColor = hasTickets ? Colors.white : AppColors.grey;
+    final Color textColor = hasTickets ? AppColors.white : AppColors.grey;
 
     return GestureDetector(
       onTap: () => vm.panelController.open(),
@@ -128,19 +128,19 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.keyboard_arrow_up, color: Colors.grey),
+            const Icon(Icons.keyboard_arrow_up, color: AppColors.grey),
             SizedBox(height: AppSpacing.space4),
             Text(
               widget.event.title,
               style: TextStyle(
-                color: Colors.white,
+                color: AppColors.white,
                 fontWeight: FontWeight.bold,
                 fontSize: AppSizes.size14,
               ),
             ),
             Text(
               FormatPrice.formatDateTime(widget.event.startTime.toString()),
-              style: TextStyle(color: Colors.grey, fontSize: AppSizes.size12),
+              style: TextStyle(color: AppColors.grey, fontSize: AppSizes.size12),
             ),
             const SizedBox(height: AppSpacing.space8),
             AppElevatedButton(
@@ -208,7 +208,7 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
     final Color buttonColor = hasTickets
         ? AppColors.green
         : const Color(0xFFDEE0E4);
-    final Color textColor = hasTickets ? Colors.white : AppColors.grey;
+    final Color textColor = hasTickets ? AppColors.white : AppColors.grey;
 
     return Container(
       padding: const EdgeInsets.all(AppSpacing.space16),
@@ -231,7 +231,7 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
-              color: Colors.white,
+              color: AppColors.white,
               fontSize: AppSizes.size16,
               fontWeight: FontWeight.bold,
             ),
@@ -247,7 +247,7 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
             title: Text(
               widget.event.venue ?? '',
               style: TextStyle(
-                color: Colors.white,
+                color: AppColors.white,
                 fontSize: AppSizes.size12,
                 fontWeight: FontWeight.w600,
               ),
@@ -263,7 +263,7 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
             title: Text(
               FormatPrice.formatDateTime(widget.event.startTime.toString()),
               style: TextStyle(
-                color: Colors.white,
+                color: AppColors.white,
                 fontSize: AppSizes.size12,
                 fontWeight: FontWeight.w600,
               ),
@@ -279,7 +279,7 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
                 return ListTile(
                   title: Text(
                     ticket.name,
-                    style: const TextStyle(color: Colors.white),
+                    style: const TextStyle(color: AppColors.white),
                   ),
                   trailing: Text(
                     "${FormatPrice.format(double.tryParse(ticket.price.toString()) ?? 0)}",

@@ -4,6 +4,7 @@ import 'package:event_go/core/constants/app_image.dart';
 import 'package:event_go/core/constants/app_sizes.dart';
 import 'package:event_go/core/constants/app_spacing.dart';
 import 'package:event_go/core/constants/app_strings.dart';
+import 'package:event_go/core/constants/app_storage_key.dart';
 import 'package:event_go/core/utils/extension.dart';
 import 'package:event_go/core/utils/format_price.dart';
 import 'package:event_go/core/widgets/text_field.dart';
@@ -47,7 +48,7 @@ class _SearchScreenState extends State<SearchScreen> {
           appBar: AppBar(
             title: Text(context.appLocaleLanguage.searchTitle),
             centerTitle: true,
-            backgroundColor: Color(0xFF596DC3),
+            backgroundColor: AppColors.homePrimaryBlue,
           ),
           body: Padding(
             padding: const EdgeInsets.all(AppSpacing.space10),
@@ -75,7 +76,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         )
                       : null,
                   shadowColor: AppColors.transparent,
-                  textColor: Colors.white,
+                  textColor: AppColors.white,
                 ),
                 Divider(thickness: 1, color: AppColors.primary),
                 const SizedBox(height: AppSpacing.space10),
@@ -89,7 +90,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             await showModalBottomSheet<Map<String, dynamic>?>(
                               context: context,
                               isScrollControlled: true,
-                              backgroundColor: Colors.transparent,
+                              backgroundColor: AppColors.transparent,
                               builder: (sheetContext) {
                                 return ChangeNotifierProvider.value(
                                   value: viewModel,
@@ -146,7 +147,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         showModalBottomSheet(
                           context: context,
                           isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
+                          backgroundColor: AppColors.transparent,
                           builder: (sheetContext) {
                             return ChangeNotifierProvider.value(
                               value: viewModel,
@@ -215,56 +216,71 @@ class _SearchScreenState extends State<SearchScreen> {
     Map<String, String> getCategoryInfo(String dbKey) {
       if (dbKey == AppStrings.liveMusic) {
         return {
-          'display': context.appLocaleLanguage.liveMusic,
-          'image': AppImage.music_category,
+          AppStorageKey.display: context.appLocaleLanguage.liveMusic,
+          AppStorageKey.image: AppImage.music_category,
         };
       } else if (dbKey == AppStrings.theaterAndArtsSimple) {
         return {
-          'display': context.appLocaleLanguage.theaterAndArtsSimple,
-          'image': AppImage.film_category,
+          AppStorageKey.display: context.appLocaleLanguage.theaterAndArtsSimple,
+          AppStorageKey.image: AppImage.film_category,
         };
       } else if (dbKey == AppStrings.sportsCategory) {
         return {
-          'display': context.appLocaleLanguage.sports,
-          'image': AppImage.sport_category,
+          AppStorageKey.display: context.appLocaleLanguage.sports,
+          AppStorageKey.image: AppImage.sport_category,
         };
       } else if (dbKey == AppStrings.other) {
         return {
-          'display': context.appLocaleLanguage.other,
-          'image': AppImage.other_category,
+          AppStorageKey.display: context.appLocaleLanguage.other,
+          AppStorageKey.image: AppImage.other_category,
         };
       }
 
-      return {'display': dbKey, 'image': AppImage.other_category};
+      return {
+        AppStorageKey.display: dbKey,
+        AppStorageKey.image: AppImage.other_category,
+      };
     }
 
     final List<Map<String, String>> locations = [
       {
-        'display': context.appLocaleLanguage.hanoi,
-        'filterValue': AppStrings.hanoi,
-        'image': AppImage.location_hn,
+        AppStorageKey.display: context.appLocaleLanguage.hanoi,
+        AppStorageKey.filterValue: AppStrings.hanoi,
+        AppStorageKey.image: AppImage.location_hn,
       },
       {
-        'display': context.appLocaleLanguage.hoChiMinh,
-        'filterValue': AppStrings.hoChiMinh,
-        'image': AppImage.location_hcm,
+        AppStorageKey.display: context.appLocaleLanguage.hoChiMinh,
+        AppStorageKey.filterValue: AppStrings.hoChiMinh,
+        AppStorageKey.image: AppImage.location_hcm,
       },
       {
-        'display': context.appLocaleLanguage.dalat,
-        'filterValue': AppStrings.dalat,
-        'image': AppImage.location_dalat,
+        AppStorageKey.display: context.appLocaleLanguage.dalat,
+        AppStorageKey.filterValue: AppStrings.dalat,
+        AppStorageKey.image: AppImage.location_dalat,
       },
       {
-        'display': context.appLocaleLanguage.otherLocation,
-        'filterValue': AppStrings.otherLocation,
-        'image': AppImage.location_other,
+        AppStorageKey.display: context.appLocaleLanguage.otherLocation,
+        AppStorageKey.filterValue: AppStrings.otherLocation,
+        AppStorageKey.image: AppImage.location_other,
       },
     ];
     final List<Map<String, String>> cities = [
-      {'name': AppStrings.hanoi, 'image': AppImage.hn_location},
-      {'name': AppStrings.hoChiMinh, 'image': AppImage.hcm_location},
-      {'name': AppStrings.dalat, 'image': AppImage.dalat_location},
-      {'name': AppStrings.otherLocation, 'image': AppImage.other_location},
+      {
+        AppStorageKey.name: AppStrings.hanoi,
+        AppStorageKey.image: AppImage.hn_location,
+      },
+      {
+        AppStorageKey.name: AppStrings.hoChiMinh,
+        AppStorageKey.image: AppImage.hcm_location,
+      },
+      {
+        AppStorageKey.name: AppStrings.dalat,
+        AppStorageKey.image: AppImage.dalat_location,
+      },
+      {
+        AppStorageKey.name: AppStrings.otherLocation,
+        AppStorageKey.image: AppImage.other_location,
+      },
     ];
 
     return SingleChildScrollView(
@@ -276,7 +292,7 @@ class _SearchScreenState extends State<SearchScreen> {
             Text(
               context.appLocaleLanguage.recentSearches,
               style: TextStyle(
-                color: Colors.white,
+                color: AppColors.white,
                 fontSize: AppSizes.size18,
                 fontWeight: FontWeight.w600,
               ),
@@ -290,7 +306,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 final item = viewModel.recentSearches[index];
                 return ListTile(
                   dense: true,
-                  leading: Icon(Icons.access_time, color: Colors.white70),
+                  leading: Icon(Icons.access_time, color: AppColors.white70),
                   title: Text(item),
                   trailing: IconButton(
                     icon: Icon(
@@ -314,7 +330,7 @@ class _SearchScreenState extends State<SearchScreen> {
           Text(
             context.appLocaleLanguage.trendingSearches,
             style: TextStyle(
-              color: Colors.white,
+              color: AppColors.white,
               fontSize: AppSizes.size18,
               fontWeight: FontWeight.w600,
             ),
@@ -328,7 +344,7 @@ class _SearchScreenState extends State<SearchScreen> {
               final item = viewModel.trendingTopics[index];
               return ListTile(
                 dense: true,
-                leading: const Icon(Icons.trending_up, color: Colors.green),
+                leading: const Icon(Icons.trending_up, color: AppColors.green),
                 title: Text(item),
                 onTap: () {
                   viewModel.searchController.text = item;
@@ -342,7 +358,7 @@ class _SearchScreenState extends State<SearchScreen> {
           Text(
             context.appLocaleLanguage.exploreByCategory,
             style: TextStyle(
-              color: Colors.white,
+              color: AppColors.white,
               fontSize: AppSizes.size24,
               fontWeight: FontWeight.w600,
             ),
@@ -353,8 +369,8 @@ class _SearchScreenState extends State<SearchScreen> {
             child: Row(
               children: viewModel.eventsByCategory.keys.map((dbKey) {
                 final info = getCategoryInfo(dbKey);
-                final displayName = info['display']!;
-                final imagePath = info['image']!;
+                final displayName = info[AppStorageKey.display]!;
+                final imagePath = info[AppStorageKey.image]!;
 
                 return Padding(
                   padding: const EdgeInsets.only(right: AppSpacing.space10),
@@ -374,7 +390,7 @@ class _SearchScreenState extends State<SearchScreen> {
           Text(
             context.appLocaleLanguage.exploreByCity,
             style: TextStyle(
-              color: Colors.white,
+              color: AppColors.white,
               fontSize: AppSizes.size24,
               fontWeight: FontWeight.w600,
             ),
@@ -387,10 +403,12 @@ class _SearchScreenState extends State<SearchScreen> {
                 return Padding(
                   padding: const EdgeInsets.only(right: AppSpacing.space10),
                   child: CategoryCard(
-                    title: city['display']!,
-                    imagePath: city['image']!,
+                    title: city[AppStorageKey.display]!,
+                    imagePath: city[AppStorageKey.image]!,
                     onTap: () {
-                      viewModel.selectLocationAndSearch(city['filterValue']!);
+                      viewModel.selectLocationAndSearch(
+                        city[AppStorageKey.filterValue]!,
+                      );
                     },
                   ),
                 );
@@ -402,7 +420,7 @@ class _SearchScreenState extends State<SearchScreen> {
           Text(
             context.appLocaleLanguage.suggestionsForYou,
             style: TextStyle(
-              color: Colors.white,
+              color: AppColors.white,
               fontSize: AppSizes.size24,
               fontWeight: FontWeight.w600,
             ),
@@ -450,7 +468,7 @@ class _SearchScreenState extends State<SearchScreen> {
       return Center(
         child: Text(
           context.appLocaleLanguage.noResultsFound,
-          style: TextStyle(color: Colors.white70),
+          style: TextStyle(color: AppColors.white70),
         ),
       );
     }
@@ -491,10 +509,10 @@ class _SearchScreenState extends State<SearchScreen> {
       label: Text(label),
       onDeleted: onDeleted,
       backgroundColor: AppColors.green,
-      labelStyle: const TextStyle(color: Colors.white, fontSize: 14),
+      labelStyle: const TextStyle(color: AppColors.white, fontSize: 14),
       deleteIcon: const Icon(
         Icons.close,
-        color: Colors.white,
+        color: AppColors.white,
         size: AppSizes.size18,
       ),
       padding: const EdgeInsets.symmetric(
