@@ -1,7 +1,5 @@
 import 'package:event_go/core/constants/app_strings.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-// Helper class để xử lý lỗi từ Supabase trong UseCase layer
 class AuthErrorHandler {
   static String getErrorMessage(dynamic error) {
     if (error is AuthException) {

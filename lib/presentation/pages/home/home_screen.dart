@@ -8,6 +8,7 @@ import 'package:event_go/core/constants/app_colors.dart';
 import 'package:event_go/core/constants/app_image.dart';
 import 'package:event_go/core/constants/app_strings.dart';
 import 'package:event_go/core/constants/app_text_styles.dart';
+import 'package:event_go/core/constants/app_storage_key.dart';
 import 'package:event_go/core/widgets/event_card.dart';
 import 'package:event_go/core/widgets/location_card.dart';
 import 'package:event_go/core/widgets/trending_card.dart';
@@ -43,51 +44,54 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<Map<String, String>> get locations => [
     {
-      'display': context.appLocaleLanguage.hanoi,
-      'filterValue': AppStrings.hanoi,
-      'image': AppImage.location_hn,
+      AppStorageKey.display: context.appLocaleLanguage.hanoi,
+      AppStorageKey.filterValue: AppStrings.hanoi,
+      AppStorageKey.image: AppImage.location_hn,
     },
     {
-      'display': context.appLocaleLanguage.hoChiMinh,
-      'filterValue': AppStrings.hoChiMinh,
-      'image': AppImage.location_hcm,
+      AppStorageKey.display: context.appLocaleLanguage.hoChiMinh,
+      AppStorageKey.filterValue: AppStrings.hoChiMinh,
+      AppStorageKey.image: AppImage.location_hcm,
     },
     {
-      'display': context.appLocaleLanguage.dalat,
-      'filterValue': AppStrings.dalat,
-      'image': AppImage.location_dalat,
+      AppStorageKey.display: context.appLocaleLanguage.dalat,
+      AppStorageKey.filterValue: AppStrings.dalat,
+      AppStorageKey.image: AppImage.location_dalat,
     },
     {
-      'display': context.appLocaleLanguage.otherLocation,
-      'filterValue': AppStrings.otherLocation,
-      'image': AppImage.location_other,
+      AppStorageKey.display: context.appLocaleLanguage.otherLocation,
+      AppStorageKey.filterValue: AppStrings.otherLocation,
+      AppStorageKey.image: AppImage.location_other,
     },
   ];
 
   Map<String, String> getCategoryInfo(String dbKey) {
     if (dbKey == AppStrings.liveMusic) {
       return {
-        'display': context.appLocaleLanguage.liveMusic,
-        'image': AppImage.music_category,
+        AppStorageKey.display: context.appLocaleLanguage.liveMusic,
+        AppStorageKey.image: AppImage.music_category,
       };
     } else if (dbKey == AppStrings.theaterAndArtsSimple) {
       return {
-        'display': context.appLocaleLanguage.theaterAndArtsSimple,
-        'image': AppImage.film_category,
+        AppStorageKey.display: context.appLocaleLanguage.theaterAndArtsSimple,
+        AppStorageKey.image: AppImage.film_category,
       };
     } else if (dbKey == AppStrings.sportsCategory) {
       return {
-        'display': context.appLocaleLanguage.sports,
-        'image': AppImage.sport_category,
+        AppStorageKey.display: context.appLocaleLanguage.sports,
+        AppStorageKey.image: AppImage.sport_category,
       };
     } else if (dbKey == AppStrings.other) {
       return {
-        'display': context.appLocaleLanguage.other,
-        'image': AppImage.other_category,
+        AppStorageKey.display: context.appLocaleLanguage.other,
+        AppStorageKey.image: AppImage.other_category,
       };
     }
 
-    return {'display': dbKey, 'image': AppImage.other_category};
+    return {
+      AppStorageKey.display: dbKey,
+      AppStorageKey.image: AppImage.other_category,
+    };
   }
 
   @override
@@ -114,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Text(context.appLocaleLanguage.appName),
               ],
             ),
-            backgroundColor: Color(0xFF596DC3),
+            backgroundColor: AppColors.homePrimaryBlue,
             actions: [
               IconButton(
                 onPressed: () {
@@ -210,12 +214,17 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         ...viewModel.eventsByCategory.entries.map((entry) {
                           final events = entry.value
-                              .where((e) => e.status != 'COMPLETED')
+                              .where(
+                                (e) =>
+                                    e.status !=
+                                    AppStorageKey.completed.toUpperCase(),
+                              )
                               .toList();
                           if (events.isEmpty) return const SizedBox.shrink();
                           final categoryName = entry.key;
                           final categoryInfo = getCategoryInfo(categoryName);
-                          final displayName = categoryInfo['display']!;
+                          final displayName =
+                              categoryInfo[AppStorageKey.display]!;
 
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -314,13 +323,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: GestureDetector(
                                   onTap: () {
                                     viewModel.selectLocationAndSearch(
-                                      location['filterValue']!,
+                                      location[AppStorageKey.filterValue]!,
                                     );
                                     context.push(RouterPath.search);
                                   },
                                   child: LocationCard(
-                                    imageUrl: location['image']!,
-                                    locationName: location['display']!,
+                                    imageUrl: location[AppStorageKey.image]!,
+                                    locationName:
+                                        location[AppStorageKey.display]!,
                                   ),
                                 ),
                               );
@@ -343,7 +353,9 @@ class _HomeScreenState extends State<HomeScreen> {
     final allEvents =
         viewModel.events
             .where(
-              (event) => event.startTime != null && event.status != 'COMPLETED',
+              (event) =>
+                  event.startTime != null &&
+                  event.status != AppStorageKey.completed.toUpperCase(),
             )
             .toList()
           ..sort((a, b) => a.startTime!.compareTo(b.startTime!));
@@ -393,8 +405,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [
-                          Colors.transparent,
-                          Colors.black.withOpacity(0.6),
+                          AppColors.transparent,
+                          AppColors.black.withOpacity(0.6),
                         ],
                       ),
                     ),

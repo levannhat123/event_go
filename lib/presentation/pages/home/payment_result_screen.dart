@@ -62,16 +62,16 @@ class _PaymentResultScreenState extends State<PaymentResultScreen>
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = const Color(0xFF596DC3);
-    final failColor = Colors.redAccent;
-    final successColor = Colors.greenAccent;
+    final primaryColor = AppColors.homePrimaryBlue;
+    final failColor = AppColors.redAccent;
+    final successColor = AppColors.greenAccent;
 
     return Scaffold(
       // gradient background
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [const Color(0xFF0F1722), const Color(0xFF121212)],
+            colors: [AppColors.darkBlueBg, AppColors.background],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -89,16 +89,16 @@ class _PaymentResultScreenState extends State<PaymentResultScreen>
                   // Card chứa nội dung
                   Container(
                     decoration: BoxDecoration(
-                      color: const Color(0xFF141414).withOpacity(0.6),
+                      color: AppColors.darkGreyBg.withOpacity(0.6),
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.6),
+                          color: AppColors.black.withOpacity(0.6),
                           blurRadius: 18,
                           offset: const Offset(0, 8),
                         ),
                       ],
-                      border: Border.all(color: Colors.white.withOpacity(0.03)),
+                      border: Border.all(color: AppColors.white.withOpacity(0.03)),
                     ),
                     padding: const EdgeInsets.all(AppSpacing.space20),
                     child: Column(
@@ -132,7 +132,7 @@ class _PaymentResultScreenState extends State<PaymentResultScreen>
                               : AppStrings.paymentFailure,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: Colors.white,
+                            color: AppColors.white,
                             fontSize: AppSizes.size20,
                             fontWeight: FontWeight.w700,
                           ),
@@ -158,7 +158,7 @@ class _PaymentResultScreenState extends State<PaymentResultScreen>
                                     vertical: AppSpacing.space8,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.03),
+                                    color: AppColors.white.withOpacity(0.03),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Text(
@@ -188,10 +188,10 @@ class _PaymentResultScreenState extends State<PaymentResultScreen>
                         child: OutlinedButton(
                           style: OutlinedButton.styleFrom(
                             side: BorderSide(
-                              color: Colors.white.withOpacity(0.08),
+                              color: AppColors.white.withOpacity(0.08),
                             ),
-                            padding: const EdgeInsets.symmetric(vertical: 14),
-                            backgroundColor: Colors.transparent,
+                            padding: const EdgeInsets.symmetric(vertical: AppSizes.size14),
+                            backgroundColor: AppColors.transparent,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
@@ -206,7 +206,7 @@ class _PaymentResultScreenState extends State<PaymentResultScreen>
                           child: Text(
                             isSuccess ? 'Xem vé' : 'Về trang chính',
                             style: TextStyle(
-                              color: Colors.white,
+                              color: AppColors.white,
                               fontSize: AppSizes.size16,
                             ),
                           ),
@@ -219,7 +219,7 @@ class _PaymentResultScreenState extends State<PaymentResultScreen>
                             backgroundColor: isSuccess
                                 ? successColor
                                 : failColor,
-                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            padding: const EdgeInsets.symmetric(vertical: AppSizes.size14),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
@@ -230,7 +230,7 @@ class _PaymentResultScreenState extends State<PaymentResultScreen>
                           child: Text(
                             'Hoàn tất',
                             style: TextStyle(
-                              color: Colors.black,
+                              color: AppColors.black,
                               fontSize: AppSizes.size16,
                               fontWeight: FontWeight.w600,
                             ),

@@ -2,6 +2,7 @@ import 'package:event_go/core/constants/app_colors.dart';
 import 'package:event_go/core/constants/app_strings.dart';
 import 'package:event_go/core/utils/format_price.dart';
 import 'package:flutter/material.dart';
+import 'package:event_go/core/constants/app_sizes.dart';
 
 class EventCard extends StatelessWidget {
   final String imageUrl;
@@ -68,8 +69,8 @@ class EventCard extends StatelessWidget {
 
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
+                          horizontal: AppSizes.size10,
+                          vertical: AppSizes.size4,
                         ),
                         decoration: BoxDecoration(
                           color: _getStatusColor(status!),
@@ -79,7 +80,7 @@ class EventCard extends StatelessWidget {
                           getEventStatusLabel(status!),
                           style: const TextStyle(
                             color: Colors.white,
-                            fontSize: 12,
+                            fontSize: AppSizes.size12,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -89,33 +90,33 @@ class EventCard extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(12.0),
+              padding: const EdgeInsets.all(AppSizes.size12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
-                    height: 45,
+                    height: AppSizes.size45,
                     child: Text(
                       title,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 16,
+                        fontSize: AppSizes.size16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppSizes.size8),
                   Text(
                     "${AppStrings.fromPrice}${FormatPrice.format(double.tryParse(price) ?? 0)}",
                     style: const TextStyle(
-                      color: Color(0xFF23D288),
-                      fontSize: 14,
+                      color: AppColors.colorFF23D288,
+                      fontSize: AppSizes.size14,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppSizes.size12),
                   Row(
                     children: [
                       const Icon(
@@ -123,12 +124,12 @@ class EventCard extends StatelessWidget {
                         color: Colors.white70,
                         size: 14,
                       ),
-                      const SizedBox(width: 6),
+                      const SizedBox(width: AppSizes.size6),
                       Text(
                         FormatPrice.formatDate(date),
                         style: const TextStyle(
                           color: Colors.white70,
-                          fontSize: 12,
+                          fontSize: AppSizes.size12,
                         ),
                       ),
                     ],

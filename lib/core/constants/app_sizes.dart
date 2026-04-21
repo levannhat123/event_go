@@ -96,4 +96,9 @@ class AppSizes {
   static const double size500 = 500.0;
   static const double size550 = 550.0;
   static const double size600 = 600.0;
+  static const double size0_8_96 = 0.8;
+  static const double size1_4 = 1.4;
+  static const double size12_6 = 12.6;
+  static const double size37 = 37.0;
+  static const double size48_6 = 48.6;
 }

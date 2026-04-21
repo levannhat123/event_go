@@ -2,6 +2,7 @@ import 'package:event_go/core/constants/app_colors.dart'; // Đảm bảo import
 import 'package:event_go/routers/router_name.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:event_go/core/constants/app_sizes.dart';
 
 class PaymentResultVnPlayScreen extends StatelessWidget {
   final bool isSuccess;
@@ -17,74 +18,73 @@ class PaymentResultVnPlayScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color statusColor = isSuccess ? AppColors.green : Colors.red;
+    final Color statusColor = isSuccess ? AppColors.green : AppColors.red;
     final IconData statusIcon = isSuccess ? Icons.check_circle : Icons.error;
-    final String title = isSuccess ? "Thanh toán thành công" : "Thanh toán thất bại";
+    final String title = isSuccess
+        ? "Thanh toán thành công"
+        : "Thanh toán thất bại";
     final String btnText = isSuccess ? "Xem vé của tôi" : "Thử lại";
 
     return Scaffold(
-      backgroundColor: const Color(0xFF121212),
+      backgroundColor: AppColors.background,
       body: Center(
         child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 20),
-          padding: const EdgeInsets.all(24),
+          margin: const EdgeInsets.symmetric(horizontal: AppSizes.size20),
+          padding: const EdgeInsets.all(AppSizes.size24),
           decoration: BoxDecoration(
-            color: const Color(0xFF1C1C1E),
+            color: AppColors.surfaceDark,
             borderRadius: BorderRadius.circular(16),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 80,
-                height: 80,
+                width: AppSizes.size80,
+                height: AppSizes.size80,
                 decoration: BoxDecoration(
-                  color: statusColor.withOpacity(0.1),
+                  color: statusColor.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
-                  statusIcon,
-                  color: statusColor,
-                  size: 40,
-                ),
+                child: Icon(statusIcon, color: statusColor, size: 40),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: AppSizes.size20),
               Text(
                 title,
                 style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
+                  color: AppColors.white,
+                  fontSize: AppSizes.size20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSizes.size8),
               Text(
                 message,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                  color: Colors.grey,
-                  fontSize: 14,
+                  color: AppColors.grey,
+                  fontSize: AppSizes.size14,
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSizes.size16),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSizes.size12,
+                  vertical: AppSizes.size8,
+                ),
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.3),
+                  color: AppColors.black.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
                   "Mã giao dịch: $transactionId",
                   style: const TextStyle(
-                    color: Colors.white70,
-                    fontSize: 12,
+                    color: AppColors.white70,
+                    fontSize: AppSizes.size12,
                     fontFamily: "Courier",
                   ),
                 ),
               ),
-              const SizedBox(height: 30),
-
-              // 2 Nút bấm
+              const SizedBox(height: AppSizes.size30),
               Row(
                 children: [
                   Expanded(
@@ -93,24 +93,25 @@ class PaymentResultVnPlayScreen extends StatelessWidget {
                         context.go(RouterPath.home);
                       },
                       style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        side: const BorderSide(color: Colors.grey),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: AppSizes.size14,
+                        ),
+                        side: const BorderSide(color: AppColors.grey),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
-                          ),
+                        ),
                       ),
                       child: const Text(
-                         "Về trang chính",
-                        style: TextStyle(color: Colors.white),
+                        "Về trang chính",
+                        style: TextStyle(color: AppColors.white),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: AppSizes.size12),
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
                         if (isSuccess) {
-
                           context.go(RouterPath.ticket);
                         } else {
                           context.pop();
@@ -118,7 +119,9 @@ class PaymentResultVnPlayScreen extends StatelessWidget {
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: statusColor,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: AppSizes.size14,
+                        ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -126,7 +129,7 @@ class PaymentResultVnPlayScreen extends StatelessWidget {
                       child: Text(
                         btnText,
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: AppColors.white,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

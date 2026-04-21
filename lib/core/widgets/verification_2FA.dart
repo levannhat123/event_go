@@ -96,10 +96,10 @@ class _Verification2FAWidgetState extends State<Verification2FAWidget> {
                   builder: (context, error, _) {
                     if (error == null) return SizedBox.shrink();
                     return Padding(
-                      padding: EdgeInsets.only(top: 8.h),
+                      padding: EdgeInsets.only(top: AppSizes.size8.h),
                       child: Text(
                         error,
-                        style: TextStyle(color: Colors.red, fontSize: 14.sp),
+                        style: TextStyle(color: Colors.red, fontSize: AppSizes.size14.sp),
                       ),
                     );
                   },
@@ -109,8 +109,8 @@ class _Verification2FAWidgetState extends State<Verification2FAWidget> {
 
                 AppElevatedButton(
                   text: widget.buttonText ?? AppStrings.verify,
-                  borderColor: const Color(0xFFf49415),
-                  color: const Color(0xFFf49415),
+                  borderColor: AppColors.authOrange,
+                  color: AppColors.authOrange,
                   splashColor: AppColors.transparent,
                   highlightColor: AppColors.white,
                   onPressed: () async {

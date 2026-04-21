@@ -66,7 +66,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
               Positioned.fill(
                 child: Container(
                   decoration: const BoxDecoration(
-                    color: Color(0xFF4257b4),
+                    color: AppColors.authPrimaryBlue,
                     borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(AppSizes.size40),
                       bottomRight: Radius.circular(AppSizes.size40),
@@ -81,10 +81,10 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                           radius: AppSizes.size40,
                         ),
                         const SizedBox(height: AppSpacing.space10),
-                         Text(
+                        Text(
                           context.appLocaleLanguage.newPasswordTitle,
                           style: TextStyle(
-                            color: Color(0xFFf49415),
+                            color: AppColors.authOrange,
                             fontSize: AppSizes.size24,
                             fontWeight: FontWeight.bold,
                           ),
@@ -93,7 +93,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                         Text(
                           context.appLocaleLanguage.newPasswordDescription,
                           style: const TextStyle(
-                            color: Color(0xFFf49415),
+                            color: AppColors.authOrange,
                             fontSize: AppSizes.size12,
                           ),
                           textAlign: TextAlign.center,
@@ -111,7 +111,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                   padding: const EdgeInsets.all(AppSpacing.space20),
                   height: MediaQuery.of(context).size.height * AppSizes.size0_7,
                   decoration: const BoxDecoration(
-                    color: Colors.white,
+                    color: AppColors.white,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(AppSizes.size30),
                       topRight: Radius.circular(AppSizes.size30),
@@ -123,25 +123,23 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const SizedBox(height: AppSpacing.space30),
-
-                        // Password field
-                         Text(
+                        Text(
                           context.appLocaleLanguage.newPasswordLabel,
                           style: TextStyle(
                             fontSize: AppSizes.size16,
                             fontWeight: FontWeight.w500,
-                            color: Color(0xFF333333),
+                            color: AppColors.authDarkText,
                           ),
                         ),
                         const SizedBox(height: AppSpacing.space10),
                         AppTextField(
                           controller: passwordController,
                           hintText: context.appLocaleLanguage.newPasswordHint,
-                          borderColor: Colors.grey.shade300,
-                          fillColor: Colors.grey.shade100,
+                          borderColor: AppColors.grey300,
+                          fillColor: AppColors.grey100,
                           validator: Validator.password,
-                          focusedBorderColor: const Color(0xFF4257b4),
-                          enabledBorderColor: Colors.grey.shade300,
+                          focusedBorderColor: AppColors.authPrimaryBlue,
+                          enabledBorderColor: AppColors.grey300,
                           prefixIcon: const Icon(Icons.lock),
                           shadowColor: AppColors.transparent,
                           suffixIcon: IconButton(
@@ -149,7 +147,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                               viewModel.obscurePassword
                                   ? Icons.visibility
                                   : Icons.visibility_off,
-                              color: Colors.grey,
+                              color: AppColors.grey,
                             ),
                             onPressed: () {
                               viewModel.togglePasswordVisibility();
@@ -157,23 +155,24 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                           ),
                         ),
                         const SizedBox(height: AppSpacing.space20),
-                         Text(
+                        Text(
                           context.appLocaleLanguage.confirmPasswordLabel,
                           style: TextStyle(
                             fontSize: AppSizes.size16,
                             fontWeight: FontWeight.w500,
-                            color: Color(0xFF333333),
+                            color: AppColors.authDarkText,
                           ),
                         ),
                         const SizedBox(height: AppSpacing.space10),
                         AppTextField(
                           controller: confirmPasswordController,
-                          hintText: context.appLocaleLanguage.confirmNewPasswordHint,
-                          borderColor: Colors.grey.shade300,
-                          fillColor: Colors.grey.shade100,
+                          hintText:
+                              context.appLocaleLanguage.confirmNewPasswordHint,
+                          borderColor: AppColors.grey300,
+                          fillColor: AppColors.grey100,
                           validator: _validateConfirmPassword,
-                          focusedBorderColor: const Color(0xFF4257b4),
-                          enabledBorderColor: Colors.grey.shade300,
+                          focusedBorderColor: AppColors.authPrimaryBlue,
+                          enabledBorderColor: AppColors.grey300,
                           prefixIcon: const Icon(Icons.lock_outline),
                           shadowColor: AppColors.transparent,
                           suffixIcon: IconButton(
@@ -181,7 +180,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                               viewModel.obscureConfirmPassword
                                   ? Icons.visibility
                                   : Icons.visibility_off,
-                              color: Colors.grey,
+                              color: AppColors.grey,
                             ),
                             onPressed: () {
                               viewModel.toggleConfirmPasswordVisibility();
@@ -192,16 +191,18 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                         viewModel.isLoading
                             ? Center(
                                 child: LoadingAnimationWidget.hexagonDots(
-                                  color: Color(0xFFf49415),
+                                  color: AppColors.authOrange,
                                   size: AppSizes.size50,
                                 ),
                               )
                             : AppElevatedButton(
                                 text: viewModel.isLoading
                                     ? context.appLocaleLanguage.updating
-                                    : context.appLocaleLanguage.resetPasswordButton,
-                                borderColor: const Color(0xFFf49415),
-                                color: const Color(0xFFf49415),
+                                    : context
+                                          .appLocaleLanguage
+                                          .resetPasswordButton,
+                                borderColor: AppColors.authOrange,
+                                color: AppColors.authOrange,
                                 splashColor: AppColors.transparent,
                                 highlightColor: AppColors.white,
                                 onPressed: viewModel.isLoading
@@ -215,14 +216,17 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                                           if (success) {
                                             await showCustomDialog(
                                               context: context,
-                                              title: context.appLocaleLanguage
+                                              title: context
+                                                  .appLocaleLanguage
                                                   .resetPasswordSuccessTitle,
-                                              message: context.appLocaleLanguage
+                                              message: context
+                                                  .appLocaleLanguage
                                                   .passwordUpdatedMessage,
-                                              buttonText:
-                                                  context.appLocaleLanguage.loginButton,
+                                              buttonText: context
+                                                  .appLocaleLanguage
+                                                  .loginButton,
                                               icon: Icons.check_circle,
-                                              iconColor: Colors.green,
+                                              iconColor: AppColors.green,
                                               onPressed: () {
                                                 context.push(RouterPath.login);
                                               },
@@ -230,15 +234,19 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                                           } else {
                                             await showCustomDialog(
                                               context: context,
-                                              title: context.appLocaleLanguage
+                                              title: context
+                                                  .appLocaleLanguage
                                                   .resetPasswordFailedTitle,
                                               message:
                                                   viewModel.errorMessage ??
-                                                  context.appLocaleLanguage
+                                                  context
+                                                      .appLocaleLanguage
                                                       .errorOccurredTryAgain,
-                                              buttonText: context.appLocaleLanguage.okayButton,
+                                              buttonText: context
+                                                  .appLocaleLanguage
+                                                  .okayButton,
                                               icon: Icons.error,
-                                              iconColor: Colors.red,
+                                              iconColor: AppColors.red,
                                               onPressed: () {},
                                             );
                                           }

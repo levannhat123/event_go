@@ -81,4 +81,50 @@ class AppColors {
   static const lightGray = Color(0xFFD9D9D9);
   static const neutralGray = Color(0xFF7E7E7E);
 
+  // Home specific colors
+  static const homePrimaryBlue = Color(0xFF596DC3);
+  static const surfaceDark = Color(0xFF1C1C1E);
+  static const eventSurface = Color(0xFF1A1A1A);
+  static const darkBlueBg = Color(0xFF0F1722);
+  static const darkGreyBg = Color(0xFF141414);
+
+  static const color00000000 = Color(0x00000000);
+  static const colorFF011836 = Color(0xFF011836);
+  static const colorFF1C2D56 = Color(0xFF1C2D56);
+  static const colorFF1E1E1E = Color(0xFF1E1E1E);
+  static const colorFF222224 = Color(0xFF222224);
+  static const colorFF23D288 = Color(0xFF23D288);
+  static const colorFF27272A = Color(0xFF27272A);
+  static const colorFF27272E = Color(0xFF27272E);
+  static const colorFF2A2D34 = Color(0xFF2A2D34);
+  static const colorFF2C2C2C = Color(0xFF2C2C2C);
+  static const colorFF34A853 = Color(0xFF34A853);
+  static const colorFF39383D = Color(0xFF39383D);
+  static const colorFF515158 = Color(0xFF515158);
+  static const colorFF5C6BC0 = Color(0xFF5C6BC0);
+  static const colorFF6AFB92 = Color(0xFF6AFB92);
+  static const colorFF8A8A8A = Color(0xFF8A8A8A);
+  static const colorFFC5CAE9 = Color(0xFFC5CAE9);
+  static const colorFFD32F2F = Color(0xFFD32F2F);
+  static const colorFFDDDDE3 = Color(0xFFDDDDE3);
+  static const colorFFDEE0E4 = Color(0xFFDEE0E4);
+  static const colorFFE6EAF5 = Color(0xFFE6EAF5);
+  static const colorFFE6EEFF = Color(0xFFE6EEFF);
+  static const colorFFF2F6FF = Color(0xFFF2F6FF);
+  static const colorFFFFCDD2 = Color(0xFFFFCDD2);
+  // Standard colors
+  static const black = Colors.black;
+  static const black54 = Colors.black54;
+  static const white70 = Colors.white70;
+  static const redAccent = Colors.redAccent;
+  static const greenAccent = Colors.greenAccent;
+
+  // Auth specific colors
+  static const authPrimaryBlue = Color(0xFF4257b4);
+  static const authOrange = Color(0xFFf49415);
+  static const authDarkText = Color(0xFF333333);
+  static const grey100 = Color(0xFFF5F5F5);
+  static const grey300 = Color(0xFFE0E0E0);
+  static const grey600 = Color(0xFF757575);
+
 }

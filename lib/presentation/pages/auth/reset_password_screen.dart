@@ -55,7 +55,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     if (_isVerifying) {
-      return  Scaffold(
+      return Scaffold(
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -70,12 +70,12 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     }
 
     if (_verifiedEmail == null) {
-      return  Scaffold(
+      return Scaffold(
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.error, size: AppSizes.size64, color: Colors.red),
+              Icon(Icons.error, size: AppSizes.size64, color: AppColors.red),
               SizedBox(height: AppSpacing.space16),
               Text(context.appLocaleLanguage.invalidLink),
               Text(context.appLocaleLanguage.tryAgainOrRequestNew),
@@ -96,7 +96,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               Positioned.fill(
                 child: Container(
                   decoration: const BoxDecoration(
-                    color: Color(0xFF4257b4),
+                    color: AppColors.authPrimaryBlue,
                     borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(AppSizes.size40),
                       bottomRight: Radius.circular(AppSizes.size40),
@@ -111,10 +111,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           radius: AppSizes.size40,
                         ),
                         const SizedBox(height: AppSpacing.space10),
-                         Text(
+                        Text(
                           context.appLocaleLanguage.resetPasswordTitle,
                           style: TextStyle(
-                            color: Color(0xFFf49415),
+                            color: AppColors.authOrange,
                             fontSize: AppSizes.size24,
                             fontWeight: FontWeight.bold,
                           ),
@@ -125,7 +125,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                               '\n' +
                               _verifiedEmail!,
                           style: const TextStyle(
-                            color: Color(0xFFf49415),
+                            color: AppColors.authOrange,
                             fontSize: AppSizes.size12,
                           ),
                           textAlign: TextAlign.center,
@@ -135,8 +135,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   ),
                 ),
               ),
-
-              // Form content
               Positioned(
                 bottom: 0,
                 left: 0,
@@ -145,7 +143,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   padding: const EdgeInsets.all(AppSpacing.space20),
                   height: MediaQuery.of(context).size.height * AppSizes.size0_7,
                   decoration: const BoxDecoration(
-                    color: Colors.white,
+                    color: AppColors.white,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(AppSizes.size30),
                       topRight: Radius.circular(AppSizes.size30),
@@ -158,23 +156,23 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       children: [
                         const SizedBox(height: AppSpacing.space30),
 
-                         Text(
+                        Text(
                           context.appLocaleLanguage.newPasswordLabel,
                           style: TextStyle(
                             fontSize: AppSizes.size16,
                             fontWeight: FontWeight.w500,
-                            color: Color(0xFF333333),
+                            color: AppColors.authDarkText,
                           ),
                         ),
                         const SizedBox(height: AppSpacing.space10),
                         AppTextField(
                           controller: passwordController,
                           hintText: context.appLocaleLanguage.newPasswordHint,
-                          borderColor: Colors.grey.shade300,
-                          fillColor: Colors.grey.shade100,
+                          borderColor: AppColors.grey300,
+                          fillColor: AppColors.grey100,
                           validator: Validator.password,
-                          focusedBorderColor: const Color(0xFF4257b4),
-                          enabledBorderColor: Colors.grey.shade300,
+                          focusedBorderColor: AppColors.authPrimaryBlue,
+                          enabledBorderColor: AppColors.grey300,
                           prefixIcon: const Icon(Icons.lock),
                           suffixIcon: IconButton(
                             icon: Icon(
@@ -189,31 +187,34 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         ),
 
                         const SizedBox(height: AppSpacing.space20),
-                         Text(
+                        Text(
                           context.appLocaleLanguage.confirmPasswordLabel,
                           style: TextStyle(
                             fontSize: AppSizes.size16,
                             fontWeight: FontWeight.w500,
-                            color: Color(0xFF333333),
+                            color: AppColors.authDarkText,
                           ),
                         ),
                         const SizedBox(height: AppSpacing.space10),
                         AppTextField(
                           controller: confirmPasswordController,
-                          hintText: context.appLocaleLanguage.confirmNewPasswordHint,
-                          borderColor: Colors.grey.shade300,
-                          fillColor: Colors.grey.shade100,
+                          hintText:
+                              context.appLocaleLanguage.confirmNewPasswordHint,
+                          borderColor: AppColors.grey300,
+                          fillColor: AppColors.grey100,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return context.appLocaleLanguage.pleaseConfirmPassword;
+                              return context
+                                  .appLocaleLanguage
+                                  .pleaseConfirmPassword;
                             }
                             if (value != passwordController.text) {
                               return context.appLocaleLanguage.passwordMismatch;
                             }
                             return null;
                           },
-                          focusedBorderColor: const Color(0xFF4257b4),
-                          enabledBorderColor: Colors.grey.shade300,
+                          focusedBorderColor: AppColors.authPrimaryBlue,
+                          enabledBorderColor: AppColors.grey300,
                           prefixIcon: const Icon(Icons.lock),
                           suffixIcon: IconButton(
                             icon: Icon(
@@ -233,8 +234,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           text: viewModel.isLoading
                               ? context.appLocaleLanguage.updating
                               : context.appLocaleLanguage.updatePasswordButton,
-                          borderColor: const Color(0xFFf49415),
-                          color: const Color(0xFFf49415),
+                          borderColor: AppColors.authOrange,
+                          color: AppColors.authOrange,
                           splashColor: AppColors.transparent,
                           highlightColor: AppColors.white,
                           onPressed: viewModel.isLoading
@@ -249,10 +250,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         Center(
                           child: TextButton(
                             onPressed: () => context.go(RouterPath.login),
-                            child:  Text(
+                            child: Text(
                               context.appLocaleLanguage.loginButton,
                               style: TextStyle(
-                                color: Color(0xFF4257b4),
+                                color: AppColors.authPrimaryBlue,
                                 fontSize: AppSizes.size14,
                                 fontWeight: FontWeight.w500,
                               ),

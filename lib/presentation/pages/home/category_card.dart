@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_sizes.dart';
 
 class CategoryCard extends StatelessWidget {
@@ -31,7 +32,10 @@ class CategoryCard extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Colors.black.withOpacity(0.7), Colors.transparent],
+                    colors: [
+                      AppColors.black.withOpacity(0.7),
+                      AppColors.transparent,
+                    ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -43,15 +47,15 @@ class CategoryCard extends StatelessWidget {
                 right: 16.0,
                 child: Text(
                   title,
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: AppColors.white,
                     fontSize: AppSizes.size14,
                     fontWeight: FontWeight.w700,
                     shadows: [
                       Shadow(
                         blurRadius: 4.0,
-                        color: Colors.black54,
-                        offset: Offset(2.0, 2.0),
+                        color: AppColors.black54,
+                        offset: const Offset(2.0, 2.0),
                       ),
                     ],
                   ),

@@ -1,10 +1,8 @@
-
 import 'package:event_go/core/base/base_view.dart';
 import 'package:event_go/core/constants/app_colors.dart';
 import 'package:event_go/core/constants/app_image.dart';
 import 'package:event_go/core/constants/app_sizes.dart';
 import 'package:event_go/core/constants/app_spacing.dart';
-import 'package:event_go/core/constants/app_strings.dart';
 import 'package:event_go/core/constants/app_svg.dart';
 import 'package:event_go/core/utils/extension.dart';
 import 'package:event_go/core/utils/validator.dart';
@@ -45,22 +43,25 @@ class _LoginScreenState extends State<LoginScreen> {
               Positioned.fill(
                 child: Container(
                   decoration: const BoxDecoration(
-                    color: Color(0xFF4257b4),
+                    color: AppColors.authPrimaryBlue,
                     borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(AppSizes.size40),
                       bottomRight: Radius.circular(AppSizes.size40),
                     ),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.only(top: AppSpacing.space60),
+                    padding:  EdgeInsets.only(top: AppSpacing.space60,left: AppSpacing.space20,right: AppSpacing.space20),
                     child: Column(
                       children: [
-                        CircleAvatar(backgroundImage: AssetImage(AppImage.logo), radius: AppSizes.size40),
+                        CircleAvatar(
+                          backgroundImage: AssetImage(AppImage.logo),
+                          radius: AppSizes.size40,
+                        ),
                         const SizedBox(height: AppSpacing.space10),
                         Text(
                           context.appLocaleLanguage.loginTitle,
                           style: TextStyle(
-                            color: Color(0xFFf49415),
+                            color: AppColors.authOrange,
                             fontSize: AppSizes.size24,
                             fontWeight: FontWeight.bold,
                           ),
@@ -68,7 +69,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(height: AppSpacing.space10),
                         Text(
                           context.appLocaleLanguage.loginDescription,
-                          style: TextStyle(color: Color(0xFFf49415), fontSize:AppSizes.size12),
+                          style: TextStyle(
+                            color: AppColors.authOrange,
+                            fontSize: AppSizes.size12,
+                          ),
                           textAlign: TextAlign.justify,
                         ),
                       ],
@@ -84,7 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   padding: const EdgeInsets.all(AppSpacing.space20),
                   height: MediaQuery.of(context).size.height * AppSizes.size0_7,
                   decoration: const BoxDecoration(
-                    color: Colors.white,
+                    color: AppColors.white,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(AppSizes.size30),
                       topRight: Radius.circular(AppSizes.size30),
@@ -97,8 +101,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         AppTextField(
                           controller: emailController,
                           hintText: context.appLocaleLanguage.emailHint,
-                          borderColor: Colors.grey.shade300,
-                          fillColor: Colors.grey.shade100,
+                          borderColor: AppColors.grey300,
+                          fillColor: AppColors.grey100,
                           validator: Validator.email,
                           suffixIcon: IconButton(
                             onPressed: () {
@@ -108,11 +112,11 @@ class _LoginScreenState extends State<LoginScreen> {
                               AppSvg.close,
                               width: AppSizes.size24,
                               height: AppSizes.size24,
-                              color: Colors.grey,
+                              color: AppColors.grey,
                             ),
                           ),
-                          focusedBorderColor: const Color(0xFF4257b4),
-                          enabledBorderColor: Colors.grey.shade300,
+                          focusedBorderColor: AppColors.authPrimaryBlue,
+                          enabledBorderColor: AppColors.grey300,
                           prefixIcon: const Icon(Icons.email),
                           shadowColor: AppColors.transparent,
                         ),
@@ -120,11 +124,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         AppTextFieldPassword(
                           controller: passwordController,
                           hintText: context.appLocaleLanguage.passwordHint,
-                          borderColor: Colors.grey.shade300,
+                          borderColor: AppColors.grey300,
                           validator: Validator.password,
-                          fillColor: Colors.grey.shade100,
-                          focusedBorderColor: const Color(0xFF4257b4),
-                          enabledBorderColor: Colors.grey.shade300,
+                          fillColor: AppColors.grey100,
+                          focusedBorderColor: AppColors.authPrimaryBlue,
+                          enabledBorderColor: AppColors.grey300,
                           shadowColor: AppColors.transparent,
                         ),
                         Row(
@@ -134,9 +138,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               onPressed: () {
                                 context.push(RouterPath.forgotPassword);
                               },
-                              child:  Text(
+                              child: Text(
                                 context.appLocaleLanguage.forgotPasswordButton,
-                                style: TextStyle(color: Color(0xFFf49415)),
+                                style: TextStyle(color: AppColors.authOrange),
                               ),
                             ),
                           ],
@@ -144,60 +148,76 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(height: AppSpacing.space20),
                         viewModel.isLoading
                             ? Center(
-                          child: LoadingAnimationWidget.hexagonDots(
-                            color:Color(0xFFf49415),
-                            size: AppSizes.size50,
-                          ),
-                        )
+                                child: LoadingAnimationWidget.hexagonDots(
+                                  color: AppColors.authOrange,
+                                  size: AppSizes.size50,
+                                ),
+                              )
                             : AppElevatedButton(
-                          text: context.appLocaleLanguage.loginButton,
-                          borderColor: Color(0xFFf49415),
-                          color: Color(0xFFf49415),
-                          splashColor: AppColors.transparent,
-                          highlightColor: AppColors.white,
-                          onPressed: () async {
-                            if (_formKey.currentState!.validate()) {
-                              final success = await viewModel.login(
-                                emailController.text.trim(),
-                                passwordController.text,
-                              );
-                              if (success) {
-                                await showCustomDialog(
-                                  context: context,
-                                  title: context.appLocaleLanguage.loginSuccessTitle,
-                                  message: context.appLocaleLanguage.loginSuccessMessage,
-                                  buttonText: context.appLocaleLanguage.okayButton,
-                                  icon: Icons.check_circle,
-                                  iconColor: Colors.green,
-                                  onPressed: () {
-                                    context.go(RouterPath.home);
-                                  },
-                                );
-                              } else {
-                                await showCustomDialog(
-                                  context: context,
-                                  title: context.appLocaleLanguage.loginFailedTitle,
-                                  message:
-                                  viewModel.errorMessage ?? context.appLocaleLanguage.wrongEmailOrPasswordMessage,
-                                  buttonText: context.appLocaleLanguage.okayButton,
-                                  icon: Icons.error,
-                                  iconColor: Colors.red,
-                                  onPressed: () {},
-                                );
-                              }
-                            }
-                          },
-                        ),
+                                text: context.appLocaleLanguage.loginButton,
+                                borderColor: AppColors.authOrange,
+                                color: AppColors.authOrange,
+                                splashColor: AppColors.transparent,
+                                highlightColor: AppColors.white,
+                                onPressed: () async {
+                                  if (_formKey.currentState!.validate()) {
+                                    final success = await viewModel.login(
+                                      emailController.text.trim(),
+                                      passwordController.text,
+                                    );
+                                    if (success) {
+                                      await showCustomDialog(
+                                        context: context,
+                                        title: context
+                                            .appLocaleLanguage
+                                            .loginSuccessTitle,
+                                        message: context
+                                            .appLocaleLanguage
+                                            .loginSuccessMessage,
+                                        buttonText: context
+                                            .appLocaleLanguage
+                                            .okayButton,
+                                        icon: Icons.check_circle,
+                                        iconColor: AppColors.green,
+                                        onPressed: () {
+                                          context.go(RouterPath.home);
+                                        },
+                                      );
+                                    } else {
+                                      await showCustomDialog(
+                                        context: context,
+                                        title: context
+                                            .appLocaleLanguage
+                                            .loginFailedTitle,
+                                        message:
+                                            viewModel.errorMessage ??
+                                            context
+                                                .appLocaleLanguage
+                                                .wrongEmailOrPasswordMessage,
+                                        buttonText: context
+                                            .appLocaleLanguage
+                                            .okayButton,
+                                        icon: Icons.error,
+                                        iconColor: AppColors.red,
+                                        onPressed: () {},
+                                      );
+                                    }
+                                  }
+                                },
+                              ),
                         const SizedBox(height: AppSpacing.space20),
                         RichText(
                           text: TextSpan(
                             text: context.appLocaleLanguage.noAccount,
-                            style: TextStyle(color: Colors.grey, fontSize: AppSizes.size14),
+                            style: TextStyle(
+                              color: AppColors.grey,
+                              fontSize: AppSizes.size14,
+                            ),
                             children: [
                               TextSpan(
                                 text: context.appLocaleLanguage.signUpButton,
                                 style: TextStyle(
-                                  color: Color(0xFFf49415),
+                                  color: AppColors.authOrange,
                                   fontWeight: FontWeight.bold,
                                 ),
                                 recognizer: TapGestureRecognizer()

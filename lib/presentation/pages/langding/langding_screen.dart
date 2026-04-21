@@ -7,6 +7,7 @@ import 'package:event_go/core/widgets/app_elevated_button.dart';
 import 'package:event_go/routers/router_name.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:event_go/core/constants/app_sizes.dart';
 
 class LangdingScreen extends StatefulWidget {
   const LangdingScreen({Key? key}) : super(key: key);
@@ -27,9 +28,9 @@ class _LangdingScreenState extends State<LangdingScreen> {
             alignment: Alignment.bottomCenter,
             child: Padding(
               padding: const EdgeInsets.only(
-                left: 37.0,
-                right: 37.0,
-                bottom: 64.0,
+                left: AppSizes.size37,
+                right: AppSizes.size37,
+                bottom: AppSizes.size64,
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -49,19 +50,19 @@ class _LangdingScreenState extends State<LangdingScreen> {
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                  SizedBox(height: 12.0),
+                  SizedBox(height: AppSizes.size12),
                   Text(
                     context.appLocaleLanguage.slogan,
                     style: AppTextStyles.content2,
                     textAlign: TextAlign.justify,
                   ),
-                  SizedBox(height: 20.0),
+                  SizedBox(height: AppSizes.size20),
                   AppElevatedButton(
                     text: context.appLocaleLanguage.getStarted,
                     textColor: AppColors.white,
-                    color: Color(0xFFf49415),
-                    fontSize: 15.0,
-                    borderColor: Color(0xFFf49415),
+                    color: AppColors.authOrange,
+                    fontSize: AppSizes.size15,
+                    borderColor: AppColors.authOrange,
                     splashColor: AppColors.transparent,
                     highlightColor: AppColors.white,
                     onPressed: () {

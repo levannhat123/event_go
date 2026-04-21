@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:event_go/core/constants/app_sizes.dart';
 
 class AppTextField extends StatelessWidget {
   const AppTextField({
@@ -50,14 +51,14 @@ class AppTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     OutlineInputBorder outlineInputBorder(Color color) => OutlineInputBorder(
-      borderSide: BorderSide(color: color, width: 1.2),
+      borderSide: BorderSide(color: color, width: AppSizes.size1_2),
       borderRadius: const BorderRadius.all(Radius.circular(10.0)),
     );
 
     return Stack(
       children: [
         Container(
-          height: 48.6,
+          height: AppSizes.size48_6,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16.0),
             boxShadow: [
@@ -70,7 +71,7 @@ class AppTextField extends StatelessWidget {
           ),
         ),
         TextFormField(
-          style: TextStyle(color: textColor, fontSize: 16),
+          style: TextStyle(color: textColor, fontSize: AppSizes.size16),
           onChanged: onChanged,
           controller: controller,
           focusNode: focusNode,
@@ -83,8 +84,8 @@ class AppTextField extends StatelessWidget {
           autovalidateMode: AutovalidateMode.onUserInteraction,
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 12.6,
+              horizontal: AppSizes.size16,
+              vertical: AppSizes.size12_6,
             ),
             filled: true,
             fillColor: fillColor ?? Colors.pink.shade50,

@@ -144,7 +144,6 @@ class AuthViewModel extends BaseViewModel {
     } catch (e) {
       _isInitialized = true;
       _setLoading(false);
-      print('Error checking auth state: $e');
     }
   }
 
@@ -388,7 +387,7 @@ class AuthViewModel extends BaseViewModel {
             .from('avatars_profile')
             .upload(
               fileName,
-              file, // File local
+              file,
               fileOptions: const FileOptions(
                 cacheControl: '3600',
                 upsert: true,
@@ -415,11 +414,9 @@ class AuthViewModel extends BaseViewModel {
 
       _userProfile = profileToSave;
       _networkAvatarUrl = profileToSave.avatarUrl;
-      print('✅ Upserted profile for user: ${user.email}');
       notifyListeners();
     } catch (e) {
       _setLoading(false);
-      print('❌ Error upserting profile: $e');
     }
   }
   Future<void> refreshUserProfile() async {
@@ -468,9 +465,7 @@ class AuthViewModel extends BaseViewModel {
           .eq('id', user.id)
           .single();
       _userProfile = ProfileModel.fromJson(profileData);
-      print('✅ Profile đã được TẢI LẠI: ${_userProfile?.fullName}');
     } catch (e) {
-      print("❌ Lỗi khi tải profile: $e");
       _userProfile = null;
     }
   }

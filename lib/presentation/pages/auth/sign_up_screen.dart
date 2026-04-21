@@ -51,7 +51,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     horizontal: AppSpacing.space30,
                   ),
                   decoration: const BoxDecoration(
-                    color: Color(0xFF4257b4),
+                    color: AppColors.authPrimaryBlue,
                     borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(AppSizes.size40),
                       bottomRight: Radius.circular(AppSizes.size40),
@@ -69,7 +69,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         Text(
                           context.appLocaleLanguage.signUpTitle,
                           style: TextStyle(
-                            color: Color(0xFFf49415),
+                            color: AppColors.authOrange,
                             fontSize: AppSizes.size24,
                             fontWeight: FontWeight.bold,
                           ),
@@ -78,7 +78,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         Text(
                           context.appLocaleLanguage.signUpDescription,
                           style: TextStyle(
-                            color: Color(0xFFf49415),
+                            color: AppColors.authOrange,
                             fontSize: AppSizes.size12,
                           ),
                           textAlign: TextAlign.center,
@@ -88,8 +88,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
               ),
-
-              // Nội dung form
               Positioned(
                 bottom: 0,
                 left: 0,
@@ -98,7 +96,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   padding: const EdgeInsets.all(AppSpacing.space20),
                   height: MediaQuery.of(context).size.height * AppSizes.size0_7,
                   decoration: const BoxDecoration(
-                    color: Colors.white,
+                    color: AppColors.white,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(AppSizes.size30),
                       topRight: Radius.circular(AppSizes.size30),
@@ -111,9 +109,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         AppTextField(
                           controller: emailController,
                           hintText: context.appLocaleLanguage.emailHint,
-                          borderColor: Colors.grey.shade300,
+                          borderColor: AppColors.grey300,
                           validator: Validator.email,
-                          fillColor: Colors.white,
+                          fillColor: AppColors.white,
                           suffixIcon: IconButton(
                             onPressed: () {
                               emailController.clear();
@@ -122,11 +120,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               AppSvg.close,
                               width: AppSizes.size24,
                               height: AppSizes.size24,
-                              color: Colors.grey,
+                              color: AppColors.grey,
                             ),
                           ),
-                          focusedBorderColor: const Color(0xFF4257b4),
-                          enabledBorderColor: Colors.grey.shade300,
+                          focusedBorderColor: AppColors.authPrimaryBlue,
+                          enabledBorderColor: AppColors.grey300,
                           prefixIcon: const Icon(Icons.email),
                           shadowColor: AppColors.transparent,
                         ),
@@ -135,44 +133,47 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           controller: passwordController,
                           validator: Validator.password,
                           hintText: context.appLocaleLanguage.passwordLabel,
-                          borderColor: Colors.grey.shade300,
-                          fillColor: Colors.white,
-                          focusedBorderColor: const Color(0xFF4257b4),
-                          enabledBorderColor: Colors.grey.shade300,
+                          borderColor: AppColors.grey300,
+                          fillColor: AppColors.white,
+                          focusedBorderColor: AppColors.authPrimaryBlue,
+                          enabledBorderColor: AppColors.grey300,
                           shadowColor: AppColors.transparent,
                         ),
                         const SizedBox(height: AppSpacing.space20),
                         AppTextFieldPassword(
                           controller: configpasswordController,
-                          hintText: context.appLocaleLanguage.confirmPasswordHint,
-                          borderColor: Colors.grey.shade300,
+                          hintText:
+                              context.appLocaleLanguage.confirmPasswordHint,
+                          borderColor: AppColors.grey300,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return context.appLocaleLanguage.pleaseReenterPassword;
+                              return context
+                                  .appLocaleLanguage
+                                  .pleaseReenterPassword;
                             } else if (value != passwordController.text) {
                               return context.appLocaleLanguage.passwordMismatch;
                             }
                             return null;
                           },
-                          fillColor: Colors.white,
-                          focusedBorderColor: const Color(0xFF4257b4),
-                          enabledBorderColor: Colors.grey.shade300,
+                          fillColor: AppColors.white,
+                          focusedBorderColor: AppColors.authPrimaryBlue,
+                          enabledBorderColor: AppColors.grey300,
                           shadowColor: AppColors.transparent,
                         ),
                         const SizedBox(height: AppSpacing.space20),
                         viewModel.isLoading
                             ? Center(
                                 child: LoadingAnimationWidget.hexagonDots(
-                                  color: Color(0xFFf49415),
+                                  color: AppColors.authOrange,
                                   size: AppSizes.size50,
                                 ),
                               )
                             : AppElevatedButton(
                                 text: context.appLocaleLanguage.register,
                                 textColor: AppColors.textPrimary,
-                                color: Color(0xFFf49415),
+                                color: AppColors.authOrange,
                                 fontSize: AppSizes.size15,
-                                borderColor: Color(0xFFf49415),
+                                borderColor: AppColors.authOrange,
                                 splashColor: AppColors.transparent,
                                 highlightColor: AppColors.white,
                                 onPressed: () async {
@@ -185,12 +186,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     if (success) {
                                       await showCustomDialog(
                                         context: context,
-                                        title: context.appLocaleLanguage.signUpSuccessTitle,
-                                        message:
-                                            context.appLocaleLanguage.signUpSuccessMessage,
-                                        buttonText: context.appLocaleLanguage.okayButton,
+                                        title: context
+                                            .appLocaleLanguage
+                                            .signUpSuccessTitle,
+                                        message: context
+                                            .appLocaleLanguage
+                                            .signUpSuccessMessage,
+                                        buttonText: context
+                                            .appLocaleLanguage
+                                            .okayButton,
                                         icon: Icons.check_circle,
-                                        iconColor: Colors.green,
+                                        iconColor: AppColors.green,
                                         onPressed: () {
                                           context.go(RouterPath.login);
                                         },
@@ -198,13 +204,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     } else {
                                       await showCustomDialog(
                                         context: context,
-                                        title: context.appLocaleLanguage.signUpFailedTitle,
+                                        title: context
+                                            .appLocaleLanguage
+                                            .signUpFailedTitle,
                                         message:
                                             viewModel.errorMessage ??
-                                            context.appLocaleLanguage.errorOccurredMessage,
-                                        buttonText: context.appLocaleLanguage.okayButton,
+                                            context
+                                                .appLocaleLanguage
+                                                .errorOccurredMessage,
+                                        buttonText: context
+                                            .appLocaleLanguage
+                                            .okayButton,
                                         icon: Icons.error,
-                                        iconColor: Colors.red,
+                                        iconColor: AppColors.red,
                                         onPressed: () {},
                                       );
                                     }
@@ -216,14 +228,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           text: TextSpan(
                             text: context.appLocaleLanguage.hasAccount,
                             style: TextStyle(
-                              color: Colors.grey,
+                              color: AppColors.grey,
                               fontSize: AppSizes.size14,
                             ),
                             children: [
                               TextSpan(
                                 text: context.appLocaleLanguage.login,
                                 style: TextStyle(
-                                  color: Color(0xFFf49415),
+                                  color: AppColors.authOrange,
                                   fontWeight: FontWeight.bold,
                                 ),
                                 recognizer: TapGestureRecognizer()
