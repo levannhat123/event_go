@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
+import 'package:event_go/core/config/app_env.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -12,6 +13,10 @@ enum VNPayHashType { SHA256, HMACSHA512 }
 class VNPAYFlutter {
   static final VNPAYFlutter _instance = VNPAYFlutter();
   static VNPAYFlutter get instance => _instance;
+  static String get tmnCode => AppEnv.get('VNPAY_TMN_CODE');
+  static String get hashKey => AppEnv.get('VNPAY_HASH_KEY');
+  static String get paymentUrl =>
+      AppEnv.get('VNPAY_URL');
 
   Map<String, dynamic> _sortParams(Map<String, dynamic> params) {
     final sortedParams = <String, dynamic>{};

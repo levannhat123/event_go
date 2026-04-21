@@ -41,9 +41,6 @@ class EventOrderViewModel extends BaseViewModel {
   final WatchSoldTicketsByEventUsecase watchSoldTicketsByEventUsecase;
   final GetSoldTicketsByEventUsecase getSoldTicketsByEventUsecase;
   final SendOrderEmailUsecase sendOrderEmailUsecase;
-  final String _vnpTmnCode = '0MS82K1F';
-  final String _vnpHashKey = '3906YDIHHGXTRHO8NW2UKIC6ZLJX4O20';
-  final String _vnpUrl = 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html';
 
   String? get _userId => Supabase.instance.client.auth.currentUser?.id;
   String? get userEmail => Supabase.instance.client.auth.currentUser?.email;
@@ -372,15 +369,15 @@ class EventOrderViewModel extends BaseViewModel {
   void _processVNPayPayment(BuildContext context) {
     if (event == null) return;
     final paymentUrl = VNPAYFlutter.instance.generatePaymentUrl(
-      url: _vnpUrl,
+      url: VNPAYFlutter.paymentUrl,
       version: '2.1.0',
-      tmnCode: _vnpTmnCode,
+      tmnCode: VNPAYFlutter.tmnCode,
       txnRef: DateTime.now().millisecondsSinceEpoch.toString(),
       orderInfo: 'Thanh toan ve: ${event!.title}',
       amount: grandTotal,
       returnUrl: 'https://vnpay.vn/return',
       ipAdress: '192.168.1.1',
-      vnpayHashKey: _vnpHashKey,
+      vnpayHashKey: VNPAYFlutter.hashKey,
       vnPayHashType: VNPayHashType.HMACSHA512,
     );
     VNPAYFlutter.instance.show(

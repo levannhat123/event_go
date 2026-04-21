@@ -1,5 +1,6 @@
 
 import 'package:dio/dio.dart';
+import 'package:event_go/core/config/app_env.dart';
 import 'package:event_go/data/models/payment/endpoints.dart';
 import 'package:sprintf/sprintf.dart';
 
@@ -7,11 +8,10 @@ import '../../data/models/payment/create_order_response.dart';
 import '../../data/models/payment/util.dart' as utils;
 
 class ZaloPayConfig {
-  static const String appId = "2553";
-  static const String key1 = "PcY4iZIKFCIdgZvA6ueMcMHHUbRLYjPL";
-  static const String key2 = "kLtgPl8HHhfvMuDHPwKfgfsY4Ydm9eIz";
-
-  static const String appUser = "zalopaydemo";
+  static String get appId => AppEnv.get('ZALOPAY_APP_ID');
+  static String get key1 => AppEnv.get('ZALOPAY_KEY1');
+  static String get key2 => AppEnv.get('ZALOPAY_KEY2');
+  static String get appUser => AppEnv.get('ZALOPAY_APP_USER');
   static int transIdDefault = 1;
 }
 
