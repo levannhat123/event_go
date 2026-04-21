@@ -11,9 +11,9 @@ import 'package:event_go/routers/app_route.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
@@ -30,6 +30,7 @@ void main() {
       await initializeDateFormatting('vi_VN', null);
       await Hive.initFlutter();
       await Hive.openBox('settings');
+      await dotenv.load(fileName: '.env');
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );

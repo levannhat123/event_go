@@ -46,4 +46,4 @@ app.*.map.json
 /README.md
 /.metadata
 /analysis_options.yaml
-
+.env

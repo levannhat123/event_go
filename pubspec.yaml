@@ -68,6 +68,7 @@ dependencies:
   hive:
   hive_flutter: ^1.1.0
   webview_flutter: ^4.13.0
+  flutter_dotenv: ^5.2.1
 
 dev_dependencies:
   flutter_test:
@@ -103,6 +104,7 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - .env
 
   # An images asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
