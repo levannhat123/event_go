@@ -1,0 +1,20 @@
+
+
+import 'package:event_go/data/repositories/auth/auth_repository.dart';
+import 'package:event_go/domain/entities/auth_result.dart';
+import 'package:event_go/domain/utils/auth_error_handler.dart';
+
+class LoginUseCase {
+  final AuthRepository _authRepository;
+
+  LoginUseCase(this._authRepository);
+
+  Future<AuthResult> call(String email, String password) async {
+    try {
+      final user = await _authRepository.signInWithEmailAndPassword(email, password);
+      return AuthResult.success(user);
+    } catch (e) {
+      return AuthResult.failure(AuthErrorHandler.getErrorMessage(e));
+    }
+  }
+}

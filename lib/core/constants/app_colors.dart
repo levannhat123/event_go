@@ -1,0 +1,130 @@
+import 'package:flutter/material.dart';
+
+class AppColors {
+  static const textPrimary = Color.fromARGB(255, 255, 255, 255);
+  static const textSecondary = Color.fromRGBO(247, 166, 0, 1);
+  static const textTertiary = Color.fromARGB(50, 255, 255, 255);
+  static const textFourth = Color.fromARGB(75, 255, 255, 255);
+  static const primaryButton = Color(0xfff7a600);
+  static const secondaryButton = Color(0xff1f1f1f);
+  static const tertiaryButton = Color(0xff303030);
+  static const disabledButton = Color.fromARGB(25, 255, 255, 255);
+  static const bgOverlay = Color.fromRGBO(0, 0, 0, 0.7);
+  static const transparent = Colors.transparent;
+  static const primary = Color(0xFFF7A600);
+  static const secondary = Color(0xFF121212);
+  static const background = Color(0xFF121212);
+  static const error = Colors.red;
+  static const iconSearch = Color(0xFF1F1F1F);
+  static const hintText = Color.fromRGBO(255, 255, 255, 0.25);
+  static const subtitleText = Color.fromRGBO(255, 255, 255, 0.5);
+  static const textWarning = Color(0xFFEF4D42);
+  static const textError = Color(0xFFF44336);
+  static const iconPrimary = Color.fromRGBO(255, 255, 255, 0.5);
+  static const iconSuccess = Color.fromARGB(255, 0, 255, 0);
+  static const iconError = Color.fromARGB(255, 255, 0, 0);
+  static const iconUnselected = Color(0xFF555555);
+  static const divider = Color(0xFF303030);
+  static const navBottom = Color(0xFF1F1F1F);
+  static const borderInput = Color.fromRGBO(255, 255, 255, 0.5);
+  static const borderError = Color(0xFFF44336);
+  static const borderCard = Color(0xFF303030);
+  static const changeButton = Color(0xff24B36E);
+  static const textNoData = Color(0xff888888);
+  static const backgroundLight = Color(0xFFFFFFFF);
+  static const backgroundCategory = Color(0xFF414141);
+  static const backgroundDark = Color(0xFF121212);
+  static const backgroundToast = Color.fromRGBO(0, 0, 0, 0.4);
+  static const backgroundAssetsCard = Color(0x841f1f1f);
+  static const backgroundWarning = Color.fromRGBO(239, 77, 66, 0.05);
+  static const backgroundSearch = Color(0xff1f1f1f);
+  static const checkPasswordWeak = Color(0xFFFF0000);
+  static const checkPasswordMedium = Color.fromARGB(255, 255, 153, 0);
+  static const checkPasswordStrong = Color.fromARGB(255, 255, 251, 0);
+  static const checkPasswordVeryStrong = Color.fromARGB(255, 0, 255, 0);
+  static const tertiary = Color(0xFFFFFFFF);
+  static const fourth = Color(0xFF5AC8FA);
+  static const btnError = Color(0xFF007AFF);
+  static const success = Color(0xFF34C759);
+  static const warning = Color(0xFFFF9500);
+  static const white = Color(0xFFFFFFFF);
+  static const grey = Color(0xFF8E8E93);
+  static const stock = Color(0xFF2C2C2E);
+  static const red = Color(0xFFEF4D42);
+  static const red_40 = Color.fromARGB(40, 239, 77, 66);
+  static const green = Color(0xFF24B36E);
+  static const textRedOnOrderBook = Color(0xFFE84142);
+  static const textGreenOnOrderBook = Color(0xFF24B36E);
+  static const depthRedBackgroundOnOrderBook = Color.fromARGB(40, 240, 76, 66);
+
+  static const textOnSellOrderBook = Color(0xFFE84142);
+  static const textOnBuyOrderBook = Color(0xFF24B36E);
+  static const depthBackgroundOnSellOrderBook = Color.fromARGB(40, 240, 76, 66);
+  static const depthBackgroundOnBuyOrderBook = Color.fromARGB(40, 36, 179, 110);
+  static const textOnLastTradeInfo = Color(0xFF24B36E);
+  static const green_40 = Color.fromARGB(40, 36, 179, 110);
+  static const backgroundMain = Color.fromRGBO(247, 166, 0, 0.10);
+  static const grey_40 = Color.fromRGBO(255, 255, 255, 0.4);
+  static const completed = Color(0xFF24B36E);
+  static const bgcompleted = Color(0xFF14221b);
+  static const blueGrey = Color(0xff607d8b);
+  static const gold = Color(0xFFF7A600);
+  static const silver = Color(0xFFADADAD);
+  static const bronze = Color(0xFFB87333);
+  static const processing = Color(0x1AF7A600);
+
+  static const pending = Color.fromARGB(255, 3, 86, 46);
+  static const transferredOut = Color.fromARGB(255, 99, 4, 4);
+  static const green_36 = Color.fromRGBO(36, 179, 110, 0.1);
+  static const  lightPeach= Color(0xFF0085c3);
+  static const Color yellow = Colors.yellow;
+  static const lightGray = Color(0xFFD9D9D9);
+  static const neutralGray = Color(0xFF7E7E7E);
+
+  // Home specific colors
+  static const homePrimaryBlue = Color(0xFF596DC3);
+  static const surfaceDark = Color(0xFF1C1C1E);
+  static const eventSurface = Color(0xFF1A1A1A);
+  static const darkBlueBg = Color(0xFF0F1722);
+  static const darkGreyBg = Color(0xFF141414);
+
+  static const color00000000 = Color(0x00000000);
+  static const colorFF011836 = Color(0xFF011836);
+  static const colorFF1C2D56 = Color(0xFF1C2D56);
+  static const colorFF1E1E1E = Color(0xFF1E1E1E);
+  static const colorFF222224 = Color(0xFF222224);
+  static const colorFF23D288 = Color(0xFF23D288);
+  static const colorFF27272A = Color(0xFF27272A);
+  static const colorFF27272E = Color(0xFF27272E);
+  static const colorFF2A2D34 = Color(0xFF2A2D34);
+  static const colorFF2C2C2C = Color(0xFF2C2C2C);
+  static const colorFF34A853 = Color(0xFF34A853);
+  static const colorFF39383D = Color(0xFF39383D);
+  static const colorFF515158 = Color(0xFF515158);
+  static const colorFF5C6BC0 = Color(0xFF5C6BC0);
+  static const colorFF6AFB92 = Color(0xFF6AFB92);
+  static const colorFF8A8A8A = Color(0xFF8A8A8A);
+  static const colorFFC5CAE9 = Color(0xFFC5CAE9);
+  static const colorFFD32F2F = Color(0xFFD32F2F);
+  static const colorFFDDDDE3 = Color(0xFFDDDDE3);
+  static const colorFFDEE0E4 = Color(0xFFDEE0E4);
+  static const colorFFE6EAF5 = Color(0xFFE6EAF5);
+  static const colorFFE6EEFF = Color(0xFFE6EEFF);
+  static const colorFFF2F6FF = Color(0xFFF2F6FF);
+  static const colorFFFFCDD2 = Color(0xFFFFCDD2);
+  // Standard colors
+  static const black = Colors.black;
+  static const black54 = Colors.black54;
+  static const white70 = Colors.white70;
+  static const redAccent = Colors.redAccent;
+  static const greenAccent = Colors.greenAccent;
+
+  // Auth specific colors
+  static const authPrimaryBlue = Color(0xFF4257b4);
+  static const authOrange = Color(0xFFf49415);
+  static const authDarkText = Color(0xFF333333);
+  static const grey100 = Color(0xFFF5F5F5);
+  static const grey300 = Color(0xFFE0E0E0);
+  static const grey600 = Color(0xFF757575);
+
+}
