@@ -126,9 +126,4 @@ Các màn hình được khai báo trong `lib/routers/app_route.dart`, gồm:
 - Booking / Payment / Payment Result
 - Ticket / User
 
-## Ghi chú bảo mật
-
-- Không hardcode API key/secret trong code.
-- Luôn để key trong `.env`.
-- Nếu nghi ngờ lộ key, rotate key trên hệ thống tương ứng (Supabase, ZaloPay, VNPay).
 
